@@ -75,8 +75,8 @@ export function UrlBar({ value, onChange, onSubmit, busy, error, kind = 'any', s
               aria-invalid={Boolean(error) || undefined}
               aria-describedby={error ? errorId : undefined}
               className={cn(
-                'rounded-full border-transparent bg-transparent pr-9 pl-11 hover:border-transparent focus-visible:border-transparent focus-visible:ring-0',
-                lg ? 'h-12 text-base' : 'h-10',
+                'rounded-full border-transparent bg-transparent pr-12 pl-11 hover:border-transparent focus-visible:border-transparent focus-visible:ring-0',
+                lg ? 'h-12 text-base' : 'h-11',
               )}
             />
             {value ? (
@@ -86,7 +86,7 @@ export function UrlBar({ value, onChange, onSubmit, busy, error, kind = 'any', s
                   onChange('');
                   inputRef.current?.focus();
                 }}
-                className="absolute right-2 grid size-7 place-items-center rounded-md text-ink-faint hover:bg-raised hover:text-ink"
+                className="absolute right-1 grid size-10 place-items-center rounded-full text-ink-faint hover:bg-raised hover:text-ink"
                 aria-label="Clear link"
               >
                 <X className="size-4" />
@@ -122,7 +122,7 @@ export function UrlBar({ value, onChange, onSubmit, busy, error, kind = 'any', s
               onChange(url);
               onSubmit(url);
             }}
-            className="rounded-full border border-line bg-surface px-3 py-1 font-mono text-[0.6875rem] font-medium tracking-[0.04em] text-ink uppercase transition-colors hover:border-line-strong hover:bg-raised disabled:opacity-50"
+            className="hit-area rounded-full border border-line bg-surface px-3 py-1 font-mono text-[0.6875rem] font-medium tracking-[0.04em] text-ink uppercase transition-colors hover:border-line-strong hover:bg-raised disabled:opacity-50"
           >
             {sample.label}
           </button>

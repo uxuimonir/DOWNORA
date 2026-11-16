@@ -48,7 +48,7 @@ export function HelpPage() {
           placeholder="Search, for example “resume” or “4K”"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="h-12 rounded-full pl-11 text-base"
+          className="ios-search h-11 rounded-[0.75rem] pl-11 text-base"
         />
       </div>
       <p className="sr-only" role="status">

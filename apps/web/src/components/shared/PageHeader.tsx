@@ -1,5 +1,11 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { useDocumentTitle } from '@/lib/useDocumentTitle';
+import { useChrome } from '@/stores/chrome';
 
+/**
+ * iOS large title. When it scrolls under the navigation bar, the bar shows the
+ * title instead, as UINavigationBar does.
+ */
 export function PageHeader({
   title,
   description,
@@ -9,10 +15,34 @@ export function PageHeader({
   description?: ReactNode;
   actions?: ReactNode;
 }) {
+  const ref = useRef<HTMLHeadingElement>(null);
+  const setChrome = useChrome((s) => s.set);
+  useDocumentTitle(title);
+
+  useEffect(() => {
+    setChrome({ title, collapsed: false });
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => setChrome({ collapsed: !entry?.isIntersecting }),
+      { rootMargin: '-56px 0px 0px 0px', threshold: 0 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      setChrome({ title: '', collapsed: false });
+    };
+  }, [title, setChrome]);
+
   return (
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h1 className="text-[2.125rem] leading-tight font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:font-semibold">{title}</h1>
+        <h1
+          ref={ref}
+          className="text-[2.125rem] leading-tight font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:font-semibold"
+        >
+          {title}
+        </h1>
         {description ? <p className="mt-2 max-w-[62ch] text-[0.9375rem] text-ink-muted sm:text-base">{description}</p> : null}
       </div>
       {actions ? <div className="flex shrink-0 flex-wrap gap-2">{actions}</div> : null}

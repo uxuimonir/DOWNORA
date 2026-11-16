@@ -2,6 +2,7 @@ import { Badge, Button, Input, Label, Logo, Panel } from '@downora/ui';
 import { Info } from 'lucide-react';
 import { useId } from 'react';
 import { Link } from 'react-router';
+import { useDocumentTitle } from '@/lib/useDocumentTitle';
 
 /**
  * Sign-in screen. The form is built but disabled: there is no auth service
@@ -11,13 +12,16 @@ import { Link } from 'react-router';
 export function AuthPage() {
   const emailId = useId();
   const passwordId = useId();
+  useDocumentTitle('Sign in');
   return (
     <div className="grid min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-      <div className="flex flex-col px-4 py-8 sm:px-10">
-        <Link to="/" aria-label="Downora home" className="self-start">
-          <Logo />
-        </Link>
-        <div className="my-auto w-full max-w-sm self-center py-12">
+      <div className="flex flex-col px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-8 sm:px-10">
+        <header className="self-start">
+          <Link to="/" aria-label="Downora home" className="flex min-h-11 items-center">
+            <Logo />
+          </Link>
+        </header>
+        <main id="main" className="my-auto w-full max-w-sm self-center py-12">
           <h1 className="text-[2.125rem] leading-tight font-bold tracking-[-0.03em]">Sign in to Downora</h1>
           <p className="mt-2 text-ink-muted">Keep your history and settings in sync on every device.</p>
 
@@ -48,11 +52,11 @@ export function AuthPage() {
           <Button className="mt-3 w-full" size="lg" asChild>
             <Link to="/dashboard">Continue without an account</Link>
           </Button>
-        </div>
-        <p className="text-xs text-ink-faint">Downora never asks for your passwords to other sites.</p>
+        </main>
+        <footer className="text-xs text-ink-faint">Downora never asks for your passwords to other sites.</footer>
       </div>
 
-      <div className="relative hidden overflow-hidden border-l border-line bg-surface lg:block">
+      <aside aria-label="Account benefits" className="relative hidden overflow-hidden border-l border-line bg-surface lg:block">
         <div
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(80%_60%_at_30%_20%,rgb(243_100_68/0.28),transparent_60%),radial-gradient(70%_60%_at_80%_90%,rgb(255_255_255/0.04),transparent_60%)]"
@@ -67,7 +71,7 @@ export function AuthPage() {
             </ul>
           </Panel>
         </div>
-      </div>
+      </aside>
     </div>
   );
 }

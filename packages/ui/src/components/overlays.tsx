@@ -160,7 +160,7 @@ export function DropdownMenuContent({
       <DropdownPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          'z-50 min-w-44 rounded-control border border-line-strong bg-raised p-1 shadow-pop data-[state=open]:animate-pop-in',
+          'material z-50 min-w-48 rounded-[0.875rem] border border-white/10 p-1 shadow-pop data-[state=open]:animate-pop-in',
           className,
         )}
         {...props}
@@ -177,7 +177,7 @@ export function DropdownMenuItem({
   return (
     <DropdownPrimitive.Item
       className={cn(
-        'flex h-9 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-sm outline-none select-none',
+        'flex h-9 pointer-coarse:h-11 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-sm outline-none select-none',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
         destructive
           ? 'text-danger data-[highlighted]:bg-danger/12'
@@ -226,7 +226,7 @@ export function SelectField<T extends string>({
     <SelectPrimitive.Root value={value} onValueChange={(next) => onValueChange(next as T)}>
       <SelectPrimitive.Trigger
         className={cn(
-          'flex h-10 w-full items-center justify-between gap-2 rounded-full border border-line bg-raised px-4 text-sm text-ink',
+          'flex h-10 pointer-coarse:h-11 w-full items-center justify-between gap-2 rounded-full border border-line bg-raised px-4 text-sm text-ink',
           'hover:bg-hover data-[state=open]:border-line-strong disabled:opacity-50',
           className,
         )}
@@ -248,7 +248,7 @@ export function SelectField<T extends string>({
               <SelectPrimitive.Item
                 key={option.value}
                 value={option.value}
-                className="relative flex min-h-9 cursor-pointer items-center rounded-md py-1.5 pr-8 pl-2.5 text-sm text-ink outline-none select-none data-[highlighted]:bg-hover"
+                className="relative flex min-h-9 pointer-coarse:min-h-11 cursor-pointer items-center rounded-lg py-1.5 pr-8 pl-2.5 text-sm text-ink outline-none select-none data-[highlighted]:bg-hover"
               >
                 <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                 <SelectPrimitive.ItemIndicator className="absolute right-2.5">
@@ -327,10 +327,10 @@ export function SegmentedControl<T extends string>({
           value={option.value}
           aria-label={option.ariaLabel}
           className={cn(
-            'inline-flex min-w-9 items-center justify-center gap-2 rounded-full px-3.5 text-sm font-medium text-ink-muted transition-colors',
+            'hit-area inline-flex min-w-9 items-center justify-center gap-2 rounded-full px-3.5 text-sm font-medium text-ink-muted transition-colors',
             'hover:text-ink data-[state=on]:bg-ink data-[state=on]:text-canvas data-[state=on]:shadow-[0_3px_8px_rgb(0_0_0/0.25)]',
             '[&_svg]:size-4',
-            size === 'sm' ? 'h-7 text-xs' : 'h-8',
+            size === 'sm' ? 'h-7 pointer-coarse:h-9 text-xs' : 'h-8 pointer-coarse:h-10',
           )}
         >
           {option.label}

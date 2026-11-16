@@ -51,7 +51,7 @@ export function ProfilePage() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <Panel>
-          <div className="flex items-center gap-4 p-5">
+          <div className="flex flex-wrap items-center gap-4 p-5">
             <span className="accent-gradient grid size-14 shrink-0 place-items-center rounded-full">
               <HardDrive className="size-6 text-canvas" aria-hidden />
             </span>
@@ -59,7 +59,7 @@ export function ProfilePage() {
               <p className="text-lg font-semibold">Local workspace</p>
               <p className="text-sm text-ink-muted">{summary.since ? `First download on ${summary.since}` : 'No downloads yet'}</p>
             </div>
-            <Badge className="ml-auto" dot>
+            <Badge className="sm:ml-auto" dot>
               Not signed in
             </Badge>
           </div>

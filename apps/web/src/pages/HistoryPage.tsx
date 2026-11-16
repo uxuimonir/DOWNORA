@@ -71,7 +71,7 @@ export function HistoryPage() {
                 aria-label="Search history"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="pl-9"
+                className="ios-search h-11 rounded-[0.75rem] pl-9"
               />
             </div>
             <div className="flex flex-wrap gap-2 md:ml-auto">

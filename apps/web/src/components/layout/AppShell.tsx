@@ -16,6 +16,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router';
 import { useShallow } from 'zustand/react/shallow';
+import { useChrome } from '@/stores/chrome';
 import { isActive, useDownloads } from '@/stores/downloads';
 
 interface NavItem {
@@ -177,15 +178,54 @@ function TabBar() {
   );
 }
 
+// ───────────────────────── Phone nav bar ─────────────────────────
+
+/** Shows the logo at rest and the page title once the large title scrolls away. */
+function NavBar() {
+  const { title, collapsed } = useChrome(useShallow((s) => ({ title: s.title, collapsed: s.collapsed })));
+  const showTitle = collapsed && Boolean(title);
+  return (
+    <header
+      className={cn(
+        'material sticky top-0 z-40 border-b pt-safe transition-colors duration-200 lg:hidden',
+        showTitle ? 'border-white/8' : 'border-transparent',
+      )}
+    >
+      <div className="relative flex h-11 items-center justify-center px-4">
+        <Link
+          to="/"
+          aria-label="Downora home"
+          tabIndex={showTitle ? -1 : undefined}
+          aria-hidden={showTitle || undefined}
+          className={cn('flex min-h-11 items-center transition-opacity duration-200', showTitle && 'pointer-events-none opacity-0')}
+        >
+          <Logo className="[&_svg]:size-7 [&>span:last-child]:text-[1.0625rem]" />
+        </Link>
+        <p
+          aria-hidden
+          className={cn(
+            'absolute inset-x-16 truncate text-center text-[1.0625rem] font-semibold tracking-[-0.02em] transition-[opacity,transform] duration-200',
+            showTitle ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-1 opacity-0',
+          )}
+        >
+          {title}
+        </p>
+      </div>
+    </header>
+  );
+}
+
 // ───────────────────────── Shell ─────────────────────────
 
 export function AppShell() {
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
 
-  // Move focus to the page on navigation so screen readers announce it.
+  // Move focus to the page on navigation so screen readers announce it —
+  // unless the page already put focus somewhere useful (e.g. an autofocus field).
   useEffect(() => {
-    mainRef.current?.focus({ preventScroll: true });
+    const main = mainRef.current;
+    if (main && !main.contains(document.activeElement)) main.focus({ preventScroll: true });
   }, [location.pathname]);
 
   return (
@@ -215,17 +255,13 @@ export function AppShell() {
       </aside>
 
       <div className="min-w-0">
-        <header className="material sticky top-0 z-40 flex h-12 items-center justify-center border-b border-white/8 px-4 lg:hidden">
-          <Link to="/" aria-label="Downora home">
-            <Logo className="[&_svg]:size-7 [&>span:last-child]:text-[1.0625rem]" />
-          </Link>
-        </header>
+        <NavBar />
 
         <main
           id="main"
           ref={mainRef}
           tabIndex={-1}
-          className="mx-auto w-full max-w-[1160px] px-4 pt-6 pb-28 outline-none sm:px-6 lg:px-10 lg:pt-12 lg:pb-16"
+          className="mx-auto w-full max-w-[1160px] px-4 pt-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] outline-none sm:px-6 lg:px-10 lg:pt-12 lg:pb-16"
         >
           <Outlet />
         </main>

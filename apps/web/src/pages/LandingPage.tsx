@@ -4,16 +4,19 @@ import { motion } from 'framer-motion';
 import { Ban, Check, ChevronRight, Globe, Laptop, Play, Puzzle } from 'lucide-react';
 import { Link } from 'react-router';
 import { Downloader } from '@/components/downloader/Downloader';
+import { useDocumentTitle } from '@/lib/useDocumentTitle';
 
 const ease = [0.22, 1, 0.36, 1] as const;
+
 const FORMATS = [...new Set(describeAdapters().filter((a) => a.status === 'available').flatMap((a) => a.formats))];
 
 export function LandingPage() {
+  useDocumentTitle('');
   return (
     <div className="min-h-dvh overflow-x-clip">
-      <header className="material sticky top-0 z-40 border-b border-white/6">
+      <header className="material sticky top-0 z-40 border-b border-white/6 pt-safe">
         <div className="mx-auto flex h-14 max-w-[1240px] items-center justify-between px-4 sm:px-6">
-          <Link to="/" aria-label="Downora home">
+          <Link to="/" aria-label="Downora home" className="flex min-h-11 items-center">
             <Logo />
           </Link>
           <nav aria-label="Site" className="flex items-center gap-1 sm:gap-2">
@@ -30,7 +33,7 @@ export function LandingPage() {
         </div>
       </header>
 
-      <main>
+      <main id="main">
         {/* Hero — layout follows the reference: breadcrumb, light display headline, description in the right column. */}
         <section className="mx-auto max-w-[1240px] px-4 pt-10 pb-16 sm:px-6 sm:pt-16">
           <p className="label-mono flex items-center gap-2.5 text-ink-muted">
@@ -183,7 +186,7 @@ export function LandingPage() {
           <span className="flex items-center gap-2">
             <LogoMark className="size-5" /> Downora
           </span>
-          <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2">
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-1 [&_a]:inline-flex [&_a]:min-h-11 [&_a]:items-center">
             <Link to="/sources" className="hover:text-ink">Supported sources</Link>
             <Link to="/help" className="hover:text-ink">Help center</Link>
             <Link to="/settings" className="hover:text-ink">Settings</Link>

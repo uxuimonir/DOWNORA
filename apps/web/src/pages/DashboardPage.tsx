@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router';
 import { UrlBar } from '@/components/downloader/UrlBar';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { JobRow } from '@/components/shared/JobRow';
+import { PageHeader } from '@/components/shared/PageHeader';
 import { checkApi, type ApiStatus } from '@/lib/api/client';
 import { formatBytes } from '@/lib/format';
 import { isActive, useDownloads } from '@/stores/downloads';
@@ -43,10 +44,7 @@ export function DashboardPage() {
 
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-[2.125rem] leading-tight font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:font-semibold">Dashboard</h1>
-        <p className="mt-2 text-ink-muted">Paste a link to start, or pick up where you left off.</p>
-      </div>
+      <PageHeader title="Dashboard" description="Paste a link to start, or pick up where you left off." />
 
       <UrlBar
         value={url}
@@ -156,7 +154,7 @@ export function DashboardPage() {
             <EngineRow name="Desktop app" note="Windows and macOS, with a folder picker." badge={<Badge tone="accent">In development</Badge>} />
           </ul>
           <div className="border-t border-line px-5 py-3">
-            <Link to="/help" className="inline-flex items-center gap-1 text-sm text-accent-soft hover:underline">
+            <Link to="/help" className="inline-flex min-h-11 items-center gap-1 text-sm text-accent-soft hover:underline">
               What each one can do
               <ArrowUpRight className="size-3.5" aria-hidden />
             </Link>

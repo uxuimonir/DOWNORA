@@ -159,8 +159,58 @@ for (const route of ['/', '/dashboard', '/video', '/queue', '/history', '/source
   test(`no serious accessibility violations on ${route} @responsive`, async ({ page }) => {
     await page.goto(route);
     await page.waitForLoadState('networkidle');
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-    const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa', 'best-practice']).analyze();
+    const serious = results.violations; // every impact level, not only serious
     expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
   });
 }
+
+test('whole download flow works with the keyboard only', async ({ page }) => {
+  await page.goto('/video');
+  const field = page.getByRole('textbox', { name: 'Media link' });
+  await expect(field).toBeFocused();
+  await page.keyboard.type(`${MEDIA}/cors/downora-sample-720p.webm`);
+  await page.keyboard.press('Enter');
+  const download = page.getByRole('button', { name: /Download WEBM/ });
+  await expect(download).toBeVisible();
+  // Tab until the download button has focus — proves it is reachable and focus is visible.
+  for (let i = 0; i < 25 && !(await download.evaluate((el) => el === document.activeElement)); i += 1) {
+    await page.keyboard.press('Tab');
+  }
+  await expect(download).toBeFocused();
+  const outline = await download.evaluate((el) => getComputedStyle(el).outlineStyle);
+  expect(outline).not.toBe('none');
+  const saved = page.waitForEvent('download');
+  await page.keyboard.press('Enter');
+  expect((await saved).suggestedFilename()).toBe('downora-sample-720p.webm');
+});
+
+test('every screen has its own document title', async ({ page }) => {
+  const titles = new Set<string>();
+  for (const route of ['/', '/dashboard', '/video', '/audio', '/queue', '/history', '/sources', '/settings', '/profile', '/sign-in', '/help', '/nope']) {
+    await page.goto(route);
+    await expect(page).toHaveTitle(/Downora/);
+    titles.add(await page.title());
+  }
+  expect(titles.size).toBe(12);
+});
+
+test('stays accessible with Increase Contrast and Reduce Motion @responsive', async ({ page }) => {
+  await page.emulateMedia({ contrast: 'more', reducedMotion: 'reduce', colorScheme: 'light' });
+  for (const route of ['/', '/settings', '/history']) {
+    await page.goto(route);
+    await page.waitForLoadState('networkidle');
+    // Dark theme holds even when the OS asks for light.
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(13, 13, 13)');
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  }
+});
+
+test('large title collapses into the nav bar on scroll @mobile', async ({ page }) => {
+  await page.goto('/help');
+  const barTitle = page.locator('header p', { hasText: 'Help center' });
+  await expect(barTitle).toHaveCSS('opacity', '0');
+  await page.mouse.wheel(0, 400);
+  await expect(barTitle).toHaveCSS('opacity', '1');
+});
