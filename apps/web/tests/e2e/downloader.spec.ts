@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { formatBytes } from '../../src/lib/format';
 
 const MEDIA = 'http://localhost:4599';
 const sampleSize = (name: string) =>
@@ -40,7 +41,7 @@ test('shows real progress, pauses, and resumes from the same byte', async ({ pag
   // ~490 KB at 60 KB/s ≈ 8 s, slow enough to observe and pause.
   await analyze(page, `${MEDIA}/cors/downora-sample-1080p.mp4?rate=60000`);
   const stage = page.getByTestId('media-stage');
-  await expect(stage.getByText('481 KB').first()).toBeVisible();
+  await expect(stage.getByText(formatBytes(sampleSize('downora-sample-1080p.mp4'))).first()).toBeVisible();
 
   const downloadPromise = page.waitForEvent('download', { timeout: 45_000 });
   await stage.getByRole('button', { name: /Download MP4/ }).click();
@@ -145,7 +146,10 @@ test('help center search filters articles', async ({ page }) => {
 
 test('mobile navigation drawer works @mobile', async ({ page }) => {
   await page.goto('/dashboard');
-  await page.getByRole('button', { name: 'Open menu' }).click();
+  // iOS-style tab bar, with the rest of the app behind "More".
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Queue' }).click();
+  await expect(page.getByRole('heading', { name: 'Queue', level: 1 })).toBeVisible();
+  await page.getByRole('button', { name: 'More' }).click();
   await page.getByRole('dialog').getByRole('link', { name: 'Supported sources' }).click();
   await expect(page.getByRole('heading', { name: 'Supported sources', level: 1 })).toBeVisible();
   await expect(page.getByRole('dialog')).toHaveCount(0);

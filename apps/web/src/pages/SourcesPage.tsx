@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/shared/PageHeader';
 const STATUS: Record<AdapterStatus, { label: string; tone: BadgeProps['tone'] }> = {
   available: { label: 'Available', tone: 'success' },
   limited: { label: 'Limited', tone: 'warn' },
-  planned: { label: 'Planned', tone: 'violet' },
+  planned: { label: 'Planned', tone: 'accent' },
 };
 
 const PERMISSION: Record<string, string> = {
@@ -33,7 +33,7 @@ export function SourcesPage() {
         {adapters.map((adapter) => (
           <Panel key={adapter.id} className="flex flex-col p-5">
             <div className="flex items-start justify-between gap-3">
-              <h2 className="font-sans text-base font-semibold tracking-normal [font-variation-settings:normal]">{adapter.name}</h2>
+              <h2 className="font-sans text-base font-semibold tracking-[-0.015em]">{adapter.name}</h2>
               <Badge tone={STATUS[adapter.status].tone} dot>
                 {STATUS[adapter.status].label}
               </Badge>
@@ -41,9 +41,9 @@ export function SourcesPage() {
             <p className="mt-1.5 text-sm text-ink-muted">{adapter.summary}</p>
             <div className="mt-4 flex flex-wrap gap-1.5">
               {adapter.formats.map((f) => (
-                <span key={f} className="rounded-md border border-line-strong px-2 py-0.5 text-xs font-semibold text-ink">
-                  {f.toUpperCase()}
-                </span>
+                <Badge key={f} tone="solid">
+                  {f}
+                </Badge>
               ))}
             </div>
             <dl className="mt-5 flex flex-col gap-3 border-t border-line pt-4 text-sm">
@@ -72,7 +72,7 @@ export function SourcesPage() {
         ))}
       </div>
 
-      <h2 className="mt-12 text-2xl font-semibold">What Downora won’t download</h2>
+      <h2 className="label-mono mt-12 px-1">What Downora won’t download</h2>
       <p className="mt-2 max-w-[62ch] text-ink-muted">
         These limits are deliberate. They protect creators and keep Downora within the rules of the sites you use.
       </p>
@@ -124,7 +124,7 @@ function LinkChecker() {
       <form onSubmit={check} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">
           <label htmlFor={id} className="flex items-center gap-2 text-sm font-medium">
-            <FlaskConical className="size-4 text-sky" aria-hidden />
+            <FlaskConical className="size-4 text-info" aria-hidden />
             Check a link
           </label>
           <Input
@@ -151,7 +151,7 @@ function LinkChecker() {
             <p className="font-medium text-ink">{result.title}</p>
             <p className="mt-0.5 text-ink-muted">{result.body}</p>
             {result.href ? (
-              <Link to={result.href} className="mt-1.5 inline-block text-violet-soft hover:underline">
+              <Link to={result.href} className="mt-1.5 inline-block text-accent-soft hover:underline">
                 Analyze this link
               </Link>
             ) : null}

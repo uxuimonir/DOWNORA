@@ -1,20 +1,13 @@
+import { cn, Logo, Sheet, SheetContent, SheetTrigger } from '@downora/ui';
 import {
-  Button,
-  cn,
-  Logo,
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTrigger,
-} from '@downora/ui';
-import {
+  ChevronRight,
   Clock3,
+  Ellipsis,
   Film,
-  Gauge,
+  House,
   Layers,
   LifeBuoy,
   ListOrdered,
-  Menu,
   Music2,
   Settings2,
   UserRound,
@@ -22,94 +15,171 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router';
-import { useDownloads } from '@/stores/downloads';
+import { useShallow } from 'zustand/react/shallow';
+import { isActive, useDownloads } from '@/stores/downloads';
 
 interface NavItem {
   to: string;
   label: string;
   icon: LucideIcon;
+  count?: 'active' | 'history';
 }
 
-const PRIMARY: NavItem[] = [
-  { to: '/dashboard', label: 'Dashboard', icon: Gauge },
+const LIBRARY: NavItem[] = [
+  { to: '/dashboard', label: 'Dashboard', icon: House },
   { to: '/video', label: 'Video', icon: Film },
   { to: '/audio', label: 'Audio', icon: Music2 },
-  { to: '/queue', label: 'Queue', icon: ListOrdered },
-  { to: '/history', label: 'History', icon: Clock3 },
+  { to: '/queue', label: 'Queue', icon: ListOrdered, count: 'active' },
+  { to: '/history', label: 'History', icon: Clock3, count: 'history' },
   { to: '/sources', label: 'Supported sources', icon: Layers },
 ];
 
-const SECONDARY: NavItem[] = [
+const ACCOUNT: NavItem[] = [
   { to: '/settings', label: 'Settings', icon: Settings2 },
   { to: '/profile', label: 'Profile', icon: UserRound },
   { to: '/help', label: 'Help center', icon: LifeBuoy },
 ];
 
-function useActiveCount(): number {
-  return useDownloads((s) => s.jobs.filter((j) => j.status === 'downloading' || j.status === 'queued').length);
+/** Bottom tab bar on phones — the four most-used places plus "More". */
+const TABS: NavItem[] = [
+  { to: '/dashboard', label: 'Home', icon: House },
+  { to: '/video', label: 'Video', icon: Film },
+  { to: '/audio', label: 'Audio', icon: Music2 },
+  { to: '/queue', label: 'Queue', icon: ListOrdered, count: 'active' },
+];
+
+const MORE: NavItem[] = [
+  { to: '/history', label: 'History', icon: Clock3 },
+  { to: '/sources', label: 'Supported sources', icon: Layers },
+  { to: '/settings', label: 'Settings', icon: Settings2 },
+  { to: '/profile', label: 'Profile', icon: UserRound },
+  { to: '/help', label: 'Help center', icon: LifeBuoy },
+];
+
+function useCounts() {
+  return useDownloads(
+    useShallow((s) => ({
+      active: s.jobs.filter((j) => j.status === 'downloading' || j.status === 'queued').length,
+      history: s.jobs.filter((j) => !isActive(j)).length,
+    })),
+  );
 }
 
-function NavList({ items, onNavigate }: { items: NavItem[]; onNavigate?: () => void }) {
-  const active = useActiveCount();
+// ───────────────────────── Desktop sidebar ─────────────────────────
+
+function SidebarSection({ title, items }: { title: string; items: NavItem[] }) {
+  const counts = useDownloads((s) => s.jobs);
+  const active = counts.filter((j) => j.status === 'downloading' || j.status === 'queued').length;
+  const history = counts.filter((j) => !isActive(j)).length;
   return (
-    <ul className="flex flex-col gap-0.5">
-      {items.map(({ to, label, icon: Icon }) => (
-        <li key={to}>
-          <NavLink
-            to={to}
-            onClick={onNavigate}
-            className={({ isActive }) =>
-              cn(
-                'group relative flex h-10 items-center gap-3 rounded-control px-3 text-sm font-medium transition-colors',
-                isActive ? 'bg-raised text-ink' : 'text-ink-muted hover:bg-raised/60 hover:text-ink',
-              )
-            }
-          >
-            {({ isActive }) => (
-              <>
-                {isActive ? (
-                  <span className="accent-gradient absolute top-2.5 bottom-2.5 left-0 w-[3px] rounded-full" aria-hidden />
-                ) : null}
-                <Icon className={cn('size-[18px]', isActive ? 'text-violet-soft' : 'text-ink-faint group-hover:text-ink-muted')} />
-                <span className="flex-1">{label}</span>
-                {to === '/queue' && active > 0 ? (
-                  <span className="tabular grid h-5 min-w-5 place-items-center rounded-full bg-violet/20 px-1.5 text-2xs font-semibold text-violet-soft">
-                    <span className="sr-only">Active downloads: </span>
-                    {active}
-                  </span>
-                ) : null}
-              </>
-            )}
-          </NavLink>
+    <div className="border-b border-line px-2.5 py-3 last:border-b-0">
+      <p className="label-mono px-2.5 pb-2">{title}</p>
+      <ul className="flex flex-col gap-0.5">
+        {items.map(({ to, label, icon: Icon, count }) => {
+          const n = count === 'active' ? active : count === 'history' ? history : undefined;
+          return (
+            <li key={to}>
+              <NavLink
+                to={to}
+                className={({ isActive: on }) =>
+                  cn(
+                    'group flex h-9 items-center gap-3 rounded-control border px-2.5 text-sm transition-colors',
+                    on ? 'border-line-strong bg-raised text-ink' : 'border-transparent text-ink-muted hover:bg-raised/60 hover:text-ink',
+                  )
+                }
+              >
+                {({ isActive: on }) => (
+                  <>
+                    <Icon className={cn('size-[17px]', on ? 'text-accent' : 'text-ink-faint group-hover:text-ink-muted')} />
+                    <span className="flex-1">{label}</span>
+                    {n !== undefined ? (
+                      <span className={cn('tabular font-mono text-[0.6875rem]', count === 'active' && n > 0 ? 'text-accent' : 'text-ink-faint')}>
+                        {count === 'active' && n > 0 ? <span className="sr-only">Active downloads: </span> : null}
+                        {n}
+                      </span>
+                    ) : null}
+                  </>
+                )}
+              </NavLink>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+// ───────────────────────── Phone tab bar ─────────────────────────
+
+function TabBar() {
+  const { active } = useCounts();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const location = useLocation();
+  const moreActive = MORE.some((m) => location.pathname.startsWith(m.to));
+
+  return (
+    <nav aria-label="Main" className="material fixed inset-x-0 bottom-0 z-40 border-t border-white/8 pb-safe lg:hidden">
+      <ul className="mx-auto grid h-[3.25rem] max-w-lg grid-cols-5">
+        {TABS.map(({ to, label, icon: Icon, count }) => (
+          <li key={to}>
+            <NavLink
+              to={to}
+              className={({ isActive: on }) =>
+                cn('relative flex h-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium', on ? 'text-accent' : 'text-ink-faint')
+              }
+            >
+              <Icon className="size-[22px]" strokeWidth={1.8} />
+              {label}
+              {count === 'active' && active > 0 ? (
+                <span className="tabular absolute top-1 left-1/2 ml-2 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-danger px-1 text-[0.625rem] font-semibold text-white">
+                  <span className="sr-only">Active downloads: </span>
+                  {active}
+                </span>
+              ) : null}
+            </NavLink>
+          </li>
+        ))}
+        <li>
+          <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
+            <SheetTrigger
+              className={cn(
+                'flex h-full w-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium',
+                moreActive ? 'text-accent' : 'text-ink-faint',
+              )}
+            >
+              <Ellipsis className="size-[22px]" strokeWidth={1.8} />
+              More
+            </SheetTrigger>
+            <SheetContent title="More">
+              <p className="label-mono px-6 pt-4 pb-2">More</p>
+              <ul className="mx-4 mb-4 overflow-hidden rounded-panel bg-white/6">
+                {MORE.map(({ to, label, icon: Icon }) => (
+                  <li key={to} className="border-b border-white/8 last:border-b-0">
+                    <Link
+                      to={to}
+                      onClick={() => setMoreOpen(false)}
+                      className="flex h-12 items-center gap-3.5 px-4 text-[1.0625rem] text-ink active:bg-white/8"
+                    >
+                      <span className="grid size-7 place-items-center rounded-[0.5rem] bg-accent/18">
+                        <Icon className="size-4 text-accent" />
+                      </span>
+                      <span className="flex-1">{label}</span>
+                      <ChevronRight className="size-4 text-ink-faint" aria-hidden />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </SheetContent>
+          </Sheet>
         </li>
-      ))}
-    </ul>
+      </ul>
+    </nav>
   );
 }
 
-function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
-  return (
-    <>
-      <div className="flex h-16 shrink-0 items-center px-5">
-        <Link to="/" onClick={onNavigate} aria-label="Downora home">
-          <Logo />
-        </Link>
-      </div>
-      <nav aria-label="Main" className="flex flex-1 flex-col gap-6 overflow-y-auto px-3 pt-2 pb-4">
-        <NavList items={PRIMARY} onNavigate={onNavigate} />
-        <div className="mt-auto">
-          <NavList items={SECONDARY} onNavigate={onNavigate} />
-        </div>
-      </nav>
-      <div className="border-t border-line px-5 py-4 text-xs leading-relaxed text-ink-faint">
-        Downloads run in this browser. Nothing is uploaded.
-      </div>
-    </>
-  );
-}
+// ───────────────────────── Shell ─────────────────────────
 
 export function AppShell() {
-  const [open, setOpen] = useState(false);
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
 
@@ -119,45 +189,48 @@ export function AppShell() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[248px_1fr]">
+    <div className="min-h-dvh lg:grid lg:grid-cols-[264px_1fr]">
       <a
         href="#main"
-        className="sr-only z-50 rounded-control bg-violet-deep px-4 py-2 text-sm font-medium text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        className="sr-only z-50 rounded-full bg-ink px-4 py-2 text-sm font-medium text-canvas focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
       >
         Skip to content
       </a>
 
-      <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-surface/60 lg:flex">
-        <SidebarBody />
-      </aside>
-
-      <div className="min-w-0">
-        <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-line bg-canvas/85 px-4 backdrop-blur-md lg:hidden">
+      <aside className="sticky top-0 hidden h-dvh flex-col p-3 lg:flex">
+        <div className="flex h-14 shrink-0 items-center px-3">
           <Link to="/" aria-label="Downora home">
             <Logo />
           </Link>
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open menu">
-                <Menu />
-              </Button>
-            </SheetTrigger>
-            <SheetContent title="Navigation">
-              <SidebarBody onNavigate={() => setOpen(false)} />
-              <SheetClose className="sr-only">Close menu</SheetClose>
-            </SheetContent>
-          </Sheet>
+        </div>
+        <nav aria-label="Main" className="mt-2 flex flex-1 flex-col overflow-y-auto">
+          <div className="rounded-panel border border-line bg-surface">
+            <SidebarSection title="Library" items={LIBRARY} />
+            <SidebarSection title="Account" items={ACCOUNT} />
+          </div>
+          <p className="mt-auto px-3 pt-4 text-xs leading-relaxed text-ink-faint">
+            Downloads run in this browser. Nothing is uploaded.
+          </p>
+        </nav>
+      </aside>
+
+      <div className="min-w-0">
+        <header className="material sticky top-0 z-40 flex h-12 items-center justify-center border-b border-white/8 px-4 lg:hidden">
+          <Link to="/" aria-label="Downora home">
+            <Logo className="[&_svg]:size-7 [&>span:last-child]:text-[1.0625rem]" />
+          </Link>
         </header>
 
         <main
           id="main"
           ref={mainRef}
           tabIndex={-1}
-          className="mx-auto w-full max-w-[1120px] px-4 pt-6 pb-16 outline-none sm:px-6 lg:px-10 lg:pt-10"
+          className="mx-auto w-full max-w-[1160px] px-4 pt-6 pb-28 outline-none sm:px-6 lg:px-10 lg:pt-12 lg:pb-16"
         >
           <Outlet />
         </main>
       </div>
+      <TabBar />
       <ScrollRestoration />
     </div>
   );

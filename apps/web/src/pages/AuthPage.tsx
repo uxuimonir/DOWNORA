@@ -18,11 +18,11 @@ export function AuthPage() {
           <Logo />
         </Link>
         <div className="my-auto w-full max-w-sm self-center py-12">
-          <h1 className="display-tight text-4xl font-semibold">Sign in to Downora</h1>
+          <h1 className="text-[2.125rem] leading-tight font-bold tracking-[-0.03em]">Sign in to Downora</h1>
           <p className="mt-2 text-ink-muted">Keep your history and settings in sync on every device.</p>
 
-          <div className="mt-6 flex gap-3 rounded-control border border-sky/25 bg-sky/8 p-3.5 text-sm" role="note">
-            <Info className="mt-0.5 size-4 shrink-0 text-sky" aria-hidden />
+          <div className="mt-6 flex gap-3 rounded-control border border-info/25 bg-info/8 p-3.5 text-sm" role="note">
+            <Info className="mt-0.5 size-4 shrink-0 text-info" aria-hidden />
             <p className="text-ink-muted">
               <span className="font-medium text-ink">Accounts aren’t available yet.</span> They arrive with the Downora API.
               You can use every download feature without one today.
@@ -55,11 +55,11 @@ export function AuthPage() {
       <div className="relative hidden overflow-hidden border-l border-line bg-surface lg:block">
         <div
           aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(80%_60%_at_30%_20%,rgb(139_92_246/0.28),transparent_60%),radial-gradient(70%_60%_at_80%_90%,rgb(56_189_248/0.18),transparent_60%)]"
+          className="absolute inset-0 bg-[radial-gradient(80%_60%_at_30%_20%,rgb(243_100_68/0.28),transparent_60%),radial-gradient(70%_60%_at_80%_90%,rgb(255_255_255/0.04),transparent_60%)]"
         />
         <div className="relative flex h-full flex-col justify-end p-12">
           <Panel level="raised" className="max-w-md p-6">
-            <Badge tone="violet">With an account</Badge>
+            <Badge tone="accent">With an account</Badge>
             <ul className="mt-4 flex flex-col gap-2.5 text-sm text-ink-muted">
               <li>History that follows you from browser to desktop.</li>
               <li>The extension and desktop app share your settings.</li>

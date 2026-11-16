@@ -29,7 +29,7 @@ import { toast } from '@downora/ui';
 
 const STATUS: Record<DownloadStatus, { label: string; tone: BadgeProps['tone'] }> = {
   queued: { label: 'Queued', tone: 'neutral' },
-  downloading: { label: 'Downloading', tone: 'violet' },
+  downloading: { label: 'Downloading', tone: 'accent' },
   paused: { label: 'Paused', tone: 'warn' },
   completed: { label: 'Saved', tone: 'success' },
   failed: { label: 'Failed', tone: 'danger' },

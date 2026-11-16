@@ -7,26 +7,25 @@ import { cn } from '../lib/cn';
 export const buttonVariants = cva(
   [
     'relative inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap select-none',
-    'rounded-control font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150',
-    'active:translate-y-px disabled:pointer-events-none disabled:opacity-45',
+    'rounded-full font-medium tracking-[-0.01em] transition-[background-color,border-color,color,opacity,transform] duration-150',
+    'active:scale-[0.97] active:opacity-80 disabled:pointer-events-none disabled:opacity-40',
     '[&_svg]:pointer-events-none [&_svg]:shrink-0',
   ],
   {
     variants: {
       variant: {
-        primary:
-          'bg-violet-deep text-white shadow-[0_1px_0_0_rgb(255_255_255/0.18)_inset,0_6px_20px_-8px_rgb(139_92_246/0.7)] hover:bg-[#7f4ff1]',
-        secondary:
-          'border border-line-strong bg-raised text-ink hover:border-[#465066] hover:bg-hover',
+        primary: 'bg-ink text-canvas hover:bg-white',
+        tinted: 'bg-accent/15 text-accent-soft hover:bg-accent/22',
+        secondary: 'border border-line-strong bg-raised text-ink hover:bg-hover',
         ghost: 'text-ink-muted hover:bg-raised hover:text-ink',
         outline: 'border border-line-strong text-ink hover:bg-raised',
         danger: 'border border-danger/40 bg-danger/10 text-danger hover:bg-danger/20',
-        link: 'h-auto rounded-sm px-0 text-violet-soft underline-offset-4 hover:underline',
+        link: 'h-auto rounded-sm px-0 text-accent underline-offset-4 hover:underline',
       },
       size: {
-        sm: 'h-8 px-3 text-xs [&_svg]:size-3.5',
-        md: 'h-10 px-4 text-sm [&_svg]:size-4',
-        lg: 'h-12 px-6 text-base [&_svg]:size-[18px]',
+        sm: 'h-8 px-3.5 text-[0.8125rem] [&_svg]:size-3.5',
+        md: 'h-10 px-[1.125rem] text-[0.9375rem] [&_svg]:size-4',
+        lg: 'h-[3.125rem] px-6 text-[1.0625rem] font-semibold [&_svg]:size-[18px]',
         icon: 'size-9 [&_svg]:size-4',
         'icon-sm': 'size-8 [&_svg]:size-4',
       },

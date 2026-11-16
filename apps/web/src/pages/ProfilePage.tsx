@@ -70,9 +70,9 @@ export function ProfilePage() {
               ['Videos', summary.video],
               ['Audio', summary.audio],
             ].map(([k, v]) => (
-              <div key={String(k)} className="bg-surface px-5 py-4">
-                <dt className="text-sm text-ink-muted">{k}</dt>
-                <dd className="display-tight mt-1 text-2xl font-semibold">{v}</dd>
+              <div key={String(k)} className="flex flex-col-reverse bg-surface px-5 py-5">
+                <dt className="label-mono mt-3">{k}</dt>
+                <dd className="text-[1.5rem] leading-none font-light tracking-[-0.03em]">{v}</dd>
               </div>
             ))}
           </dl>

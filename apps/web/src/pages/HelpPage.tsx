@@ -48,7 +48,7 @@ export function HelpPage() {
           placeholder="Search, for example “resume” or “4K”"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="h-12 pl-11 text-base"
+          className="h-12 rounded-full pl-11 text-base"
         />
       </div>
       <p className="sr-only" role="status">
@@ -57,13 +57,13 @@ export function HelpPage() {
 
       {results.length === 0 ? (
         <EmptyState icon={Search} title="No articles match" className="mt-8">
-          Try a shorter word, or check the <Link to="/sources" className="text-violet-soft hover:underline">supported sources</Link>.
+          Try a shorter word, or check the <Link to="/sources" className="text-accent-soft hover:underline">supported sources</Link>.
         </EmptyState>
       ) : (
         <div className="mt-8 flex flex-col gap-8">
           {topics.map((topic) => (
             <section key={topic}>
-              <h2 className="mb-2 text-xl font-semibold">{topic}</h2>
+              <h2 className="label-mono mb-2 px-4">{topic}</h2>
               <Panel className="px-5">
                 <Accordion type="multiple" defaultValue={query ? results.map((r) => r.id) : []}>
                   {results

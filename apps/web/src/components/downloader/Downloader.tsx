@@ -221,7 +221,7 @@ function MediaStage({
               {analysis.thumbnail ? (
                 <img src={analysis.thumbnail} alt={`Preview frame of ${analysis.title}`} className="size-full object-cover" />
               ) : (
-                <div className="grid size-full place-items-center bg-[radial-gradient(120%_90%_at_20%_0%,rgb(139_92_246/0.22),transparent_60%),radial-gradient(100%_80%_at_100%_100%,rgb(56_189_248/0.16),transparent_60%)]">
+                <div className="grid size-full place-items-center bg-[radial-gradient(120%_90%_at_20%_0%,rgb(243_100_68/0.22),transparent_60%),radial-gradient(100%_80%_at_100%_100%,rgb(255_255_255/0.04),transparent_60%)]">
                   <KindIcon className="size-10 text-ink-faint" aria-hidden />
                 </div>
               )}
@@ -249,7 +249,7 @@ function MediaStage({
         {/* Details */}
         <div className="flex min-w-0 flex-col p-5">
           <div className="flex items-start justify-between gap-3">
-            <h2 className="min-w-0 font-sans text-lg font-semibold tracking-normal break-words [font-variation-settings:normal]">
+            <h2 className="min-w-0 text-lg font-semibold tracking-[-0.015em] break-words ">
               {analysis.title}
             </h2>
             <Badge tone="success" className="mt-0.5">
@@ -268,11 +268,11 @@ function MediaStage({
           </dl>
 
           {pageKind !== 'any' && pageKind !== analysis.kind ? (
-            <p className="mt-4 flex gap-2 rounded-control border border-sky/25 bg-sky/8 px-3 py-2 text-sm text-ink-muted">
-              <Info className="mt-0.5 size-4 shrink-0 text-sky" aria-hidden />
+            <p className="mt-4 flex gap-2 rounded-control border border-info/25 bg-info/8 px-3 py-2 text-sm text-ink-muted">
+              <Info className="mt-0.5 size-4 shrink-0 text-info" aria-hidden />
               <span>
                 This link is {analysis.kind === 'audio' ? 'an audio' : 'a video'} file. You can still save it here, or use the{' '}
-                <Link className="text-sky underline-offset-2 hover:underline" to={analysis.kind === 'audio' ? '/audio' : '/video'}>
+                <Link className="text-info underline-offset-2 hover:underline" to={analysis.kind === 'audio' ? '/audio' : '/video'}>
                   {analysis.kind} downloader
                 </Link>
                 .
@@ -306,7 +306,7 @@ function MediaStage({
             <div className="flex flex-col gap-3">
               <div>
                 <Label htmlFor={nameId}>File name</Label>
-                <div className="mt-2 flex items-center rounded-control border border-line-strong bg-canvas focus-within:border-violet">
+                <div className="mt-2 flex items-center rounded-control border border-line-strong bg-canvas focus-within:border-accent">
                   <Input
                     id={nameId}
                     value={baseName}
@@ -366,7 +366,7 @@ function FormatOption({ format, checked, onSelect }: { format: MediaFormat; chec
       htmlFor={id}
       className={cn(
         'flex items-center gap-3 rounded-control border px-3.5 py-3 transition-colors',
-        checked ? 'border-violet/70 bg-violet/8' : 'border-line-strong hover:border-[#465066]',
+        checked ? 'border-accent/70 bg-accent/8' : 'border-line-strong hover:border-[#3a3a3a]',
       )}
     >
       <input
@@ -375,12 +375,12 @@ function FormatOption({ format, checked, onSelect }: { format: MediaFormat; chec
         name="format"
         checked={checked}
         onChange={onSelect}
-        className="size-4 accent-[var(--color-violet)]"
+        className="size-4 accent-[var(--color-accent)]"
       />
       <span className="flex min-w-0 flex-1 flex-col">
         <span className="text-sm font-semibold text-ink">
           {format.container.toUpperCase()}
-          {format.qualityLabel ? <span className="ml-2 font-medium text-violet-soft">{format.qualityLabel}</span> : null}
+          {format.qualityLabel ? <span className="ml-2 font-medium text-accent-soft">{format.qualityLabel}</span> : null}
         </span>
         <span className="truncate text-xs text-ink-muted">{details}</span>
       </span>
@@ -451,7 +451,7 @@ function JobProgress({ jobId, onReset }: { jobId: string; onReset: () => void })
           {job.status === 'queued' ? 'Waiting for a free slot' : job.status === 'paused' ? 'Paused' : 'Downloading'}{' '}
           <span className="text-ink-muted">{job.fileName}</span>
         </p>
-        <span className="display-tight tabular text-2xl font-semibold">{percent !== null ? `${percent}%` : formatBytes(job.bytesReceived)}</span>
+        <span className="tabular text-[1.75rem] leading-none font-light tracking-[-0.04em]">{percent !== null ? `${percent}%` : formatBytes(job.bytesReceived)}</span>
       </div>
       <TransferTrack
         label={`Progress for ${job.fileName}`}

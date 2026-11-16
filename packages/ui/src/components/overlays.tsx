@@ -11,10 +11,9 @@ import {
 import { Check, ChevronDown, X } from 'lucide-react';
 import type { ComponentProps, ReactNode } from 'react';
 import { cn } from '../lib/cn';
-import { buttonVariants } from './button';
 
 const overlayClass =
-  'fixed inset-0 z-50 bg-[#05070b]/75 backdrop-blur-[2px] data-[state=open]:animate-fade-in';
+  'fixed inset-0 z-50 bg-black/60 backdrop-blur-[3px] data-[state=open]:animate-fade-in';
 
 // ─────────────────────────── Dialog ───────────────────────────
 
@@ -33,7 +32,7 @@ export function DialogContent({
       <DialogPrimitive.Content
         className={cn(
           'fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2',
-          'rounded-panel border border-line-strong bg-surface p-6 shadow-pop data-[state=open]:animate-fade-in',
+          'rounded-stage border border-line-strong bg-surface p-6 shadow-pop data-[state=open]:animate-pop-in',
           className,
         )}
         {...props}
@@ -79,12 +78,13 @@ export function SheetContent({
       <DialogPrimitive.Content
         aria-describedby={undefined}
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-[min(20rem,86vw)] flex-col border-r border-line-strong bg-surface shadow-pop',
-          'data-[state=open]:animate-sheet-in',
+          'material fixed inset-x-0 bottom-0 z-50 flex max-h-[88dvh] flex-col rounded-t-[1.75rem] border-t border-white/8 shadow-pop pb-safe',
+          'data-[state=open]:animate-sheet-up',
           className,
         )}
         {...props}
       >
+        <span aria-hidden className="mx-auto mt-2 h-[5px] w-9 shrink-0 rounded-full bg-white/25" />
         <DialogPrimitive.Title className="sr-only">{title}</DialogPrimitive.Title>
         {children}
       </DialogPrimitive.Content>
@@ -119,19 +119,21 @@ export function ConfirmDialog({
     <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <AlertDialogPrimitive.Portal>
         <AlertDialogPrimitive.Overlay className={overlayClass} />
-        <AlertDialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-panel border border-line-strong bg-surface p-6 shadow-pop data-[state=open]:animate-fade-in">
-          <AlertDialogPrimitive.Title className="text-lg font-semibold tracking-normal">
-            {title}
-          </AlertDialogPrimitive.Title>
-          <AlertDialogPrimitive.Description className="mt-2 text-sm text-ink-muted">
-            {description}
-          </AlertDialogPrimitive.Description>
-          <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <AlertDialogPrimitive.Cancel className={buttonVariants({ variant: 'secondary' })}>
+        <AlertDialogPrimitive.Content className="material fixed top-1/2 left-1/2 z-50 w-[min(19rem,calc(100vw-3rem))] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.125rem] bg-[#232323]/85 text-center shadow-pop data-[state=open]:animate-pop-in">
+          <div className="px-5 pt-5 pb-4">
+            <AlertDialogPrimitive.Title className="font-sans text-[1.0625rem] font-semibold tracking-[-0.01em]">
+              {title}
+            </AlertDialogPrimitive.Title>
+            <AlertDialogPrimitive.Description className="mt-1 text-[0.8125rem] leading-snug text-ink-muted">
+              {description}
+            </AlertDialogPrimitive.Description>
+          </div>
+          <div className="grid grid-cols-2 border-t border-white/10 text-[1.0625rem]">
+            <AlertDialogPrimitive.Cancel className="h-11 border-r border-white/10 text-accent hover:bg-white/5">
               {cancelLabel}
             </AlertDialogPrimitive.Cancel>
             <AlertDialogPrimitive.Action
-              className={buttonVariants({ variant: destructive ? 'danger' : 'primary' })}
+              className={cn('h-11 font-semibold hover:bg-white/5', destructive ? 'text-danger' : 'text-accent')}
               onClick={onConfirm}
             >
               {confirmLabel}
@@ -224,8 +226,8 @@ export function SelectField<T extends string>({
     <SelectPrimitive.Root value={value} onValueChange={(next) => onValueChange(next as T)}>
       <SelectPrimitive.Trigger
         className={cn(
-          'flex h-10 w-full items-center justify-between gap-2 rounded-control border border-line-strong bg-canvas px-3 text-sm text-ink',
-          'hover:border-[#465066] data-[state=open]:border-violet disabled:opacity-50',
+          'flex h-10 w-full items-center justify-between gap-2 rounded-full border border-line bg-raised px-4 text-sm text-ink',
+          'hover:bg-hover data-[state=open]:border-line-strong disabled:opacity-50',
           className,
         )}
         {...triggerProps}
@@ -250,7 +252,7 @@ export function SelectField<T extends string>({
               >
                 <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                 <SelectPrimitive.ItemIndicator className="absolute right-2.5">
-                  <Check className="size-4 text-violet-soft" />
+                  <Check className="size-4 text-accent" />
                 </SelectPrimitive.ItemIndicator>
               </SelectPrimitive.Item>
             ))}
@@ -268,7 +270,7 @@ export const Tabs = TabsPrimitive.Root;
 export function TabsList({ className, ...props }: ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
-      className={cn('inline-flex h-10 items-center gap-1 rounded-control border border-line bg-canvas p-1', className)}
+      className={cn('inline-flex h-10 items-center gap-1 rounded-full border border-line bg-surface p-1', className)}
       {...props}
     />
   );
@@ -278,8 +280,8 @@ export function TabsTrigger({ className, ...props }: ComponentProps<typeof TabsP
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        'inline-flex h-8 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-ink-muted transition-colors',
-        'hover:text-ink data-[state=active]:bg-raised data-[state=active]:text-ink data-[state=active]:shadow-[0_0_0_1px_var(--color-line-strong)]',
+        'inline-flex h-8 items-center justify-center gap-2 rounded-full px-3.5 text-sm font-medium text-ink-muted transition-colors',
+        'hover:text-ink data-[state=active]:bg-ink data-[state=active]:text-canvas',
         '[&_svg]:size-4',
         className,
       )}
@@ -316,7 +318,7 @@ export function SegmentedControl<T extends string>({
       onValueChange={(next) => {
         if (next) onValueChange(next as T);
       }}
-      className={cn('inline-flex items-center gap-1 rounded-control border border-line bg-canvas p-1', className)}
+      className={cn('inline-flex items-center gap-1 rounded-full border border-line bg-surface p-1', className)}
       {...props}
     >
       {options.map((option) => (
@@ -325,8 +327,8 @@ export function SegmentedControl<T extends string>({
           value={option.value}
           aria-label={option.ariaLabel}
           className={cn(
-            'inline-flex min-w-9 items-center justify-center gap-2 rounded-md px-3 text-sm font-medium text-ink-muted transition-colors',
-            'hover:text-ink data-[state=on]:bg-raised data-[state=on]:text-ink data-[state=on]:shadow-[0_0_0_1px_var(--color-line-strong)]',
+            'inline-flex min-w-9 items-center justify-center gap-2 rounded-full px-3.5 text-sm font-medium text-ink-muted transition-colors',
+            'hover:text-ink data-[state=on]:bg-ink data-[state=on]:text-canvas data-[state=on]:shadow-[0_3px_8px_rgb(0_0_0/0.25)]',
             '[&_svg]:size-4',
             size === 'sm' ? 'h-7 text-xs' : 'h-8',
           )}
@@ -376,7 +378,7 @@ export function AccordionTrigger({
       <h3 className="font-sans tracking-normal [font-variation-settings:normal]">
         <AccordionPrimitive.Trigger
           className={cn(
-            'group flex w-full items-center justify-between gap-4 py-4 text-left text-[0.9375rem] font-medium text-ink hover:text-violet-soft',
+            'group flex w-full items-center justify-between gap-4 py-4 text-left text-[0.9375rem] font-medium text-ink hover:text-accent',
             className,
           )}
           {...props}

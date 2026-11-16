@@ -5,9 +5,28 @@ import { PageHeader } from '@/components/shared/PageHeader';
 import { buildFileName } from '@/lib/format';
 import { useSettings } from '@/stores/settings';
 
-function Row({ label, description, control, htmlFor }: { label: string; description: ReactNode; control: ReactNode; htmlFor?: string }) {
+function Row({
+  label,
+  description,
+  control,
+  htmlFor,
+  inline,
+}: {
+  label: string;
+  description: ReactNode;
+  control: ReactNode;
+  htmlFor?: string;
+  /** Keep the control beside the text on phones too, as iOS does for switches. */
+  inline?: boolean;
+}) {
   return (
-    <div className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+    <div
+      className={
+        inline
+          ? 'flex items-center justify-between gap-4 px-5 py-4 sm:gap-8'
+          : 'flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8'
+      }
+    >
       <div className="min-w-0">
         {htmlFor ? (
           <label htmlFor={htmlFor} className="text-sm font-medium text-ink">
@@ -16,7 +35,7 @@ function Row({ label, description, control, htmlFor }: { label: string; descript
         ) : (
           <p className="text-sm font-medium text-ink">{label}</p>
         )}
-        <p className="mt-0.5 max-w-[56ch] text-sm text-ink-muted">{description}</p>
+        <p className="mt-0.5 max-w-[56ch] text-[0.8125rem] text-ink-muted">{description}</p>
       </div>
       <div className="shrink-0">{control}</div>
     </div>
@@ -26,7 +45,7 @@ function Row({ label, description, control, htmlFor }: { label: string; descript
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="mb-8">
-      <h2 className="mb-3 text-xl font-semibold">{title}</h2>
+      <h2 className="label-mono mb-2 px-4">{title}</h2>
       <Panel className="divide-y divide-line">{children}</Panel>
     </section>
   );
@@ -81,6 +100,7 @@ export function SettingsPage() {
           }
         />
         <Row
+          inline
           htmlFor={autoId}
           label="Start downloads right away"
           description="When off, new downloads wait in the queue until you press Resume."
@@ -131,6 +151,7 @@ export function SettingsPage() {
 
       <Section title="Notifications and display">
         <Row
+          inline
           htmlFor={notifyId}
           label="Notify when a download finishes"
           description="Only when Downora is in a background tab. Your browser will ask for permission."

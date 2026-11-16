@@ -54,13 +54,13 @@ export function UrlBar({ value, onChange, onSubmit, busy, error, kind = 'any', s
         </label>
         <div
           className={cn(
-            'flex flex-col gap-2 rounded-panel border bg-canvas p-2 transition-[border-color,box-shadow] sm:flex-row sm:items-center',
-            'focus-within:border-violet focus-within:shadow-[0_0_0_4px_rgb(139_92_246/0.16)]',
-            error ? 'border-danger/70' : 'border-line-strong',
+            'flex flex-col gap-2 rounded-[1.375rem] border bg-surface p-1.5 transition-[border-color,box-shadow] sm:flex-row sm:items-center sm:rounded-full',
+            'focus-within:border-line-strong focus-within:shadow-[0_0_0_4px_rgb(243_100_68/0.12)]',
+            error ? 'border-danger/70' : 'border-line',
           )}
         >
           <div className="relative flex min-w-0 flex-1 items-center">
-            <Link2 className="pointer-events-none absolute left-3 size-[18px] text-ink-faint" aria-hidden />
+            <Link2 className="pointer-events-none absolute left-3.5 size-[18px] text-ink-faint" aria-hidden />
             <Input
               ref={inputRef}
               id={inputId}
@@ -75,7 +75,7 @@ export function UrlBar({ value, onChange, onSubmit, busy, error, kind = 'any', s
               aria-invalid={Boolean(error) || undefined}
               aria-describedby={error ? errorId : undefined}
               className={cn(
-                'border-transparent bg-transparent pr-9 pl-10 hover:border-transparent focus-visible:border-transparent focus-visible:ring-0',
+                'rounded-full border-transparent bg-transparent pr-9 pl-11 hover:border-transparent focus-visible:border-transparent focus-visible:ring-0',
                 lg ? 'h-12 text-base' : 'h-10',
               )}
             />
@@ -111,7 +111,7 @@ export function UrlBar({ value, onChange, onSubmit, busy, error, kind = 'any', s
         </p>
       ) : null}
       <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 px-1 text-sm text-ink-muted">
-        <span>No link handy? Try a sample:</span>
+        <span className="label-mono">Try a sample</span>
         {samples.map((sample) => (
           <button
             key={sample.path}
@@ -122,7 +122,7 @@ export function UrlBar({ value, onChange, onSubmit, busy, error, kind = 'any', s
               onChange(url);
               onSubmit(url);
             }}
-            className="rounded-full border border-line-strong px-2.5 py-0.5 text-xs font-medium text-ink transition-colors hover:border-violet/60 hover:bg-violet/10 disabled:opacity-50"
+            className="rounded-full border border-line bg-surface px-3 py-1 font-mono text-[0.6875rem] font-medium tracking-[0.04em] text-ink uppercase transition-colors hover:border-line-strong hover:bg-raised disabled:opacity-50"
           >
             {sample.label}
           </button>

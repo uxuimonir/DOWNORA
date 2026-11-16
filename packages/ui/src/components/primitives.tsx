@@ -15,9 +15,9 @@ export function Input({ className, invalid, ...props }: InputProps) {
     <input
       aria-invalid={invalid || undefined}
       className={cn(
-        'h-10 w-full min-w-0 rounded-control border border-line-strong bg-canvas px-3 text-sm text-ink',
+        'h-11 w-full min-w-0 rounded-control border border-line bg-surface px-3.5 text-[0.9375rem] text-ink',
         'placeholder:text-ink-faint transition-[border-color,box-shadow] duration-150',
-        'hover:border-[#465066] focus-visible:border-violet focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-violet/25',
+        'hover:border-line-strong focus-visible:border-accent/70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15',
         'disabled:cursor-not-allowed disabled:opacity-50',
         'aria-invalid:border-danger aria-invalid:ring-danger/20',
         className,
@@ -41,14 +41,15 @@ export function Label({ className, ...props }: ComponentProps<typeof LabelPrimit
 // ─────────────────────────── Badge ───────────────────────────
 
 export const badgeVariants = cva(
-  'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-xs font-medium whitespace-nowrap [&_svg]:size-3',
+  'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full border px-2.5 font-mono text-[0.6875rem] font-medium tracking-[0.06em] uppercase whitespace-nowrap [&_svg]:size-3',
   {
     variants: {
       tone: {
         neutral: 'border-line-strong bg-raised text-ink-muted',
-        violet: 'border-violet/35 bg-violet/12 text-violet-soft',
-        sky: 'border-sky/30 bg-sky/10 text-sky',
-        success: 'border-success/30 bg-success/10 text-success',
+        solid: 'border-transparent bg-hover text-ink',
+        accent: 'border-accent/35 bg-accent/12 text-accent-soft',
+        sky: 'border-info/30 bg-info/10 text-info',
+        success: 'border-success/25 bg-success/10 text-success',
         warn: 'border-warn/30 bg-warn/10 text-warn',
         danger: 'border-danger/35 bg-danger/10 text-danger',
       },
@@ -97,14 +98,14 @@ export function Panel({ className, level = 'surface', ...props }: PanelProps) {
 export function PanelHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('flex items-center justify-between gap-4 border-b border-line px-5 py-4', className)}
+      className={cn('flex min-h-12 items-center justify-between gap-4 border-b border-line px-5 py-3', className)}
       {...props}
     />
   );
 }
 
 export function PanelTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={cn('text-base font-semibold tracking-normal text-ink', className)} {...props} />;
+  return <h2 className={cn('label-mono', className)} {...props} />;
 }
 
 // ────────────────────────── Separator ──────────────────────────
@@ -131,14 +132,14 @@ export function Switch({ className, ...props }: ComponentProps<typeof SwitchPrim
   return (
     <SwitchPrimitive.Root
       className={cn(
-        'peer inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-line-strong bg-raised p-0.5',
-        'transition-colors duration-200 data-[state=checked]:border-violet data-[state=checked]:bg-violet-deep',
+        'peer inline-flex h-[31px] w-[51px] shrink-0 items-center rounded-full bg-[#39393d] p-[2px]',
+        'transition-colors duration-200 data-[state=checked]:bg-accent',
         'disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}
     >
-      <SwitchPrimitive.Thumb className="block size-[18px] rounded-full bg-ink-muted shadow-sm transition-transform duration-200 ease-out-quint data-[state=checked]:translate-x-5 data-[state=checked]:bg-white" />
+      <SwitchPrimitive.Thumb className="block size-[27px] rounded-full bg-white shadow-[0_3px_8px_rgb(0_0_0/0.15),0_3px_1px_rgb(0_0_0/0.06)] transition-transform duration-200 ease-out-quint data-[state=checked]:translate-x-5" />
     </SwitchPrimitive.Root>
   );
 }

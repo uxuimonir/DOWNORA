@@ -44,7 +44,7 @@ export function DashboardPage() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="display-tight text-3xl font-semibold sm:text-4xl">Dashboard</h1>
+        <h1 className="text-[2.125rem] leading-tight font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:font-semibold">Dashboard</h1>
         <p className="mt-2 text-ink-muted">Paste a link to start, or pick up where you left off.</p>
       </div>
 
@@ -65,9 +65,9 @@ export function DashboardPage() {
           ['Saved this week', String(stats.thisWeek)],
           ['In the queue', String(stats.active.length)],
         ].map(([label, value]) => (
-          <div key={label} className="bg-surface px-5 py-4">
-            <dt className="text-sm text-ink-muted">{label}</dt>
-            <dd className="display-tight mt-1 text-3xl font-semibold">{value}</dd>
+          <div key={label} className="flex flex-col-reverse bg-surface px-5 py-5">
+            <dt className="label-mono mt-3">{label}</dt>
+            <dd className="text-[1.75rem] leading-none font-light tracking-[-0.03em]">{value}</dd>
           </div>
         ))}
       </dl>
@@ -152,11 +152,11 @@ export function DashboardPage() {
                 )
               }
             />
-            <EngineRow name="Chrome extension" note="Detects media on the page you’re viewing." badge={<Badge tone="violet">In development</Badge>} />
-            <EngineRow name="Desktop app" note="Windows and macOS, with a folder picker." badge={<Badge tone="violet">In development</Badge>} />
+            <EngineRow name="Chrome extension" note="Detects media on the page you’re viewing." badge={<Badge tone="accent">In development</Badge>} />
+            <EngineRow name="Desktop app" note="Windows and macOS, with a folder picker." badge={<Badge tone="accent">In development</Badge>} />
           </ul>
           <div className="border-t border-line px-5 py-3">
-            <Link to="/help" className="inline-flex items-center gap-1 text-sm text-violet-soft hover:underline">
+            <Link to="/help" className="inline-flex items-center gap-1 text-sm text-accent-soft hover:underline">
               What each one can do
               <ArrowUpRight className="size-3.5" aria-hidden />
             </Link>
@@ -166,7 +166,7 @@ export function DashboardPage() {
       {stats.failed > 0 ? (
         <p className="mt-6 text-sm text-ink-muted">
           {stats.failed} download{stats.failed === 1 ? '' : 's'} failed.{' '}
-          <Link to="/history" className="text-violet-soft hover:underline">
+          <Link to="/history" className="text-accent-soft hover:underline">
             Review in history
           </Link>
         </p>
