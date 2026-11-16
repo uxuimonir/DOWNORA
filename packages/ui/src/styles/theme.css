@@ -1,0 +1,239 @@
+/*
+ * Downora design tokens (Tailwind v4 @theme).
+ * Import after `@import "tailwindcss"` in the consuming app.
+ */
+
+@theme {
+  /* Surfaces */
+  --color-canvas: #0b0d12;
+  --color-surface: #131720;
+  --color-raised: #1a202b;
+  --color-hover: #222a37;
+
+  /* Lines */
+  --color-line: #222935;
+  --color-line-strong: #323b4b;
+
+  /* Text */
+  --color-ink: #f8fafc;
+  --color-ink-muted: #94a3b8;
+  --color-ink-faint: #7c8aa0;
+
+  /* Accents */
+  --color-violet: #8b5cf6;
+  --color-violet-deep: #7443ea;
+  --color-violet-soft: #c4b5fd;
+  --color-sky: #38bdf8;
+  --color-success: #22c55e;
+  --color-warn: #fbbf24;
+  --color-danger: #fb7185;
+
+  /* Type */
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* A modular scale (ratio ≈ 1.2) with matching leading */
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.375rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.625rem;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.4375rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 2.125rem;
+  --text-3xl: 2.125rem;
+  --text-3xl--line-height: 2.5rem;
+  --text-4xl: 2.75rem;
+  --text-4xl--line-height: 3rem;
+  --text-5xl: 3.5rem;
+  --text-5xl--line-height: 3.625rem;
+  --text-6xl: 4.5rem;
+  --text-6xl--line-height: 4.375rem;
+  --text-7xl: 5.75rem;
+  --text-7xl--line-height: 5.25rem;
+
+  /* Radius hierarchy: controls < panels < stages */
+  --radius-control: 0.625rem;
+  --radius-panel: 1rem;
+  --radius-stage: 1.5rem;
+
+  /* Elevation — tinted with the canvas hue, never neutral grey */
+  --shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03) inset, 0 12px 32px -16px rgb(3 5 10 / 0.8);
+  --shadow-pop: 0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 24px 56px -12px rgb(3 5 10 / 0.9),
+    0 0 0 1px rgb(3 5 10 / 0.6);
+  --shadow-glow: 0 8px 32px -8px rgb(139 92 246 / 0.55);
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-track-sweep: track-sweep 1.4s linear infinite;
+  --animate-fade-in: fade-in 0.2s var(--ease-out-quint);
+  --animate-pop-in: pop-in 0.18s var(--ease-out-quint);
+  --animate-sheet-in: sheet-in 0.28s var(--ease-out-quint);
+  --animate-accordion-down: accordion-down 0.22s var(--ease-out-quint);
+  --animate-accordion-up: accordion-up 0.18s var(--ease-out-quint);
+
+  @keyframes track-sweep {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(350%);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes sheet-in {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --accent-gradient: linear-gradient(90deg, var(--color-violet) 0%, var(--color-sky) 100%);
+  }
+
+  html {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--color-canvas);
+    font-feature-settings: 'ss01', 'cv11';
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wdth' 92;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: rgb(139 92 246 / 0.45);
+    color: var(--color-ink);
+  }
+
+  /* One focus treatment everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-sky);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  button,
+  [role='button'],
+  a,
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+
+  /* The app can force reduced motion from Settings, on top of the OS preference. */
+  html[data-motion='reduce'] *,
+  html[data-motion='reduce'] *::before,
+  html[data-motion='reduce'] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html:not([data-motion='full']) *,
+    html:not([data-motion='full']) *::before,
+    html:not([data-motion='full']) *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Numbers that line up: sizes, timecodes, speeds. */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum', 'zero';
+}
+
+/* Display type at headline sizes: tighter, slightly condensed. */
+@utility display-tight {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 96, 'wdth' 84;
+  letter-spacing: -0.035em;
+}
+
+/* The segmented mask that turns any bar into Downora's transfer track. */
+@utility track-segments {
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 5px, transparent 5px 7px);
+  mask-image: repeating-linear-gradient(90deg, #000 0 5px, transparent 5px 7px);
+}
+
+@utility accent-gradient {
+  background-image: var(--accent-gradient);
+}
+
+@utility hairline-top {
+  box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.04) inset;
+}
