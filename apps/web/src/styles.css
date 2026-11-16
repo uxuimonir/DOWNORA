@@ -8,3 +8,41 @@
     isolation: isolate;
   }
 }
+
+/* Smooth in-page navigation (the reduced-motion rules in the theme switch it off). */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Slow drifting violet/sky glow behind the hero and final call to action. */
+.aurora {
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 120%;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 28% 30%, rgb(139 92 246 / 0.32), transparent 70%),
+    radial-gradient(34% 40% at 72% 26%, rgb(56 189 248 / 0.24), transparent 70%),
+    radial-gradient(30% 34% at 52% 62%, rgb(124 58 237 / 0.18), transparent 70%);
+  filter: blur(20px);
+  animation: aurora-drift 22s ease-in-out infinite alternate;
+}
+:root[data-theme='light'] .aurora {
+  opacity: 0.75;
+}
+.aurora-strong {
+  inset: -30%;
+  height: auto;
+  opacity: 1;
+}
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-3%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, 2%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-1%, -2%, 0) scale(1.02);
+  }
+}

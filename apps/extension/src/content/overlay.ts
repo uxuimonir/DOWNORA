@@ -407,15 +407,7 @@ export class Overlay {
     const fraction = d?.bytesTotal ? d.bytesReceived / d.bytesTotal : undefined;
     const done = d?.state === 'complete';
     const failed = d?.state === 'interrupted';
-    const heading = done
-      ? d?.via === 'desktop'
-        ? 'Saved by Downora Desktop'
-        : 'Saved to your Downloads folder'
-      : failed
-        ? 'Download failed'
-        : d?.via === 'desktop'
-          ? 'Downora Desktop is downloading'
-          : 'Downloading';
+    const heading = done ? 'Saved to your Downloads folder' : failed ? 'Download failed' : 'Downloading';
     const pct = done ? '100%' : fraction !== undefined ? `${Math.floor(fraction * 100)}%` : '';
     wrap.append(
       h('div', { class: 'row' }, h('span', { class: done ? 'ok' : undefined, role: 'status' }, heading), h('span', { class: 'pct' }, pct)),

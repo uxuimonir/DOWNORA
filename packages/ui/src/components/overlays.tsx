@@ -78,13 +78,13 @@ export function SheetContent({
       <DialogPrimitive.Content
         aria-describedby={undefined}
         className={cn(
-          'material fixed inset-x-0 bottom-0 z-50 flex max-h-[88dvh] flex-col rounded-t-[1.75rem] border-t border-white/8 shadow-pop pb-safe',
+          'material fixed inset-x-0 bottom-0 z-50 flex max-h-[88dvh] flex-col rounded-t-[1.75rem] border-t border-edge shadow-pop pb-safe',
           'data-[state=open]:animate-sheet-up',
           className,
         )}
         {...props}
       >
-        <span aria-hidden className="mx-auto mt-2 h-[5px] w-9 shrink-0 rounded-full bg-white/25" />
+        <span aria-hidden className="mx-auto mt-2 h-[5px] w-9 shrink-0 rounded-full bg-ink-faint/40" />
         <DialogPrimitive.Title className="sr-only">{title}</DialogPrimitive.Title>
         {children}
       </DialogPrimitive.Content>
@@ -119,7 +119,7 @@ export function ConfirmDialog({
     <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <AlertDialogPrimitive.Portal>
         <AlertDialogPrimitive.Overlay className={overlayClass} />
-        <AlertDialogPrimitive.Content className="material fixed top-1/2 left-1/2 z-50 w-[min(19rem,calc(100vw-3rem))] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.125rem] bg-[#232323]/85 text-center shadow-pop data-[state=open]:animate-pop-in">
+        <AlertDialogPrimitive.Content className="material fixed top-1/2 left-1/2 z-50 w-[min(19rem,calc(100vw-3rem))] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.125rem] bg-raised/90 text-center shadow-pop data-[state=open]:animate-pop-in">
           <div className="px-5 pt-5 pb-4">
             <AlertDialogPrimitive.Title className="font-sans text-[1.0625rem] font-semibold tracking-[-0.01em]">
               {title}
@@ -128,12 +128,12 @@ export function ConfirmDialog({
               {description}
             </AlertDialogPrimitive.Description>
           </div>
-          <div className="grid grid-cols-2 border-t border-white/10 text-[1.0625rem]">
-            <AlertDialogPrimitive.Cancel className="h-11 border-r border-white/10 text-accent hover:bg-white/5">
+          <div className="grid grid-cols-2 border-t border-edge text-[1.0625rem]">
+            <AlertDialogPrimitive.Cancel className="h-11 border-r border-edge text-accent-soft hover:bg-hover">
               {cancelLabel}
             </AlertDialogPrimitive.Cancel>
             <AlertDialogPrimitive.Action
-              className={cn('h-11 font-semibold hover:bg-white/5', destructive ? 'text-danger' : 'text-accent')}
+              className={cn('h-11 font-semibold hover:bg-hover', destructive ? 'text-danger' : 'text-accent-soft')}
               onClick={onConfirm}
             >
               {confirmLabel}
@@ -160,7 +160,7 @@ export function DropdownMenuContent({
       <DropdownPrimitive.Content
         sideOffset={sideOffset}
         className={cn(
-          'material z-50 min-w-48 rounded-[0.875rem] border border-white/10 p-1 shadow-pop data-[state=open]:animate-pop-in',
+          'material z-50 min-w-48 rounded-[0.875rem] border border-edge p-1 shadow-pop data-[state=open]:animate-pop-in',
           className,
         )}
         {...props}
@@ -252,7 +252,7 @@ export function SelectField<T extends string>({
               >
                 <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                 <SelectPrimitive.ItemIndicator className="absolute right-2.5">
-                  <Check className="size-4 text-accent" />
+                  <Check className="size-4 text-accent-soft" />
                 </SelectPrimitive.ItemIndicator>
               </SelectPrimitive.Item>
             ))}
@@ -378,7 +378,7 @@ export function AccordionTrigger({
       <h3 className="font-sans tracking-normal [font-variation-settings:normal]">
         <AccordionPrimitive.Trigger
           className={cn(
-            'group flex w-full items-center justify-between gap-4 py-4 text-left text-[0.9375rem] font-medium text-ink hover:text-accent',
+            'group flex w-full items-center justify-between gap-4 py-4 text-left text-[0.9375rem] font-medium text-ink hover:text-accent-soft',
             className,
           )}
           {...props}

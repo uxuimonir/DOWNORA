@@ -13,6 +13,7 @@
     "@downora/types": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   }

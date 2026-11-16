@@ -4,30 +4,26 @@
  */
 
 @theme {
-  /* Surfaces — neutral near-black, iOS dark elevation steps */
-  --color-canvas: #0d0d0d;
-  --color-surface: #141414;
-  --color-raised: #1c1c1c;
-  --color-hover: #242424;
-
-  /* Lines */
-  --color-line: #232323;
-  --color-line-strong: #2e2e2e;
-
-  /* Text */
-  --color-ink: #f3f3f3;
-  --color-ink-muted: #a3a3a3;
-  --color-ink-faint: #8a8a8a;
-
-  /* Accent — coral tint, used sparingly: indicators, progress, active states */
-  --color-accent: #f36444;
-  --color-accent-strong: #e5502f;
-  --color-accent-soft: #f89a82;
-  --color-info: #c9c9c9;
-  /* iOS dark system colours */
-  --color-success: #32d74b;
-  --color-warn: #ffd60a;
-  --color-danger: #ff6961;
+  /* Colors come from CSS variables so every utility works in light and dark. */
+  --color-canvas: var(--dn-canvas);
+  --color-surface: var(--dn-surface);
+  --color-raised: var(--dn-raised);
+  --color-hover: var(--dn-hover);
+  --color-line: var(--dn-line);
+  --color-line-strong: var(--dn-line-strong);
+  /* Hairline for glass edges: light on dark, dark on light. */
+  --color-edge: var(--dn-edge);
+  --color-ink: var(--dn-ink);
+  --color-ink-muted: var(--dn-ink-muted);
+  --color-ink-faint: var(--dn-ink-faint);
+  /* accent = fills; accent-soft = accessible accent text */
+  --color-accent: var(--dn-accent);
+  --color-accent-strong: var(--dn-accent-strong);
+  --color-accent-soft: var(--dn-accent-text);
+  --color-info: var(--dn-info);
+  --color-success: var(--dn-success);
+  --color-warn: var(--dn-warn);
+  --color-danger: var(--dn-danger);
 
   /* Type — SF Pro on Apple devices, Inter elsewhere */
   --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', system-ui, sans-serif;
@@ -66,10 +62,9 @@
   --radius-stage: 1.75rem;
 
   /* Elevation — flat and quiet, like the reference */
-  --shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.025) inset;
-  --shadow-pop: 0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 24px 60px -12px rgb(0 0 0 / 0.85),
-    0 0 0 1px rgb(255 255 255 / 0.06);
-  --shadow-glow: 0 8px 28px -10px rgb(243 100 68 / 0.6);
+  --shadow-panel: var(--dn-shadow-panel);
+  --shadow-pop: var(--dn-shadow-pop);
+  --shadow-glow: 0 10px 40px -12px rgb(139 92 246 / 0.55);
 
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -142,13 +137,88 @@
 }
 
 @layer base {
-  :root {
+  /* Dark is the default; the app sets data-theme from Settings or the OS. */
+  :root,
+  :root[data-theme='dark'] {
     color-scheme: dark;
-    --accent-gradient: linear-gradient(90deg, var(--color-accent-strong) 0%, var(--color-accent) 100%);
+    --dn-canvas: #08090d;
+    --dn-surface: #11141b;
+    --dn-raised: #191e28;
+    --dn-hover: #222836;
+    --dn-line: #1f2430;
+    --dn-line-strong: #2d3443;
+    --dn-edge: rgb(255 255 255 / 0.08);
+    --dn-ink: #f8fafc;
+    --dn-ink-muted: #94a3b8;
+    --dn-ink-faint: #8693a8;
+    --dn-accent: #8b5cf6;
+    --dn-accent-strong: #7c3aed;
+    --dn-accent-text: #b4a0fb;
+    --dn-info: #38bdf8;
+    --dn-success: #34d399;
+    --dn-warn: #fbbf24;
+    --dn-danger: #f87171;
+    --dn-glass: rgb(17 20 27 / 0.66);
+    --dn-shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03) inset, 0 20px 50px -30px rgb(0 0 0 / 0.9);
+    --dn-shadow-pop: 0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 30px 70px -20px rgb(0 0 0 / 0.85), 0 0 0 1px rgb(255 255 255 / 0.06);
+    --accent-gradient: linear-gradient(100deg, #8b5cf6 0%, #38bdf8 100%);
   }
+  :root[data-theme='light'] {
+    color-scheme: light;
+    --dn-canvas: #f7f8fc;
+    --dn-surface: #ffffff;
+    --dn-raised: #f0f2f8;
+    --dn-hover: #e7eaf3;
+    --dn-line: #e4e7ef;
+    --dn-line-strong: #cfd5e1;
+    --dn-edge: rgb(15 23 42 / 0.08);
+    --dn-ink: #111827;
+    --dn-ink-muted: #586477;
+    --dn-ink-faint: #5d6a7e;
+    --dn-accent: #7047eb;
+    --dn-accent-strong: #5b32d6;
+    --dn-accent-text: #5b32d6;
+    --dn-info: #2585e8;
+    --dn-success: #047857;
+    --dn-warn: #92400e;
+    --dn-danger: #c81e1e;
+    --dn-glass: rgb(255 255 255 / 0.7);
+    --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
+    --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
+    --accent-gradient: linear-gradient(100deg, #7047eb 0%, #2585e8 100%);
+  }
+  /* No theme chosen yet (e.g. extension pages, which can't run an inline script): follow the OS. */
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+      color-scheme: light;
+      --dn-canvas: #f7f8fc;
+      --dn-surface: #ffffff;
+      --dn-raised: #f0f2f8;
+      --dn-hover: #e7eaf3;
+      --dn-line: #e4e7ef;
+      --dn-line-strong: #cfd5e1;
+      --dn-edge: rgb(15 23 42 / 0.08);
+      --dn-ink: #111827;
+      --dn-ink-muted: #586477;
+      --dn-ink-faint: #5d6a7e;
+      --dn-accent: #7047eb;
+      --dn-accent-strong: #5b32d6;
+      --dn-accent-text: #5b32d6;
+      --dn-info: #2585e8;
+      --dn-success: #047857;
+      --dn-warn: #92400e;
+      --dn-danger: #c81e1e;
+      --dn-glass: rgb(255 255 255 / 0.7);
+      --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
+      --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
+      --accent-gradient: linear-gradient(100deg, #7047eb 0%, #2585e8 100%);
+    }
+  }
+
 
   html {
     background: var(--color-canvas);
+    transition: background-color 0.25s ease;
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 16px;
@@ -178,7 +248,7 @@
   }
 
   ::selection {
-    background: rgb(243 100 68 / 0.4);
+    background: rgb(139 92 246 / 0.35);
     color: var(--color-ink);
   }
 
@@ -247,7 +317,7 @@
 
 /* iOS frosted material for bars and sheets. */
 @utility material {
-  background-color: rgb(20 20 20 / 0.72);
+  background-color: var(--dn-glass);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
 }
@@ -317,12 +387,20 @@
 
   /* iOS "Increase Contrast". */
   @media (prefers-contrast: more) {
-    :root {
-      --color-line: #3d3d3d;
-      --color-line-strong: #5a5a5a;
-      --color-ink-muted: #d0d0d0;
-      --color-ink-faint: #b5b5b5;
-      --color-accent: #ff7a5c;
+    :root,
+    :root[data-theme='dark'] {
+      --dn-line: #3a4252;
+      --dn-line-strong: #566074;
+      --dn-ink-muted: #cbd5e1;
+      --dn-ink-faint: #b6c2d4;
+      --dn-accent-text: #cdbdfd;
+    }
+    :root[data-theme='light'] {
+      --dn-line: #b7bfcd;
+      --dn-line-strong: #8d97a8;
+      --dn-ink-muted: #374151;
+      --dn-ink-faint: #374151;
+      --dn-accent-text: #4c1fc9;
     }
   }
 

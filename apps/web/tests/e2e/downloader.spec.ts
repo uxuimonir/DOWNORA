@@ -32,7 +32,7 @@ test('analyzes a bundled sample and saves the exact file', async ({ page }) => {
   expect(statSync(saved).size).toBe(sampleSize('downora-sample-1080p.mp4'));
 
   await expect(page.getByTestId('download-complete')).toContainText('Saved downora-sample-1080p.mp4');
-  await page.getByRole('link', { name: 'View history' }).click();
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'History' }).click();
   await expect(page.getByTestId('job-row').first()).toHaveAttribute('data-status', 'completed');
 });
 
@@ -48,7 +48,7 @@ test('shows real progress, pauses, and resumes from the same byte', async ({ pag
   const bar = page.getByTestId('download-progress').getByRole('progressbar');
   await expect.poll(async () => Number(await bar.getAttribute('aria-valuenow')), { timeout: 10_000 }).toBeGreaterThan(5);
 
-  await page.getByRole('link', { name: 'Open queue' }).click();
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: /^Queue/ }).click();
   const row = page.getByTestId('job-row').first();
   await row.getByRole('button', { name: 'Pause' }).click();
   await expect(row).toHaveAttribute('data-status', 'paused');
@@ -94,12 +94,13 @@ test('falls back to opening the file when the server blocks browser reads', asyn
   await analyze(page, `${MEDIA}/nocors/downora-sample-720p.webm`);
   const stage = page.getByTestId('media-stage');
   await expect(stage.getByText('1280 × 720').first()).toBeVisible();
-  await expect(stage.getByText('Not reported by the server')).toBeVisible();
-  await expect(stage.getByRole('link', { name: 'Open file in a new tab' })).toHaveAttribute(
+  await expect(stage.getByText('doesn’t let browsers read the file directly')).toBeVisible();
+  await expect(stage.getByRole('link', { name: 'Open the file in a new tab instead' })).toHaveAttribute(
     'href',
     `${MEDIA}/nocors/downora-sample-720p.webm`,
   );
-  await expect(stage.getByRole('button', { name: /Download/ })).toHaveCount(0);
+  // Signed out, the server route is locked rather than pretending to work.
+  await expect(stage.getByRole('button', { name: /Download WEBM/ })).toBeDisabled();
 });
 
 test('settings persist and change file naming', async ({ page }) => {
@@ -174,7 +175,7 @@ test('whole download flow works with the keyboard only', async ({ page }) => {
   const download = page.getByRole('button', { name: /Download WEBM/ });
   await expect(download).toBeVisible();
   // Tab until the download button has focus — proves it is reachable and focus is visible.
-  for (let i = 0; i < 25 && !(await download.evaluate((el) => el === document.activeElement)); i += 1) {
+  for (let i = 0; i < 40 && !(await download.evaluate((el) => el === document.activeElement)); i += 1) {
     await page.keyboard.press('Tab');
   }
   await expect(download).toBeFocused();
@@ -200,8 +201,8 @@ test('stays accessible with Increase Contrast and Reduce Motion @responsive', as
   for (const route of ['/', '/settings', '/history']) {
     await page.goto(route);
     await page.waitForLoadState('networkidle');
-    // Dark theme holds even when the OS asks for light.
-    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(13, 13, 13)');
+    // Theme follows the OS by default: light here.
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(247, 248, 252)');
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
     expect(results.violations.map((v) => v.id)).toEqual([]);
   }

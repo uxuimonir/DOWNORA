@@ -10,6 +10,8 @@ import { mimeForContainer } from '@downora/source-adapters';
 import type { DownloadJob, MediaAnalysis, MediaFormat } from '@downora/types';
 import { toast } from '@downora/ui';
 import { getSettings } from '@/stores/settings';
+import { useAccount } from '@/stores/account';
+import { api } from '@/lib/api/client';
 import { isActive, useDownloads } from '@/stores/downloads';
 import { buildFileName } from '@/lib/format';
 import { partialOf, runTransfer, TransferError } from './transfer';
@@ -131,6 +133,21 @@ async function transfer(id: string): Promise<void> {
       completedAt: new Date().toISOString(),
     });
     notifyComplete(current.fileName);
+    // Signed in: keep account history in sync (best effort; local history is the source of truth here).
+    if (useAccount.getState().status === 'signed_in') {
+      void api
+        .addHistory({
+          url: current.sourceUrl,
+          title: current.title,
+          fileName: current.fileName,
+          container: current.container,
+          kind: current.kind,
+          qualityLabel: current.qualityLabel,
+          sizeBytes: result.bytesTotal,
+          source: 'web',
+        })
+        .catch(() => {});
+    }
   } catch (error) {
     const reason = entry.reason;
     const partial = partialOf(error);

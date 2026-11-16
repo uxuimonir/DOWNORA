@@ -12,7 +12,14 @@ export default defineConfig({
     { name: 'phone', use: { ...devices['Pixel 7'] }, grep: /@responsive|@mobile/ },
   ],
   webServer: [
-    { command: 'pnpm dev', url: 'http://localhost:5173', reuseExistingServer: true },
+    { command: 'VITE_DOWNORA_API_URL=http://localhost:8787 pnpm dev', url: 'http://localhost:5173', reuseExistingServer: true },
+    {
+      // Real API; dev-only allowlist lets it read the local sample/fixture servers.
+      command: 'pnpm --filter @downora/api start',
+      url: 'http://localhost:8787/api/health',
+      reuseExistingServer: true,
+      env: { ALLOW_PRIVATE_HOSTS: 'localhost', CORS_ORIGINS: 'http://localhost:5173', DATA_DIR: '/tmp/downora-e2e-api', RATE_LIMIT_PER_MINUTE: '100000' },
+    },
     { command: 'node tests/fixtures/media-server.mjs', url: 'http://localhost:4599/page.html', reuseExistingServer: true },
   ],
 });

@@ -9,7 +9,6 @@ import { downloadFileName } from '../shared/filename';
 import {
   parseContentMessage,
   parsePopupMessage,
-  type DesktopState,
   type DownloadRequest,
   type Result,
   type TabState,
@@ -17,7 +16,7 @@ import {
 } from '../shared/messages';
 import { dashboardLink, loadSettings } from '../shared/settings';
 import { probe } from './probe';
-import * as desktop from '../shared/desktop';
+import * as account from '../shared/account';
 
 const SCRIPT_ID = 'downora-detect';
 const ALL_SITES = ['https://*/*', 'http://*/*'];
@@ -111,6 +110,7 @@ async function refreshProgress() {
     if (!item) continue;
     const next = applyItem(d, item);
     if (next !== d) {
+      void syncIfFinished(d.state, next);
       Object.assign(d, next);
       changed = true;
     }
@@ -145,6 +145,21 @@ function savedName(requested: string, path: string): string {
   return base.startsWith(stem) ? base : requested;
 }
 
+/** When a download finishes, add it to the signed-in account's history. */
+async function syncIfFinished(prev: ExtensionDownload['state'], next: ExtensionDownload) {
+  if (prev === 'complete' || next.state !== 'complete') return;
+  const { apiUrl } = await loadSettings();
+  if (!apiUrl) return;
+  await account.recordHistory(apiUrl, {
+    url: next.url,
+    title: next.title,
+    fileName: next.fileName,
+    container: next.container,
+    kind: next.kind,
+    sizeBytes: next.bytesTotal ?? next.bytesReceived,
+  });
+}
+
 function applyItem(d: ExtensionDownload, item: chrome.downloads.DownloadItem): ExtensionDownload {
   const next: ExtensionDownload = {
     ...d,
@@ -159,104 +174,7 @@ function applyItem(d: ExtensionDownload, item: chrome.downloads.DownloadItem): E
   return JSON.stringify(next) === JSON.stringify(d) ? d : next;
 }
 
-// ───────────────────────── Downora Desktop ─────────────────────────
-
-let desktopPoll: ReturnType<typeof setInterval> | undefined;
-
-async function refreshDesktopJobs() {
-  const list = await getDownloads();
-  const active = list.filter((d) => d.via === 'desktop' && d.state === 'in_progress' && d.desktopJobId);
-  if (!active.length) {
-    if (desktopPoll) clearInterval(desktopPoll);
-    desktopPoll = undefined;
-    return;
-  }
-  let changed = false;
-  for (const d of active) {
-    try {
-      const j = await desktop.jobStatus(d.desktopJobId!);
-      const next: ExtensionDownload = {
-        ...d,
-        fileName: j.fileName || d.fileName,
-        bytesReceived: j.bytesReceived,
-        bytesTotal: j.bytesTotal ?? d.bytesTotal,
-        paused: j.status === 'paused',
-        state: j.status === 'completed' ? 'complete' : j.done ? 'interrupted' : 'in_progress',
-        error: j.status === 'canceled' ? 'Canceled in Downora Desktop.' : j.error ?? undefined,
-        endedAt: j.done ? new Date().toISOString() : undefined,
-      };
-      if (JSON.stringify(next) !== JSON.stringify(d)) {
-        Object.assign(d, next);
-        changed = true;
-      }
-    } catch (e) {
-      if (e instanceof desktop.DesktopError && e.kind !== 'offline') {
-        Object.assign(d, { state: 'interrupted', error: e.message, endedAt: new Date().toISOString() });
-        changed = true;
-      }
-    }
-  }
-  if (changed) await setDownloads(list);
-}
-
-async function desktopState(): Promise<DesktopState> {
-  const key = await desktop.loadKey();
-  if (!key) return { paired: false, reachable: null };
-  try {
-    const s = await desktop.status();
-    return { paired: true, pairedAt: key.pairedAt, reachable: true, version: s.version };
-  } catch (e) {
-    return { paired: true, pairedAt: key.pairedAt, reachable: false, error: e instanceof Error ? e.message : undefined };
-  }
-}
-
-/** Tries the desktop app; returns null when Chrome should handle it instead, plus why. */
-async function viaDesktop(req: DownloadRequest, pageHost: string): Promise<{ result: Result<{ id: number }> | null; note?: string }> {
-  const settings = await loadSettings();
-  if (!settings.sendToDesktop || !(await desktop.loadKey())) return { result: null };
-  try {
-    const sent = await desktop.sendJob({ url: req.url, title: req.title, container: req.container });
-    const id = -Date.now(); // desktop entries get negative ids; Chrome's are positive
-    const record: ExtensionDownload = {
-      id,
-      url: req.url,
-      fileName: sent.fileName,
-      title: req.title,
-      kind: req.kind,
-      container: req.container,
-      pageHost,
-      state: 'in_progress',
-      paused: false,
-      bytesReceived: 0,
-      startedAt: new Date().toISOString(),
-      via: 'desktop',
-      desktopJobId: sent.jobId,
-    };
-    await setDownloads([record, ...(await getDownloads())]);
-    if (!desktopPoll) desktopPoll = setInterval(() => void refreshDesktopJobs(), 700);
-    return { result: { ok: true, data: { id } } };
-  } catch (e) {
-    const why = e instanceof desktop.DesktopError ? e.message : 'Downora Desktop didn’t respond.';
-    return { result: null, note: `${why} Chrome saved this file instead.` };
-  }
-}
-
-chrome.alarms.create('desktop-heartbeat', { periodInMinutes: 1 });
-chrome.alarms.onAlarm.addListener((a) => {
-  if (a.name !== 'desktop-heartbeat') return;
-  void (async () => {
-    if (!(await desktop.loadKey())) return;
-    await desktop.status().catch(() => {});
-    await desktop.rotateIfDue().catch(() => {});
-  })();
-});
-
 async function startDownload(req: DownloadRequest, tabId: number | undefined, pageHost: string): Promise<Result<{ id: number }>> {
-  const handoff = await viaDesktop(req, pageHost);
-  if (handoff.result) {
-    if (handoff.result.ok && tabId !== undefined) listeners.set(handoff.result.data.id, tabId);
-    return handoff.result;
-  }
   const settings = await loadSettings();
   const fileName = downloadFileName(req.title, req.container);
   let id: number;
@@ -278,8 +196,6 @@ async function startDownload(req: DownloadRequest, tabId: number | undefined, pa
     paused: false,
     bytesReceived: 0,
     startedAt: new Date().toISOString(),
-    via: 'chrome',
-    note: handoff.note,
   };
   await setDownloads([record, ...(await getDownloads()).filter((d) => d.id !== id)]);
   ensurePolling();
@@ -295,6 +211,7 @@ chrome.downloads.onChanged.addListener((delta) => {
     if (!item) return;
     const next = applyItem(d, item);
     if (next !== d) {
+      void syncIfFinished(d.state, next);
       Object.assign(d, next);
       await setDownloads(list);
     }
@@ -329,7 +246,7 @@ async function tabState(tabId: number): Promise<TabState> {
 
 async function setBadge(tabId: number, count: number) {
   await chrome.action.setBadgeText({ tabId, text: count ? String(count) : '' }).catch(() => {});
-  await chrome.action.setBadgeBackgroundColor({ tabId, color: '#F36444' }).catch(() => {});
+  await chrome.action.setBadgeBackgroundColor({ tabId, color: '#7047EB' }).catch(() => {});
 }
 
 chrome.tabs.onRemoved.addListener((tabId) => void chrome.storage.session.remove(tabKey(tabId)));
@@ -415,25 +332,30 @@ async function handlePopup(raw: unknown): Promise<unknown> {
     case 'downloads/clear':
       await setDownloads((await getDownloads()).filter((d) => d.state === 'in_progress'));
       return { ok: true, data: null };
+    case 'account/state': {
+      const { apiUrl } = await loadSettings();
+      if (!apiUrl) return { ok: true, data: { signedIn: false } };
+      return { ok: true, data: await account.state(apiUrl) };
+    }
+    case 'account/signin': {
+      const { apiUrl } = await loadSettings();
+      if (!apiUrl) return { ok: false, error: 'Set the Downora API address first.' };
+      if (!(await chrome.permissions.contains({ origins: [`${new URL(apiUrl).origin}/*`] }))) {
+        return { ok: false, error: 'Chrome didn’t allow Downora to reach that server.' };
+      }
+      try {
+        return { ok: true, data: await account.signIn(apiUrl, msg.email, msg.password) };
+      } catch (e) {
+        return { ok: false, error: e instanceof Error ? e.message : 'Sign-in failed.' };
+      }
+    }
+    case 'account/signout':
+      await account.signOut();
+      return { ok: true, data: { signedIn: false } };
     case 'downloads/show':
       if (msg.id > 0) chrome.downloads.show(msg.id);
       return { ok: true, data: null };
-    case 'desktop/state':
-      return { ok: true, data: await desktopState() };
-    case 'desktop/pair': {
-      if (!(await chrome.permissions.contains({ origins: [desktop.DESKTOP_PERMISSION] }))) {
-        return { ok: false, error: 'Chrome didn’t allow Downora to talk to the desktop app.' };
-      }
-      try {
-        await desktop.pair(msg.code);
-        return { ok: true, data: await desktopState() };
-      } catch (e) {
-        return { ok: false, error: e instanceof Error ? e.message : 'Pairing failed.' };
-      }
-    }
-    case 'desktop/unpair':
-      await desktop.deleteKey();
-      return { ok: true, data: await desktopState() };
+
   }
 }
 

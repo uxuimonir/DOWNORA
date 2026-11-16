@@ -84,13 +84,25 @@ const defaultResolver: Resolver = (host) => lookup(host, { all: true, verbatim: 
 
 const ALLOWED_PORTS = new Set(['', '80', '443', '8080', '8443']);
 
+/**
+ * Hosts that may be private — **development and tests only** (e.g. the web
+ * app's own sample files on localhost). Empty in production.
+ */
+let privateAllowlist = new Set<string>();
+export function allowPrivateHosts(hosts: string[]) {
+  privateAllowlist = new Set(hosts.map((h) => h.trim().toLowerCase()).filter(Boolean));
+}
+
 export async function vetUrl(input: string, resolve: Resolver = defaultResolver): Promise<SafeTarget> {
   const validation = validateMediaUrl(input);
   if (!validation.ok) throw new UnsafeUrlError('invalid_url', validation.message);
   const { url } = validation;
+  const host = url.hostname.replace(/^\[|\]$/g, '');
+  if (privateAllowlist.has(host.toLowerCase())) {
+    return { url, address: host === 'localhost' ? '127.0.0.1' : host, family: isIP(host) === 6 ? 6 : 4 };
+  }
   if (!ALLOWED_PORTS.has(url.port)) throw new UnsafeUrlError('bad_port', `Port ${url.port} is not allowed.`);
 
-  const host = url.hostname.replace(/^\[|\]$/g, '');
   if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.internal')) {
     throw new UnsafeUrlError('private_address', 'Links to private networks are not allowed.');
   }

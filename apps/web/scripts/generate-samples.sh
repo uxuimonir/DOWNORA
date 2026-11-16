@@ -7,7 +7,7 @@ FONT="${DOWNORA_SAMPLE_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
 mkdir -p "$OUT"
 
 video_src() { # $1=WxH $2=label $3=seconds
-  echo "gradients=s=$1:c0=0xF36444:c1=0x0D0D0D:c2=0x3A3A3A:c3=0x141414:n=4:speed=0.02:d=$3:r=30,drawtext=fontfile=$FONT:text='DOWNORA SAMPLE  $2':fontcolor=white@0.9:fontsize=h/22:x=w/20:y=h-h/8,drawtext=fontfile=$FONT:text='%{pts\:hms}':fontcolor=white@0.7:fontsize=h/30:x=w/20:y=h-h/8+h/18"
+  echo "gradients=s=$1:c0=0x8B5CF6:c1=0x08090D:c2=0x38BDF8:c3=0x191E28:n=4:speed=0.02:d=$3:r=30,drawtext=fontfile=$FONT:text='DOWNORA SAMPLE  $2':fontcolor=white@0.9:fontsize=h/22:x=w/20:y=h-h/8,drawtext=fontfile=$FONT:text='%{pts\:hms}':fontcolor=white@0.7:fontsize=h/30:x=w/20:y=h-h/8+h/18"
 }
 TONE="aevalsrc='0.18*sin(2*PI*220*t)+0.12*sin(2*PI*277.18*t)+0.10*sin(2*PI*329.63*t)':s=48000"
 

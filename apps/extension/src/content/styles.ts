@@ -7,13 +7,26 @@ export const OVERLAY_CSS = /* css */ `
 :host { all: initial; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 .layer {
-  --canvas: #0d0d0d; --surface: #141414; --raised: #1c1c1c; --hover: #242424;
-  --line: #2e2e2e; --ink: #f3f3f3; --muted: #a3a3a3; --faint: #8a8a8a;
-  --accent: #f36444; --danger: #ff6961; --success: #32d74b;
+  --canvas: #08090d; --surface: #11141b; --raised: #191e28; --hover: #222836;
+  --line: rgb(255 255 255 / 0.1); --ink: #f8fafc; --muted: #94a3b8; --faint: #8592a6;
+  --accent: #8b5cf6; --accent-ink: #b4a0fb; --sky: #38bdf8; --danger: #ff6b6b; --success: #34d399;
+  --glass: rgb(17 20 27 / 0.82); --fab: rgb(8 9 13 / 0.72); --tint: rgb(255 255 255 / 0.05); --tint2: rgb(255 255 255 / 0.09);
+  --shadow: 0 24px 60px -12px rgb(0 0 0 / 0.75);
   font: 14px/1.4 -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   position: fixed; inset: 0; pointer-events: none;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  .layer {
+    --canvas: #f7f8fc; --surface: #ffffff; --raised: #f0f2f8; --hover: #e7eaf3;
+    --line: rgb(17 24 39 / 0.1); --ink: #111827; --muted: #64748b; --faint: #5b6678;
+    --accent: #7047eb; --accent-ink: #5b32d6; --sky: #2585e8; --danger: #c62828; --success: #047857;
+    --glass: rgb(255 255 255 / 0.86); --fab: rgb(255 255 255 / 0.8); --tint: rgb(17 24 39 / 0.04); --tint2: rgb(17 24 39 / 0.07);
+    --shadow: 0 24px 60px -16px rgb(30 27 75 / 0.28);
+    color-scheme: light;
+  }
 }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -22,8 +35,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .fab {
   pointer-events: auto; position: fixed; width: 36px; height: 36px; border-radius: 999px;
   display: grid; place-items: center;
-  background: rgb(20 20 20 / 0.78); -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.14), 0 6px 18px rgb(0 0 0 / 0.45);
+  background: var(--fab); -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px);
+  box-shadow: 0 0 0 1px var(--line), 0 6px 18px rgb(0 0 0 / 0.3);
   opacity: 0.88; transition: opacity .15s, transform .15s;
 }
 .fab:hover, .fab:focus-visible, .fab[aria-expanded="true"] { opacity: 1; transform: scale(1.06); }
@@ -37,9 +50,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .panel {
   pointer-events: auto; position: fixed; width: 320px; max-width: calc(100vw - 16px);
   max-height: calc(100vh - 16px); overflow: auto;
-  background: rgb(28 28 28 / 0.92); -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
-  border: 1px solid rgb(255 255 255 / 0.1); border-radius: 20px;
-  box-shadow: 0 24px 60px -12px rgb(0 0 0 / 0.85);
+  background: linear-gradient(160deg, rgb(139 92 246 / 0.12), transparent 40%), var(--glass);
+  -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid var(--line); border-radius: 22px;
+  box-shadow: var(--shadow);
   animation: pop .18s cubic-bezier(.22,1,.36,1);
 }
 @keyframes pop { from { opacity: 0; transform: translateY(4px) scale(.98); } }
@@ -59,34 +73,34 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .close svg { width: 16px; height: 16px; }
 
 .label { font: 500 11px/16px 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); padding: 4px 16px 6px; }
-.list { margin: 0 10px; border-radius: 14px; background: rgb(255 255 255 / 0.05); overflow: hidden; }
-.opt { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid rgb(255 255 255 / 0.07); }
+.list { margin: 0 10px; border-radius: 14px; background: var(--tint); overflow: hidden; }
+.opt { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--line); }
 .opt:last-child { border-bottom: 0; }
-.opt:hover { background: rgb(255 255 255 / 0.04); }
+.opt:hover { background: var(--tint); }
 .opt input { accent-color: var(--accent); width: 18px; height: 18px; flex: none; }
 .opt .name { font-weight: 600; font-size: 14px; }
-.opt .q { color: var(--accent); font-weight: 600; margin-left: 6px; }
+.opt .q { color: var(--accent-ink); font-weight: 600; margin-left: 6px; }
 .opt .sub { font-size: 12px; color: var(--muted); }
 .opt .size { margin-left: auto; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .note { font-size: 12px; color: var(--faint); padding: 8px 16px 0; line-height: 1.45; }
-.error { margin: 10px 14px 0; padding: 10px 12px; border-radius: 12px; background: rgb(255 105 97 / 0.12); color: var(--danger); font-size: 13px; }
+.error { margin: 10px 14px 0; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); font-size: 13px; }
 
 .actions { display: grid; gap: 8px; padding: 14px; }
 .btn { min-height: 44px; border-radius: 999px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; }
 .btn svg { width: 18px; height: 18px; }
-.btn.primary { background: var(--ink); color: var(--canvas); }
-.btn.primary:hover { background: #fff; }
-.btn.secondary { background: rgb(255 255 255 / 0.08); color: var(--ink); }
-.btn.secondary:hover { background: rgb(255 255 255 / 0.12); }
+.btn.primary { background: var(--accent); color: #fff; box-shadow: 0 8px 20px -8px var(--accent); transition: filter .15s, transform .15s; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.secondary { background: var(--tint2); color: var(--ink); }
+.btn.secondary:hover { background: var(--hover); }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
 .btn:active:not(:disabled) { transform: scale(.98); }
 
 .progress { padding: 4px 14px 0; }
 .progress .row { display: flex; justify-content: space-between; font-size: 13px; }
 .progress .pct { font-size: 22px; font-weight: 300; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.track { margin-top: 8px; height: 8px; background: rgb(255 255 255 / 0.1); overflow: hidden;
+.track { margin-top: 8px; height: 8px; background: var(--tint2); overflow: hidden;
   -webkit-mask-image: repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 7px); mask-image: repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 7px); }
-.track > div { height: 100%; background: var(--accent); transition: width .3s ease-out; }
+.track > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--sky)); transition: width .3s ease-out; }
 .track.done > div { background: var(--success); }
 .track.indeterminate > div { width: 40% !important; animation: sweep 1.4s linear infinite; }
 @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(350%); } }
@@ -96,7 +110,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 `;
 
 /** Downora mark, same drawing as the web app's LogoMark. */
-export const LOGO_SVG = `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect width="32" height="32" rx="9.5" fill="#F36444"/><path d="M10 7.5h6.2c4.9 0 8.3 3.4 8.3 8.1 0 2.3-.8 4.3-2.2 5.8" stroke="#0D0D0D" stroke-width="2.6" stroke-linecap="round"/><path d="M10 7.5v10.2" stroke="#0D0D0D" stroke-width="2.6" stroke-linecap="round"/><path d="M16 12.5v8.2m0 0-3.4-3.4m3.4 3.4 3.4-3.4" stroke="#0D0D0D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 24.6h13" stroke="#0D0D0D" stroke-width="2.6" stroke-linecap="round"/></svg>`;
+export const LOGO_SVG = `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs><linearGradient id="dng" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#8B5CF6"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs><rect width="32" height="32" rx="9.5" fill="url(#dng)"/><path d="M10 7.5h6.2c4.9 0 8.3 3.4 8.3 8.1 0 2.3-.8 4.3-2.2 5.8" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/><path d="M10 7.5v10.2" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/><path d="M16 12.5v8.2m0 0-3.4-3.4m3.4 3.4 3.4-3.4" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 24.6h13" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/></svg>`;
 
 export const ICONS = {
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',

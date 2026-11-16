@@ -37,9 +37,9 @@ Progress comes from `chrome.downloads.onChanged` (`bytesReceived`/`totalBytes`),
 and pause and resume use `chrome.downloads.pause/resume`. These are real
 browser-tracked numbers.
 
-## Downora Desktop hand-off
+## Account and history sync
 
-When paired (see apps/desktop/README.md), `startDownload` first sends a signed `POST /v1/jobs` to `127.0.0.1:47913`; progress comes from signed `POST /v1/jobs/:id` polls. If the app is offline, disabled or the pairing is invalid, `chrome.downloads` is used instead and the entry carries a note. All signed calls are POST because Chrome omits `Origin` on extension GETs.
+The service worker owns the session (`src/shared/account.ts`): `POST /api/auth/login` with `client: 'extension'` returns a bearer token, stored in extension IndexedDB. When a `chrome.downloads` item turns `complete`, the worker posts it to `POST /api/history` with `source: 'extension'`. Failures are ignored (history is best effort); nothing else is sent. The API address needs a host permission, requested when it's saved.
 
 ## Permissions (minimum)
 

@@ -1,4 +1,4 @@
-import { Toaster, TooltipProvider } from '@downora/ui';
+import { Toaster, TooltipProvider, useApplyTheme } from '@downora/ui';
 import { MotionConfig } from 'framer-motion';
 import { useEffect } from 'react';
 import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router';
@@ -43,6 +43,8 @@ const router = createRouter([
 
 export function App() {
   const motion = useSettings((s) => s.settings.motion);
+  const theme = useSettings((s) => s.settings.theme);
+  useApplyTheme(theme);
   useEffect(() => {
     document.documentElement.dataset.motion = motion;
   }, [motion]);
@@ -51,7 +53,7 @@ export function App() {
     <MotionConfig reducedMotion={motion === 'reduce' ? 'always' : motion === 'full' ? 'never' : 'user'}>
       <TooltipProvider delayDuration={300}>
         <RouterProvider router={router} />
-        <Toaster />
+        <Toaster theme={theme} />
       </TooltipProvider>
     </MotionConfig>
   );

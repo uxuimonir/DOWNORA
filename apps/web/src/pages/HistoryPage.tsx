@@ -3,6 +3,7 @@ import { Button, ConfirmDialog, Input, Panel, SegmentedControl } from '@downora/
 import { Clock3, Plus, Search, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router';
+import { AccountHistory } from '@/components/shared/AccountHistory';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { JobRow } from '@/components/shared/JobRow';
 import { PageHeader } from '@/components/shared/PageHeader';
@@ -116,6 +117,8 @@ export function HistoryPage() {
           )}
         </>
       )}
+
+      <AccountHistory />
 
       <ConfirmDialog
         open={confirmOpen}

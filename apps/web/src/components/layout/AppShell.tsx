@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useChrome } from '@/stores/chrome';
+import { ThemeControl } from '@/components/site/Navigation';
 import { isActive, useDownloads } from '@/stores/downloads';
 
 interface NavItem {
@@ -91,10 +92,10 @@ function SidebarSection({ title, items }: { title: string; items: NavItem[] }) {
               >
                 {({ isActive: on }) => (
                   <>
-                    <Icon className={cn('size-[17px]', on ? 'text-accent' : 'text-ink-faint group-hover:text-ink-muted')} />
+                    <Icon className={cn('size-[17px]', on ? 'text-accent-soft' : 'text-ink-faint group-hover:text-ink-muted')} />
                     <span className="flex-1">{label}</span>
                     {n !== undefined ? (
-                      <span className={cn('tabular font-mono text-[0.6875rem]', count === 'active' && n > 0 ? 'text-accent' : 'text-ink-faint')}>
+                      <span className={cn('tabular font-mono text-[0.6875rem]', count === 'active' && n > 0 ? 'text-accent-soft' : 'text-ink-faint')}>
                         {count === 'active' && n > 0 ? <span className="sr-only">Active downloads: </span> : null}
                         {n}
                       </span>
@@ -119,14 +120,14 @@ function TabBar() {
   const moreActive = MORE.some((m) => location.pathname.startsWith(m.to));
 
   return (
-    <nav aria-label="Main" className="material fixed inset-x-0 bottom-0 z-40 border-t border-white/8 pb-safe lg:hidden">
+    <nav aria-label="Main" className="material fixed inset-x-0 bottom-0 z-40 border-t border-edge pb-safe lg:hidden">
       <ul className="mx-auto grid h-[3.25rem] max-w-lg grid-cols-5">
         {TABS.map(({ to, label, icon: Icon, count }) => (
           <li key={to}>
             <NavLink
               to={to}
               className={({ isActive: on }) =>
-                cn('relative flex h-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium', on ? 'text-accent' : 'text-ink-faint')
+                cn('relative flex h-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium', on ? 'text-accent-soft' : 'text-ink-faint')
               }
             >
               <Icon className="size-[22px]" strokeWidth={1.8} />
@@ -145,24 +146,27 @@ function TabBar() {
             <SheetTrigger
               className={cn(
                 'flex h-full w-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium',
-                moreActive ? 'text-accent' : 'text-ink-faint',
+                moreActive ? 'text-accent-soft' : 'text-ink-faint',
               )}
             >
               <Ellipsis className="size-[22px]" strokeWidth={1.8} />
               More
             </SheetTrigger>
             <SheetContent title="More">
-              <p className="label-mono px-6 pt-4 pb-2">More</p>
-              <ul className="mx-4 mb-4 overflow-hidden rounded-panel bg-white/6">
+              <div className="flex items-center justify-between px-6 pt-4 pb-2">
+                <p className="label-mono">More</p>
+                <ThemeControl />
+              </div>
+              <ul className="mx-4 mb-4 overflow-hidden rounded-panel bg-raised">
                 {MORE.map(({ to, label, icon: Icon }) => (
-                  <li key={to} className="border-b border-white/8 last:border-b-0">
+                  <li key={to} className="border-b border-edge last:border-b-0">
                     <Link
                       to={to}
                       onClick={() => setMoreOpen(false)}
-                      className="flex h-12 items-center gap-3.5 px-4 text-[1.0625rem] text-ink active:bg-white/8"
+                      className="flex h-12 items-center gap-3.5 px-4 text-[1.0625rem] text-ink active:bg-hover"
                     >
                       <span className="grid size-7 place-items-center rounded-[0.5rem] bg-accent/18">
-                        <Icon className="size-4 text-accent" />
+                        <Icon className="size-4 text-accent-soft" />
                       </span>
                       <span className="flex-1">{label}</span>
                       <ChevronRight className="size-4 text-ink-faint" aria-hidden />
@@ -188,7 +192,7 @@ function NavBar() {
     <header
       className={cn(
         'material sticky top-0 z-40 border-b pt-safe transition-colors duration-200 lg:hidden',
-        showTitle ? 'border-white/8' : 'border-transparent',
+        showTitle ? 'border-edge' : 'border-transparent',
       )}
     >
       <div className="relative flex h-11 items-center justify-center px-4">
@@ -248,9 +252,10 @@ export function AppShell() {
             <SidebarSection title="Library" items={LIBRARY} />
             <SidebarSection title="Account" items={ACCOUNT} />
           </div>
-          <p className="mt-auto px-3 pt-4 text-xs leading-relaxed text-ink-faint">
-            Downloads run in this browser. Nothing is uploaded.
-          </p>
+          <div className="mt-auto flex flex-col gap-3 px-3 pt-4">
+            <ThemeControl />
+            <p className="text-xs leading-relaxed text-ink-muted">Originals download in your browser. Conversions run on Downora’s server.</p>
+          </div>
         </nav>
       </aside>
 

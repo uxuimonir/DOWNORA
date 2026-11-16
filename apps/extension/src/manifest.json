@@ -11,7 +11,7 @@
     "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" }
   },
   "background": { "service_worker": "background.js", "type": "module" },
-  "permissions": ["downloads", "storage", "activeTab", "scripting", "alarms"],
+  "permissions": ["downloads", "storage", "activeTab", "scripting"],
   "optional_host_permissions": ["https://*/*", "http://*/*"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"

@@ -20,7 +20,7 @@ export const buttonVariants = cva(
         ghost: 'text-ink-muted hover:bg-raised hover:text-ink',
         outline: 'border border-line-strong text-ink hover:bg-raised',
         danger: 'border border-danger/40 bg-danger/10 text-danger hover:bg-danger/20',
-        link: 'hit-area h-auto rounded-sm px-0 text-accent underline-offset-4 hover:underline',
+        link: 'hit-area h-auto rounded-sm px-0 text-accent-soft underline-offset-4 hover:underline',
       },
       size: {
         sm: 'hit-area h-8 px-3.5 text-[0.8125rem] [&_svg]:size-3.5',

@@ -2,7 +2,7 @@ import { Badge, Button, Panel, PanelHeader, PanelTitle } from '@downora/ui';
 import { ArrowUpRight, Clock3, Plus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { UrlBar } from '@/components/downloader/UrlBar';
+import { URLInput } from '@/components/downloader/URLInput';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { JobRow } from '@/components/shared/JobRow';
 import { PageHeader } from '@/components/shared/PageHeader';
@@ -46,7 +46,7 @@ export function DashboardPage() {
     <>
       <PageHeader title="Dashboard" description="Paste a link to start, or pick up where you left off." />
 
-      <UrlBar
+      <URLInput
         value={url}
         onChange={setUrl}
         busy={false}
@@ -138,7 +138,7 @@ export function DashboardPage() {
                     ? `Connected, version ${api.health.version}.`
                     : api.state === 'offline'
                       ? api.message
-                      : 'Not configured. Needed for format conversion and sites that block browsers.'
+                      : 'Not configured. Needed for conversion, accounts and sites that block browsers.'
               }
               badge={
                 api?.state === 'online' ? (
@@ -150,8 +150,7 @@ export function DashboardPage() {
                 )
               }
             />
-            <EngineRow name="Chrome extension" note="Detects media on the page you’re viewing." badge={<Badge tone="accent">In development</Badge>} />
-            <EngineRow name="Desktop app" note="Windows and macOS, with a folder picker." badge={<Badge tone="accent">In development</Badge>} />
+            <EngineRow name="Chrome extension" note="Detects media on the page you’re viewing. Developer preview." badge={<Badge tone="accent">Preview</Badge>} />
           </ul>
           <div className="border-t border-line px-5 py-3">
             <Link to="/help" className="inline-flex min-h-11 items-center gap-1 text-sm text-accent-soft hover:underline">

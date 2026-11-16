@@ -4,8 +4,6 @@ import { formatBytes, qualityOf } from '../../src/content/overlay';
 import { checkApi } from '../../src/shared/api';
 import { downloadFileName } from '../../src/shared/filename';
 import { dashboardLink, normalizeSettings } from '../../src/shared/settings';
-import { signRequest } from '../../src/shared/desktop';
-import { createHash, createHmac } from 'node:crypto';
 
 const res = (status: number, headers: Record<string, string> = {}) => new Response(status === 204 || status === 206 ? null : '', { status, headers });
 const fetchOf = (...responses: (Response | Error)[]) => {
@@ -34,7 +32,7 @@ describe('settings', () => {
       askWhereToSave: false,
       dashboardUrl: 'http://localhost:5173',
       apiUrl: '',
-      sendToDesktop: true,
+      theme: 'system',
     });
     expect(normalizeSettings({ dashboardUrl: 'https://downora.app/' }).dashboardUrl).toBe('https://downora.app');
   });
@@ -90,12 +88,3 @@ describe('checkApi', () => {
   });
 });
 
-describe('desktop request signing', () => {
-  it('matches the bridge scheme: HMAC-SHA256 over method, path, timestamp, nonce, body hash', async () => {
-    const secret = Buffer.from('0123456789abcdef0123456789abcdef');
-    const body = '{"url":"https://cdn.example/a.mp4"}';
-    const canon = `POST\n/v1/jobs\n1700000000000\n00ff\n${createHash('sha256').update(body).digest('hex')}`;
-    const expected = createHmac('sha256', secret).update(canon).digest('hex');
-    expect(await signRequest(secret.toString('base64'), 'POST', '/v1/jobs', body, '1700000000000', '00ff')).toBe(expected);
-  });
-});

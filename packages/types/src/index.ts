@@ -1,7 +1,7 @@
 /**
  * @downora/types — the shared domain model.
  *
- * Every surface (web, API, extension, desktop) speaks these types. Keep this
+ * Every surface (web app, API, extension) speaks these types. Keep this
  * package free of runtime dependencies so it can be imported anywhere.
  */
 
@@ -165,6 +165,7 @@ export interface SourceAdapterDescriptor {
 
 export type FileNamePattern = 'original' | 'with-quality' | 'with-date';
 export type MotionPreference = 'system' | 'reduce' | 'full';
+export type ThemePreference = 'system' | 'light' | 'dark';
 
 export interface UserSettings {
   /** How many transfers run at once (1–4). */
@@ -176,6 +177,7 @@ export interface UserSettings {
   maxBrowserFileMb: number;
   notifyOnComplete: boolean;
   motion: MotionPreference;
+  theme: ThemePreference;
   /** Finished items kept in history before the oldest are dropped. */
   historyLimit: number;
 }
@@ -187,8 +189,62 @@ export const DEFAULT_SETTINGS: UserSettings = {
   maxBrowserFileMb: 1024,
   notifyOnComplete: false,
   motion: 'system',
+  theme: 'system',
   historyLimit: 200,
 };
+
+// ─────────────────────────── Accounts ───────────────────────────
+
+export interface User {
+  id: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  /** Only for `client: 'extension'` sign-ins; the web app uses an HttpOnly cookie. */
+  token?: string;
+}
+
+export interface HistoryEntry {
+  id: string;
+  url: string;
+  title: string;
+  fileName: string;
+  container: Container;
+  kind: MediaKind;
+  qualityLabel?: string;
+  sizeBytes?: number;
+  source: 'web' | 'extension' | 'server';
+  createdAt: string;
+}
+
+// ───────────────────────── Server jobs ─────────────────────────
+
+export type ServerJobStatus = 'queued' | 'downloading' | 'converting' | 'completed' | 'failed' | 'canceled';
+
+/** A download or conversion the API runs for a signed-in user. */
+export interface ServerJob {
+  id: string;
+  mediaId: string;
+  formatId: string;
+  title: string;
+  fileName: string;
+  container: Container;
+  kind: MediaKind;
+  qualityLabel?: string;
+  status: ServerJobStatus;
+  bytesReceived: number;
+  bytesTotal?: number;
+  /** 0–1 while converting, from FFmpeg's own progress. */
+  convertProgress?: number;
+  sizeBytes?: number;
+  error?: string;
+  createdAt: string;
+  /** The finished file is deleted after this. */
+  expiresAt?: string;
+}
 
 // ───────────────────── REST contract (Phase 3) ─────────────────────
 // The web app's API client is typed against these. The API implements them in
@@ -203,7 +259,9 @@ export interface HealthResponse {
   service: 'downora-api';
   version: string;
   /** Capabilities the running server actually has. */
-  capabilities: { analyze: boolean; downloads: boolean; transcode: boolean; auth: boolean };
+  capabilities: { analyze: boolean; downloads: boolean; transcode: boolean; auth: boolean; history: boolean };
+  /** Output containers this server's FFmpeg can produce. */
+  outputs: Container[];
 }
 
 export interface AnalyzeRequest {
@@ -278,9 +336,4 @@ export interface ExtensionDownload {
   error?: string;
   startedAt: string;
   endedAt?: string;
-  /** Who is saving the file: Chrome's downloader or the paired desktop app. */
-  via?: 'chrome' | 'desktop';
-  desktopJobId?: string;
-  /** Shown under the entry, e.g. why Chrome was used instead of the desktop app. */
-  note?: string;
 }

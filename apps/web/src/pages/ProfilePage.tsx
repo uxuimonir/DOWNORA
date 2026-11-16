@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { formatBytes } from '@/lib/format';
 import { useDownloads } from '@/stores/downloads';
+import { useAccount } from '@/stores/account';
 import { useSettings } from '@/stores/settings';
 
 function useStorageEstimate() {
@@ -20,6 +21,12 @@ export function ProfilePage() {
   const settings = useSettings((s) => s.settings);
   const [confirmErase, setConfirmErase] = useState(false);
   const storage = useStorageEstimate();
+  const account = useAccount();
+  useEffect(() => {
+    void account.init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const signedIn = account.status === 'signed_in' && account.user;
 
   const summary = useMemo(() => {
     const done = jobs.filter((j) => j.status === 'completed');
@@ -47,7 +54,7 @@ export function ProfilePage() {
 
   return (
     <>
-      <PageHeader title="Profile" description="You’re using Downora without an account. Everything below lives in this browser only." />
+      <PageHeader title="Profile" description={signedIn ? `Signed in as ${account.user!.email}.` : "You’re using Downora without an account. Local data below lives in this browser only."} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <Panel>
@@ -56,11 +63,11 @@ export function ProfilePage() {
               <HardDrive className="size-6 text-canvas" aria-hidden />
             </span>
             <div className="min-w-0">
-              <p className="text-lg font-semibold">Local workspace</p>
+              <p className="text-lg font-semibold">This browser</p>
               <p className="text-sm text-ink-muted">{summary.since ? `First download on ${summary.since}` : 'No downloads yet'}</p>
             </div>
-            <Badge className="sm:ml-auto" dot>
-              Not signed in
+            <Badge className="sm:ml-auto" tone={signedIn ? 'success' : 'neutral'} dot>
+              {signedIn ? 'Signed in' : 'Not signed in'}
             </Badge>
           </div>
           <dl className="tabular grid grid-cols-2 gap-px border-t border-line bg-line sm:grid-cols-4">
@@ -79,17 +86,31 @@ export function ProfilePage() {
         </Panel>
 
         <Panel className="flex flex-col p-5">
-          <p className="font-semibold">Sync across devices</p>
-          <p className="mt-1.5 text-sm text-ink-muted">
-            Accounts will sync history and settings between the web app, extension and desktop app. They aren’t available
-            yet.
-          </p>
-          <Button className="mt-4 self-start" asChild>
-            <Link to="/sign-in">
-              <LogIn />
-              About accounts
-            </Link>
-          </Button>
+          {signedIn ? (
+            <>
+              <p className="font-semibold">Account</p>
+              <p className="mt-1.5 text-sm break-all text-ink-muted" data-testid="account-email">{account.user!.email}</p>
+              <p className="mt-1 text-xs text-ink-muted">Member since {new Date(account.user!.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
+              <p className="mt-3 text-sm text-ink-muted">Your history syncs with the Chrome extension when you sign in there too.</p>
+              <Button className="mt-4 self-start" onClick={() => void account.signOut()}>
+                <LogIn /> Sign out
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="font-semibold">Sync and convert</p>
+              <p className="mt-1.5 text-sm text-ink-muted">
+                {account.status === 'not_configured' || account.status === 'offline'
+                  ? 'Accounts need Downora’s server, which isn’t connected.'
+                  : 'A free account lets you convert files and keeps your history in sync with the Chrome extension.'}
+              </p>
+              <Button className="mt-4 self-start" asChild>
+                <Link to="/sign-in">
+                  <LogIn /> Sign in
+                </Link>
+              </Button>
+            </>
+          )}
         </Panel>
       </div>
 

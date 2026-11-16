@@ -60,18 +60,9 @@ export type PopupMessage =
   | { type: 'downloads/cancel'; id: number }
   | { type: 'downloads/clear' }
   | { type: 'downloads/show'; id: number }
-  | { type: 'desktop/state' }
-  | { type: 'desktop/pair'; code: string }
-  | { type: 'desktop/unpair' };
-
-export interface DesktopState {
-  paired: boolean;
-  pairedAt?: string;
-  /** null = not checked (not paired). */
-  reachable: boolean | null;
-  version?: string;
-  error?: string;
-}
+  | { type: 'account/state' }
+  | { type: 'account/signin'; email: string; password: string }
+  | { type: 'account/signout' };
 
 // Worker → content script / popup
 export type WorkerEvent = { type: 'downloads/changed'; downloads: ExtensionDownload[] };
@@ -173,16 +164,15 @@ export function parsePopupMessage(v: unknown): PopupMessage | null {
         : null;
     case 'downloads/list':
     case 'downloads/clear':
+    case 'account/state':
+    case 'account/signout':
       return { type: v.type };
+    case 'account/signin':
+      return isStr(v.email, 254) && isStr(v.password, 200) ? { type: 'account/signin', email: v.email, password: v.password } : null;
     case 'downloads/retry':
     case 'downloads/cancel':
     case 'downloads/show':
-      return typeof v.id === 'number' && Number.isInteger(v.id) ? { type: v.type, id: v.id } : null;
-    case 'desktop/state':
-    case 'desktop/unpair':
-      return { type: v.type };
-    case 'desktop/pair':
-      return typeof v.code === 'string' && /^\d{6}$/.test(v.code) ? { type: 'desktop/pair', code: v.code } : null;
+      return isId(v.id) ? { type: v.type, id: v.id } : null;
     default:
       return null;
   }

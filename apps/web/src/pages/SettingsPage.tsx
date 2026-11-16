@@ -2,6 +2,7 @@ import type { FileNamePattern, MotionPreference } from '@downora/types';
 import { Button, ConfirmDialog, Panel, SegmentedControl, SelectField, Switch, toast } from '@downora/ui';
 import { useId, useState, type ReactNode } from 'react';
 import { PageHeader } from '@/components/shared/PageHeader';
+import { ThemeControl } from '@/components/site/Navigation';
 import { buildFileName } from '@/lib/format';
 import { useSettings } from '@/stores/settings';
 
@@ -131,7 +132,7 @@ export function SettingsPage() {
         <Row
           htmlFor={sizeId}
           label="Largest file in the browser"
-          description="The browser holds a file in memory until it’s saved. Larger files will need the desktop app."
+          description="The browser holds a file in memory until it’s saved. Bigger files can be fetched by Downora’s server when you’re signed in."
           control={
             <SelectField
               id={sizeId}
@@ -156,6 +157,11 @@ export function SettingsPage() {
           label="Notify when a download finishes"
           description="Only when Downora is in a background tab. Your browser will ask for permission."
           control={<Switch id={notifyId} checked={settings.notifyOnComplete} onCheckedChange={(v) => void toggleNotify(v)} />}
+        />
+        <Row
+          label="Theme"
+          description="“System” follows your device’s light or dark setting."
+          control={<ThemeControl />}
         />
         <Row
           label="Motion"

@@ -1,33 +1,33 @@
 # Downora
 
-**One click. Any supported media.** A media downloader made of a web app, a Chrome
-extension and a desktop app. It saves only files you're allowed to have: it never
-bypasses DRM, sign-ins or paywalls.
+**Your media. One click away.** Downora is two products on one backend and one
+design system: a web app and a Chrome extension (Manifest V3). It saves only
+files you're allowed to have: it never bypasses DRM, sign-ins or paywalls.
 
 ## Status
 
 | Part | State |
 | --- | --- |
-| Web app (`apps/web`) | **Working.** 11 pages, real in-browser download engine, tested |
-| Design system (`packages/ui`) | **Working.** Tokens and components used by the web app |
+| Web app (`apps/web`) | **Working.** Landing site (17 sections, light/dark/system theme), downloader, history, settings, accounts. Tested on desktop and phone |
+| Chrome extension (`apps/extension`) | **Working in Chromium.** Detection, Shadow DOM floating button and panel, glass popup, Chrome downloads, theme, account sign-in, history sync. Not on the Chrome Web Store |
+| API (`apps/api`) | **Working.** Accounts, sessions, analysis, server jobs (FFmpeg), history, settings, SSRF guard. SQLite (`node:sqlite`, still marked experimental by Node); jobs are in memory |
+| Media engine (`packages/media-engine`) | **Working.** FFmpeg probe and conversion, never upscales |
+| Design system (`packages/ui`) | **Working.** Shared tokens and components (web + extension popup) |
 | Source adapters (`packages/source-adapters`) | **Working.** Direct MP4, WebM, MP3, M4A and WAV links |
-| API (`apps/api`) | **Partial.** Health, sources and the SSRF guard work; other routes return `501` |
-| Database (`infrastructure/database`) | Draft migration, not yet applied |
-| Media engine (`packages/media-engine`) | Interface only, no FFmpeg code yet |
-| Chrome extension (`apps/extension`) | **Working.** Detection, floating button, panel, popup, Chrome downloads; tested in Chromium. Not on the Chrome Web Store |
-| Desktop app (`apps/desktop`) | **Working on Linux** (built, installed, tested). Windows/macOS: code and CI ready, not yet built there. No signed installers |
+| Postgres migration (`infrastructure/database`) | Draft, not used (the API uses SQLite) |
 
-### What the web app really does
+There is no desktop app.
 
-- **Analyzes a link.** It validates the URL, matches it to a source adapter, and reads the type and size from a HEAD request (or a 1-byte Range request). Duration and resolution come from loading the file's metadata in a media element, and a preview frame is captured when the server allows it.
-- **Lists only formats the file actually has.** A direct link is one file, so you get one honest option. Conversions are shown as unavailable until the media service exists.
-- **Downloads with real progress.** Progress, speed and time remaining come from the bytes that actually arrived. Downloads can be paused and resumed with HTTP Range requests when the server supports it (otherwise it says "Restart"), canceled, and retried. A setting controls how many run at once.
-- **Handles servers that block browser reads.** It says so and offers the browser's own download instead of failing silently.
-- **Keeps history and settings in `localStorage`.** You can search and filter history, export everything as JSON, or erase it.
+### What it really does
 
-Known limits: the browser holds each file in memory until it's saved (default
-cap 1 GB, adjustable in Settings), and closing the tab loses partial bytes (the
-download is marked as interrupted).
+- **Analyzes a link** in the browser (HEAD/Range, media metadata, preview frame) and, when the API is running, on the server too (`ffprobe` over SSRF-guarded fetches).
+- **Lists only formats the file has.** The original file always; MP4/WEBM/MKV/MP3/WAV/M4A conversions only when the API has FFmpeg and you're signed in, and only at or below the source's resolution.
+- **Downloads with real progress.** In-browser downloads count real bytes and resume with HTTP Range. Server conversions report real FFmpeg progress, then hand you the file.
+- **Accounts.** Email + password (scrypt). The web app uses an HttpOnly cookie; the extension gets a bearer token kept in its own IndexedDB. Both write to the same history.
+
+Known limits: in-browser downloads are held in memory until saved (default cap
+1 GB), server jobs vanish when the API restarts, and sites that only stream
+(HLS/DASH/MSE) or use DRM aren't supported.
 
 ## Run it
 
@@ -41,13 +41,15 @@ pnpm install
 pnpm dev
 ```
 
-Then open http://localhost:5173. To run the API as well (optional):
+Then open http://localhost:5173. To run the API as well (accounts, history,
+conversions; FFmpeg must be installed for conversions):
 
 ```bash
 pnpm dev:api
 ```
 
-Then set `VITE_DOWNORA_API_URL=http://localhost:8787` in `apps/web/.env`.
+Then set `VITE_DOWNORA_API_URL=http://localhost:8787` in `apps/web/.env`. See
+`apps/api/.env.example` for settings.
 
 ## Test it
 
@@ -75,14 +77,13 @@ desktop and phone.
 ```
 apps/
   web/          React 19 + Vite + Tailwind 4 web app
-  api/          Node + TypeScript REST API (Phase 3 groundwork)
+  api/          Node + TypeScript REST API (accounts, analysis, jobs, history)
   extension/    Chrome MV3 extension (detection, floating button, popup)
-  desktop/      Tauri 2 desktop app (Rust engine + React UI)
 packages/
   types/            Shared domain and API types
   source-adapters/  Which links are supported, and why it's allowed
   ui/               Design tokens and components
-  media-engine/     FFmpeg contract (Phase 4)
+  media-engine/     FFmpeg probe + conversion
   config/           Shared tsconfig
 infrastructure/database/  SQL migrations
 docs/                     Architecture notes
@@ -96,7 +97,6 @@ redistribute and to use in tests.
 
 ## Docs
 
-- [docs/backend-integration.md](docs/backend-integration.md): API status, Phase 3–4 plan, and the credentials you'll need
+- [docs/backend-integration.md](docs/backend-integration.md): API routes, security, and what's next
 - [apps/extension/README.md](apps/extension/README.md): build the extension and install it in Chrome
 - [docs/extension-architecture.md](docs/extension-architecture.md): Chrome extension design
-- [apps/desktop/README.md](apps/desktop/README.md): desktop app: build, installers, code signing, security, tests

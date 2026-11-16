@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en" data-motion="system" style="background:#0d0d0d;color-scheme:dark">
+<html lang="en" data-motion="system" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0D0D0D" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#08090D" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F7F8FC" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -13,6 +14,17 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="description" content="Downora saves video and audio from direct media links. One click, any supported media — no DRM bypass, no sign-in scraping." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      // Apply the saved theme before first paint (no flash).
+      (function () {
+        var pref = 'system';
+        try { pref = (JSON.parse(localStorage.getItem('downora.settings') || '{}').state || {}).settings.theme || 'system'; } catch (e) {}
+        var dark = pref === 'dark' || (pref === 'system' && !matchMedia('(prefers-color-scheme: light)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.style.background = dark ? '#08090d' : '#f7f8fc';
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+      })();
+    </script>
     <title>Downora — One click. Any supported media.</title>
   </head>
   <body>

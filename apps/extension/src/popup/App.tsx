@@ -1,5 +1,5 @@
 import type { DetectedMedia, DetectedSource, ExtensionDownload } from '@downora/types';
-import { Badge, Button, cn, Input, Logo, SegmentedControl, Skeleton, Switch, TransferTrack } from '@downora/ui';
+import { Badge, Button, cn, Input, Logo, SegmentedControl, Skeleton, Switch, ThemeSwitcher, TransferTrack, useApplyTheme } from '@downora/ui';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -8,7 +8,6 @@ import {
   Film,
   FolderOpen,
   Globe,
-  Laptop,
   Lock,
   Music2,
   RotateCcw,
@@ -18,8 +17,7 @@ import {
 import { useCallback, useEffect, useId, useState, type ReactNode } from 'react';
 import { qualityOf, formatBytes } from '../content/overlay';
 import { checkApi, type ApiStatus } from '../shared/api';
-import type { DesktopState, PopupMessage, Result, TabState } from '../shared/messages';
-import { DESKTOP_PERMISSION } from '../shared/desktop';
+import type { PopupMessage, Result, TabState } from '../shared/messages';
 import { dashboardLink, DEFAULT_SETTINGS, loadSettings, saveSettings, type ExtensionSettings } from '../shared/settings';
 
 type View = 'page' | 'downloads' | 'settings';
@@ -82,6 +80,7 @@ export function App() {
   const [downloads, setDownloads] = useState<ExtensionDownload[]>([]);
   const [settings, setSettings] = useState<ExtensionSettings>(DEFAULT_SETTINGS);
   const [flash, setFlash] = useState<{ tone: 'success' | 'danger'; text: string } | null>(null);
+  useApplyTheme(settings.theme);
 
   const refreshTab = useCallback(async (id: number) => {
     const res = await send<TabState>({ type: 'tab/state', tabId: id });
@@ -179,8 +178,9 @@ export function App() {
   const active = downloads.filter((d) => d.state === 'in_progress').length;
 
   return (
-    <div className="flex min-h-[520px] flex-col bg-canvas p-4 text-ink">
-      <header className="flex items-center justify-between">
+    <div className="relative flex min-h-[520px] flex-col overflow-hidden bg-canvas p-4 text-ink">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-24 h-56 bg-[radial-gradient(60%_60%_at_30%_40%,rgb(139_92_246/0.28),transparent),radial-gradient(50%_60%_at_80%_30%,rgb(56_189_248/0.2),transparent)] blur-2xl" />
+      <header className="relative flex items-center justify-between">
         <h1 className="m-0">
           <Logo className="[&_svg]:size-7 [&>span:last-child]:text-[1.0625rem]" />
         </h1>
@@ -190,7 +190,7 @@ export function App() {
         </Button>
       </header>
 
-      <nav aria-label="Popup sections" className="mt-4">
+      <nav aria-label="Popup sections" className="relative mt-4">
         <SegmentedControl
           aria-label="Sections"
           className="grid grid-cols-3"
@@ -226,7 +226,7 @@ export function App() {
         </div>
       ) : null}
 
-      <main className="flex-1">
+      <main className="relative flex-1">
         {view === 'page' ? (
           <PageView
             tab={tab}
@@ -298,7 +298,7 @@ function PageView({
         <div className="rounded-panel border border-line bg-surface p-4">
           <div className="flex items-center gap-3">
             <span className="grid size-9 shrink-0 place-items-center rounded-[0.625rem] bg-accent/15">
-              {tab.access === 'restricted' ? <Lock className="size-4 text-accent" /> : <Globe className="size-4 text-accent" />}
+              {tab.access === 'restricted' ? <Lock className="size-4 text-accent-soft" /> : <Globe className="size-4 text-accent-soft" />}
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{host || 'Browser page'}</p>
@@ -478,14 +478,7 @@ function DownloadsView({ downloads, onChange }: { downloads: ExtensionDownload[]
                   <p className="truncate text-sm font-medium" title={d.fileName}>
                     {d.fileName}
                   </p>
-                  <p className="flex items-center gap-1 text-xs text-ink-muted">
-                    {d.via === 'desktop' ? (
-                      <>
-                        <Laptop className="size-3 text-accent" aria-hidden /> Saved by Downora Desktop ·{' '}
-                      </>
-                    ) : null}
-                    {d.pageHost || new URL(d.url).host}
-                  </p>
+                  <p className="text-xs text-ink-muted">{d.pageHost || new URL(d.url).host}</p>
                 </div>
                 <Badge tone={d.state === 'complete' ? 'success' : d.state === 'interrupted' ? 'danger' : 'accent'} dot>
                   {d.state === 'complete' ? 'Saved' : d.state === 'interrupted' ? 'Failed' : d.paused ? 'Paused' : 'Saving'}
@@ -504,9 +497,8 @@ function DownloadsView({ downloads, onChange }: { downloads: ExtensionDownload[]
               ) : (
                 <p className="mt-1.5 text-xs text-ink-muted tabular">{formatBytes(d.bytesTotal ?? d.bytesReceived)}</p>
               )}
-              {d.note ? <p className="mt-1.5 text-xs text-ink-faint">{d.note}</p> : null}
               <div className="mt-2 flex gap-1.5">
-                {d.state === 'in_progress' && d.via !== 'desktop' ? (
+                {d.state === 'in_progress' ? (
                   <Button size="sm" variant="ghost" onClick={() => void act({ type: 'downloads/cancel', id: d.id })}>
                     <X />
                     Cancel
@@ -518,7 +510,7 @@ function DownloadsView({ downloads, onChange }: { downloads: ExtensionDownload[]
                     Retry
                   </Button>
                 ) : null}
-                {d.state === 'complete' && d.via !== 'desktop' ? (
+                {d.state === 'complete' ? (
                   <Button size="sm" variant="ghost" onClick={() => void act({ type: 'downloads/show', id: d.id })}>
                     <FolderOpen />
                     Show in folder
@@ -539,6 +531,7 @@ function SettingsView({ settings, onChange }: { settings: ExtensionSettings; onC
   const [api, setApi] = useState<ApiStatus | null>(null);
   const [allSites, setAllSites] = useState(false);
   const [urls, setUrls] = useState({ dashboardUrl: settings.dashboardUrl, apiUrl: settings.apiUrl });
+  const [apiGrant, setApiGrant] = useState(0);
   const fabId = useId();
   const saveAsId = useId();
   const allId = useId();
@@ -555,6 +548,20 @@ function SettingsView({ settings, onChange }: { settings: ExtensionSettings; onC
 
   const update = async (patch: Partial<ExtensionSettings>) => onChange(await saveSettings(patch));
 
+  const saveAddresses = async () => {
+    // The worker can only reach the API if Chrome lets it; ask for that one origin.
+    // Ask in the same click (a user gesture), but save first so a pending prompt can't block it.
+    let origin: string | undefined;
+    try {
+      origin = urls.apiUrl ? new URL(urls.apiUrl).origin : undefined;
+    } catch {
+      /* bad URL: saveSettings falls back */
+    }
+    const asked = origin ? chrome.permissions.request({ origins: [`${origin}/*`] }).catch(() => false) : null;
+    await update(urls);
+    if (asked && (await asked)) setApiGrant((n) => n + 1);
+  };
+
   const toggleAllSites = async (next: boolean) => {
     if (next) {
       const granted = await chrome.permissions.request({ origins: ['https://*/*', 'http://*/*'] }).catch(() => false);
@@ -569,6 +576,13 @@ function SettingsView({ settings, onChange }: { settings: ExtensionSettings; onC
   const row = 'flex items-center justify-between gap-4 border-b border-line px-4 py-3 last:border-b-0';
   return (
     <>
+      <Section title="Appearance">
+        <div className="flex items-center justify-between gap-4 rounded-panel border border-line bg-surface px-4 py-3">
+          <span className="text-sm">Theme</span>
+          <ThemeSwitcher size="sm" value={settings.theme} onChange={(theme) => void update({ theme })} />
+        </div>
+      </Section>
+
       <Section title="Behaviour">
         <div className="overflow-hidden rounded-panel border border-line bg-surface">
           <div className={row}>
@@ -595,14 +609,12 @@ function SettingsView({ settings, onChange }: { settings: ExtensionSettings; onC
         </div>
       </Section>
 
-      <DesktopSection settings={settings} onChange={update} />
-
       <Section title="Connections">
         <form
           className="flex flex-col gap-3 rounded-panel border border-line bg-surface p-4"
           onSubmit={(e) => {
             e.preventDefault();
-            void update(urls);
+            void saveAddresses();
           }}
         >
           <div className="flex flex-col gap-1.5">
@@ -624,121 +636,86 @@ function SettingsView({ settings, onChange }: { settings: ExtensionSettings; onC
       </Section>
 
       <Section title="Account">
-        <Notice>
-          {api === null ? (
-            'Checking…'
-          ) : api.state === 'not_configured' ? (
-            'No Downora API is set up. Accounts and history sync need it. Everything else works without one.'
-          ) : api.state === 'offline' ? (
-            <span className="text-danger">{api.message}</span>
-          ) : (
-            <>
-              Connected to Downora API {api.health.version}.{' '}
-              {api.health.capabilities.auth ? 'Sign in from the web app.' : 'This server doesn’t offer accounts yet, so history stays on this device.'}
-            </>
-          )}
-        </Notice>
+        {api === null ? (
+          <Notice>Checking…</Notice>
+        ) : api.state === 'not_configured' ? (
+          <Notice>No Downora API is set. Accounts and history sync need one. Everything else works without it.</Notice>
+        ) : api.state === 'offline' ? (
+          <Notice tone="danger">{api.message}</Notice>
+        ) : !api.health.capabilities.auth ? (
+          <Notice>This server doesn’t offer accounts, so history stays on this device.</Notice>
+        ) : (
+          <AccountPanel key={`${settings.apiUrl}#${apiGrant}`} dashboardUrl={settings.dashboardUrl} />
+        )}
       </Section>
     </>
   );
 }
 
-// ───────────────────────── Downora Desktop ─────────────────────────
 
-function DesktopSection({ settings, onChange }: { settings: ExtensionSettings; onChange: (p: Partial<ExtensionSettings>) => Promise<void> }) {
-  const [state, setState] = useState<DesktopState | null>(null);
-  const [code, setCode] = useState('');
+function AccountPanel({ dashboardUrl }: { dashboardUrl: string }) {
+  const [acct, setAcct] = useState<{ signedIn: boolean; email?: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
-  const codeId = useId();
-  const sendId = useId();
+  const emailId = useId();
+  const passId = useId();
 
-  const refresh = useCallback(async () => {
-    const r = await send<DesktopState>({ type: 'desktop/state' });
-    if (r.ok) setState(r.data);
-  }, []);
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    void send<{ signedIn: boolean; email?: string }>({ type: 'account/state' }).then((r) => setAcct(r.ok ? r.data : { signedIn: false }));
+  }, []);
 
-  const pairNow = async () => {
-    setError(undefined);
-    const granted = await chrome.permissions.request({ origins: [DESKTOP_PERMISSION] }).catch(() => false);
-    if (!granted) return setError('Chrome needs permission to talk to Downora Desktop on this computer.');
-    setBusy(true);
-    const r = await send<DesktopState>({ type: 'desktop/pair', code });
-    setBusy(false);
-    if (r.ok) {
-      setState(r.data);
-      setCode('');
-    } else setError(r.error);
-  };
-
-  return (
-    <Section title="Desktop app">
-      <div className="rounded-panel border border-line bg-surface p-4" data-testid="desktop-section">
-        {state === null ? (
-          <Skeleton className="h-10 w-full" />
-        ) : state.paired ? (
-          <>
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium">Paired with Downora Desktop</p>
-                <p className="text-xs text-ink-muted">
-                  {state.reachable ? `Running, version ${state.version}.` : 'Not running right now. Chrome will save files until it’s back.'}
-                </p>
-              </div>
-              <Badge tone={state.reachable ? 'success' : 'neutral'} dot>
-                {state.reachable ? 'Connected' : 'Offline'}
-              </Badge>
-            </div>
-            <div className="mt-3 flex items-center justify-between gap-4 border-t border-line pt-3">
-              <label htmlFor={sendId} className="text-sm">
-                Send downloads to the desktop app
-              </label>
-              <Switch id={sendId} checked={settings.sendToDesktop} onCheckedChange={(v) => void onChange({ sendToDesktop: v })} />
-            </div>
-            <Button size="sm" variant="ghost" className="mt-2" onClick={() => void send({ type: 'desktop/unpair' }).then(refresh)}>
-              Unpair
-            </Button>
-          </>
-        ) : (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              void pairNow();
+  if (acct === null) return <Notice>Checking…</Notice>;
+  if (acct.signedIn)
+    return (
+      <div className="flex flex-col gap-3 rounded-panel border border-line bg-surface p-4">
+        <p className="text-sm">
+          Signed in as <span className="font-semibold" data-testid="ext-account-email">{acct.email}</span>. Finished downloads are added to your history.
+        </p>
+        <div className="flex gap-2">
+          <Button size="sm" variant="secondary" onClick={() => void chrome.tabs.create({ url: new URL('/history', dashboardUrl).href })}>
+            <ExternalLink />
+            View history
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={async () => {
+              await send({ type: 'account/signout' });
+              setAcct({ signedIn: false });
             }}
           >
-            <p className="text-sm text-ink-muted">
-              In Downora Desktop, open Browser Integration and press Pair a browser. Enter the code it shows, then approve Chrome in the app.
-            </p>
-            <div className="mt-3 flex gap-2">
-              <label htmlFor={codeId} className="sr-only">
-                Pairing code
-              </label>
-              <Input
-                id={codeId}
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                maxLength={6}
-                placeholder="6-digit code"
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                className="h-10 font-mono tracking-[0.2em]"
-              />
-              <Button type="submit" variant="primary" size="sm" className="h-10" disabled={code.length !== 6} loading={busy}>
-                {busy ? 'Waiting…' : 'Pair'}
-              </Button>
-            </div>
-            {busy ? <p className="mt-2 text-xs text-ink-muted">Approve Chrome in Downora Desktop to finish.</p> : null}
-          </form>
-        )}
-        {error ? (
-          <p role="alert" className="mt-2 text-xs text-danger">
-            {error}
-          </p>
-        ) : null}
+            Sign out
+          </Button>
+        </div>
       </div>
-    </Section>
+    );
+  return (
+    <form
+      className="flex flex-col gap-3 rounded-panel border border-line bg-surface p-4"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const f = new FormData(e.currentTarget);
+        setBusy(true);
+        setError(undefined);
+        const r = await send<{ signedIn: boolean; email?: string }>({ type: 'account/signin', email: String(f.get('email')), password: String(f.get('password')) });
+        setBusy(false);
+        if (r.ok) setAcct(r.data);
+        else setError(r.error);
+      }}
+    >
+      <p className="text-xs text-ink-muted">Use your Downora account. New here? Create one in the web app.</p>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor={emailId} className="text-sm">Email</label>
+        <Input id={emailId} name="email" type="email" autoComplete="email" required className="h-10" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor={passId} className="text-sm">Password</label>
+        <Input id={passId} name="password" type="password" autoComplete="current-password" required minLength={10} className="h-10" />
+      </div>
+      {error ? <p role="alert" className="text-sm text-danger">{error}</p> : null}
+      <Button type="submit" size="sm" className="self-start" disabled={busy}>
+        {busy ? 'Signing in…' : 'Sign in'}
+      </Button>
+    </form>
   );
 }

@@ -46,7 +46,7 @@ const manifest = JSON.parse(await readFile(`${root}src/manifest.json`, 'utf8'));
 if (test) {
   // Test build only: pre-grant the local fixture server so the suite can run
   // without the permission prompt. Never shipped.
-  manifest.host_permissions = ['http://localhost:4600/*', 'http://127.0.0.1:47913/*'];
+  manifest.host_permissions = ['http://localhost:4600/*', 'http://localhost:8787/*'];
   manifest.name = 'Downora (test build)';
 }
 await writeFile(`${outDir}/manifest.json`, JSON.stringify(manifest, null, 2));

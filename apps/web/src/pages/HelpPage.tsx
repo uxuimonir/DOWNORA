@@ -14,19 +14,19 @@ interface Article {
 
 const ARTICLES: Article[] = [
   { id: 'what-link', topic: 'Getting started', q: 'What kind of link does Downora need?', a: 'A direct link to the media file itself, usually ending in .mp4, .webm, .mp3, .m4a or .wav. A link to a web page that plays a video is not a file link. On most sites you can find the file link by right-clicking the player, if the site offers one.' },
-  { id: 'where-saved', topic: 'Getting started', q: 'Where do my files go?', a: 'The web app hands the finished file to your browser, which saves it to your usual downloads folder. The desktop app will let you pick a folder.' },
+  { id: 'where-saved', topic: 'Getting started', q: 'Where do my files go?', a: 'The web app hands the finished file to your browser, which saves it to your usual downloads folder.' },
   { id: 'paste-blocked', topic: 'Getting started', q: 'The Paste button doesn’t work', a: 'Some browsers ask before a site can read the clipboard, and some block it. Click into the link field and press Ctrl+V (⌘V on Mac) instead.' },
   { id: 'progress', topic: 'Downloads', q: 'How is progress measured?', a: 'From the bytes your browser has actually received. If the server doesn’t report the file size, Downora shows how much has arrived instead of a percentage.' },
   { id: 'pause', topic: 'Downloads', q: 'Why does Resume sometimes start over?', a: 'Resuming needs the server to support partial requests. Downora checks this and labels the button “Restart” when the server can’t continue from where it stopped.' },
   { id: 'reload', topic: 'Downloads', q: 'What happens if I close the tab mid-download?', a: 'The bytes received so far are lost, because the browser holds them in memory. The download is marked as interrupted in History, and Retry starts it again.' },
   { id: 'blocked', topic: 'Downloads', q: 'What does “Open file in a new tab” mean?', a: 'Some servers don’t let other sites read their files. Downora can’t track progress for those, so it hands the link to your browser to open and save directly.' },
-  { id: 'big-files', topic: 'Downloads', q: 'Is there a size limit?', a: 'The browser keeps a file in memory until it’s saved, so the web app has a limit you can set in Settings (1 GB by default). The desktop app will write straight to disk without this limit.' },
+  { id: 'big-files', topic: 'Downloads', q: 'Is there a size limit?', a: 'The browser keeps a file in memory until it’s saved, so the web app has a limit you can set in Settings (1 GB by default). Conversions run on Downora’s server instead, up to the server’s own limit.' },
   { id: 'quality', topic: 'Formats', q: 'Why can’t I pick 4K or 8K?', a: 'Downora only lists qualities the file really has. A direct link is one file at one resolution, so that’s the one option shown.' },
-  { id: 'convert', topic: 'Formats', q: 'Can I convert video to MP3 or MKV?', a: 'Not yet. Conversion runs on FFmpeg in the Downora media service, which isn’t connected. Until then Downora saves the original file unchanged and says so.' },
+  { id: 'convert', topic: 'Formats', q: 'Can I convert video to MP3 or MKV?', a: 'Yes, when you’re signed in. Conversion runs with FFmpeg on Downora’s server; the formats offered are the ones that server can actually produce from your file.' },
   { id: 'drm', topic: 'Privacy and limits', q: 'Does Downora work with streaming services?', a: 'No. Downora never bypasses DRM, paywalls or sign-ins. A site is only added when downloading from it is explicitly allowed.' },
   { id: 'privacy', topic: 'Privacy and limits', q: 'What does Downora know about me?', a: 'In the web app, nothing leaves your browser: history and settings are stored locally, and files go straight from the source to your device. You can export or erase that data from Profile.' },
-  { id: 'extension', topic: 'Coming next', q: 'When is the Chrome extension coming?', a: 'It’s in development. It will show a small Downora button next to supported videos on the page you’re viewing, without reading your browsing history.' },
-  { id: 'desktop', topic: 'Coming next', q: 'When is the desktop app coming?', a: 'It’s in development for Windows and macOS. Installers will be published once they’ve been built and tested on both systems.' },
+  { id: 'extension', topic: 'Coming next', q: 'Where’s the Chrome extension?', a: 'It’s available as a developer preview: it shows a small Downora button on supported videos and doesn’t read your browsing history. It isn’t on the Chrome Web Store yet.' },
+  { id: 'account', topic: 'Privacy and limits', q: 'What does an account store?', a: 'Your email, a hashed password, and the history of files you saved while signed in. Converted files are deleted from the server within an hour.' },
 ];
 
 export function HelpPage() {

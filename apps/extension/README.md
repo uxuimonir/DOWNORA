@@ -4,7 +4,7 @@ Finds supported video and audio on the page you're viewing and puts a small
 Downora button on the player. Click it, pick a format the page really offers,
 and Chrome saves the file.
 
-**Status:** works in Chromium; 14 browser tests and 33 unit tests pass.
+**Status:** works in Chromium; 15 browser tests and 33 unit tests pass.
 It is **not** published on the Chrome Web Store and hasn't been reviewed by
 Google. It does **not** work on every site — see [Limits](#limits).
 
@@ -79,21 +79,20 @@ Downora web app and API.
 | `storage` | Settings, the sites you turned on, recent downloads |
 | `activeTab` | **Scan once** on the tab you're looking at, only when you ask |
 | `scripting` | Run the detector on sites you turned on |
-| `alarms` | A once-a-minute check-in with Downora Desktop (when paired) and key rotation |
 | Host access — **optional, per site** | Asked for when you press **Turn on for this site**. None at install. **Detect on all sites** asks for broad access and is off by default |
 
 Not requested: `cookies`, `history`, `tabs`, `webRequest`, `<all_urls>` at
 install, `externally_connectable` (web pages can't message the extension).
-Access to `http://127.0.0.1:47913` (Downora Desktop) is asked for only when you pair.
+Access to the Downora API's address is asked for only when you save it in Settings.
 
-## Downora Desktop
+## Account and history
 
-Popup → Settings → **Desktop app**: enter the 6-digit code from Downora
-Desktop (Browser Integration → Pair a browser), then press **Allow** in the app.
-After that, downloads go to the desktop app; when it isn't running, Chrome
-saves them and the Downloads tab says so. The pairing secret is kept in the
-extension's IndexedDB (unreachable from content scripts) and every request is
-signed. See [apps/desktop/README.md](../desktop/README.md#security).
+Popup → Settings → set the **Downora API address**, then sign in with your
+Downora account (create one in the web app). The API issues the extension a
+bearer token, kept in the extension's IndexedDB where content scripts can't
+reach it. Each finished download is then added to your account's history,
+the same list the web app shows. Signed out or without an API, history stays
+in the popup only. Settings → **Theme** picks System, Light or Dark.
 
 ## Security
 
