@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><title>Dynamic player</title>
+<style>body{margin:0;padding:24px;font-family:sans-serif} video{background:#000;display:block}</style>
+<button id="add">Load video</button> <button id="grow">Make bigger</button> <button id="swap">Change source</button> <button id="remove">Remove video</button>
+<div id="slot"></div>
+<script>
+  const slot = document.getElementById('slot');
+  document.getElementById('add').onclick = () => {
+    const wrap = document.createElement('div'); wrap.className = 'player';
+    wrap.innerHTML = '<video controls aria-label="Late video" style="width:400px;height:225px"></video>';
+    slot.append(wrap);
+    setTimeout(() => { wrap.querySelector('video').src = '/media/downora-sample-720p.webm'; }, 300);
+  };
+  document.getElementById('grow').onclick = () => { const v = document.querySelector('video'); v.style.width = '800px'; v.style.height = '450px'; };
+  document.getElementById('swap').onclick = () => { document.querySelector('video').src = '/media/downora-sample-1080p.mp4'; };
+  document.getElementById('remove').onclick = () => { slot.innerHTML = ''; };
+</script>

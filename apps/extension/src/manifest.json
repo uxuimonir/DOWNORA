@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Downora",
+  "version": "0.1.0",
+  "description": "Save supported video and audio from the page you're viewing. No DRM bypass, no browsing history collected.",
+  "minimum_chrome_version": "121",
+  "icons": { "16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Downora",
+    "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" }
+  },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "permissions": ["downloads", "storage", "activeTab", "scripting"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+  }
+}

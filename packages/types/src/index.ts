@@ -234,25 +234,48 @@ export interface SourcesResponse {
 
 export type UserSettingsResponse = UserSettings;
 
-// ─────────────────── Extension messaging (Phase 5) ───────────────────
-// Content script ⇄ service worker ⇄ popup. Discriminated on `type`.
+// ─────────────────────── Extension (Phase 5) ───────────────────────
+// Content script ⇄ service worker ⇄ popup. Every message is validated on
+// arrival (apps/extension/src/shared/messages.ts); these are the shapes.
+
+/** One playable file offered by a media element (its src, or a <source> child). */
+export interface DetectedSource {
+  src: string;
+  kind: MediaKind;
+  container: Container;
+  /** Only when the element or the page states it (e.g. `size="720"`). Never guessed. */
+  height?: number;
+  /** True for the file the element is actually playing. */
+  current: boolean;
+}
 
 export interface DetectedMedia {
   /** Stable per-page id for the media element. */
   elementId: string;
-  src: string;
   kind: MediaKind;
-  container?: Container;
+  title: string;
+  /** Poster image URL from the element, when it has one. */
+  poster?: string;
   width?: number;
   height?: number;
   durationSec?: number;
-  pageTitle: string;
+  sources: DetectedSource[];
 }
 
-export type ExtensionMessage =
-  | { type: 'media/detected'; tabId?: number; items: DetectedMedia[] }
-  | { type: 'media/cleared'; tabId?: number }
-  | { type: 'media/query'; tabId: number }
-  | { type: 'download/request'; media: DetectedMedia; fileName: string }
-  | { type: 'download/progress'; downloadId: number; bytesReceived: number; bytesTotal?: number }
-  | { type: 'download/finished'; downloadId: number; ok: boolean; error?: string };
+export interface ExtensionDownload {
+  /** chrome.downloads id. */
+  id: number;
+  url: string;
+  fileName: string;
+  title: string;
+  kind: MediaKind;
+  container: Container;
+  pageHost: string;
+  state: 'in_progress' | 'interrupted' | 'complete';
+  paused: boolean;
+  bytesReceived: number;
+  bytesTotal?: number;
+  error?: string;
+  startedAt: string;
+  endedAt?: string;
+}

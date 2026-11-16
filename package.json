@@ -2,9 +2,11 @@
   "name": "downora",
   "private": true,
   "version": "0.1.0",
-  "description": "Downora — one click, any supported media. Web app, Chrome extension, desktop client and API.",
+  "description": "Downora \u2014 one click, any supported media. Web app, Chrome extension, desktop client and API.",
   "packageManager": "pnpm@10.28.0",
-  "engines": { "node": ">=20.19" },
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "dev": "pnpm --filter @downora/web dev",
     "dev:api": "pnpm --filter @downora/api dev",
@@ -12,6 +14,8 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
     "e2e": "pnpm --filter @downora/web e2e",
-    "samples": "bash apps/web/scripts/generate-samples.sh"
+    "samples": "bash apps/web/scripts/generate-samples.sh",
+    "ext:build": "pnpm --filter @downora/extension build",
+    "ext:e2e": "pnpm --filter @downora/extension e2e"
   }
 }

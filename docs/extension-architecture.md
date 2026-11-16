@@ -1,6 +1,6 @@
 # Chrome extension architecture (Phase 5)
 
-Status: design. Nothing here is implemented yet.
+Status: implemented in `apps/extension` (see its README for what's tested and what isn't). Differences from the original design are noted inline.
 
 ## Pieces
 
@@ -8,7 +8,7 @@ Status: design. Nothing here is implemented yet.
 | --- | --- | --- |
 | Content script | The page (isolated world) | Finds `<video>`/`<audio>` elements, checks them against the source adapters, and draws the Downora button |
 | Service worker | The extension | Keeps per-tab media state, starts downloads with `chrome.downloads`, and tracks their progress |
-| Popup | The toolbar action | Shows media on the current tab, a box to paste a link, recent downloads, settings, and a link to open the dashboard |
+| Popup | The toolbar action | Shows the tab's access state, media on the tab with quick downloads, recent downloads, settings, account status, and a link to open the dashboard. *(No paste box: pasting links lives in the web app.)* |
 
 All three import `@downora/source-adapters` and `@downora/types`, bundled at
 build time with Vite. Nothing is loaded remotely, and the MV3 content security
@@ -16,17 +16,17 @@ policy (`script-src 'self'`) enforces that.
 
 ## Detection
 
-1. A `MutationObserver` on `document` watches for added `video`, `audio` and `source` elements, plus changes to their `src` attribute. A `loadedmetadata` listener catches players that swap sources later.
+1. A `MutationObserver` on `document` watches for added or removed `video`, `audio` and `source` elements, plus changes to `src`/`poster`. Capture-phase `loadedmetadata`, `emptied` and `resize` listeners catch players that swap sources later. Bursts are batched into one scan (250 ms), and nothing is sent unless the result changed.
 2. For each element, read `currentSrc`. Ignore `blob:` and `mediasource:` URLs: those are MSE streams, usually HLS or DASH and often DRM-protected, and are never offered. Ignore anything `matchUrl` rejects.
 3. Elements under 200×112 px, or hidden, are skipped so ads and previews don't get buttons.
-4. The content script sends `media/detected` (see `ExtensionMessage` in `@downora/types`) with the URL, kind, dimensions and duration only. It never sends page text, cookies, other URLs or browsing history.
+4. The content script sends `media/update` (`DetectedMedia` in `@downora/types`): file URLs, kind, title, poster, dimensions and duration only. It never sends page text, cookies, other URLs or browsing history.
 
 ## The floating button
 
-- It's a single host element attached to `document.documentElement`, with a **closed Shadow DOM**, so page CSS can't style it and it can't style the page. Every style is inlined from the design tokens.
-- It's positioned with `getBoundingClientRect()` of the video, in the **top-right corner, 12 px inset**, away from the bottom controls bar. A `ResizeObserver` and passive scroll and resize listeners (throttled to animation frames) keep it aligned.
-- It's 36 px, with `pointer-events` only on the button itself. It never covers player controls, and the user can drag it to any corner, remembered per site in `chrome.storage.local`.
-- Clicking it opens the picker in the same shadow root: thumbnail (captured only when the video is CORS-clean), title, resolution, format, size from a HEAD request, and Download.
+- It's a single host element attached to `document.documentElement`, with a Shadow DOM, so page CSS can't style it and it can't style the page. *Built with an open root* so automated tests can reach it; page scripts still can't trigger downloads, because every click handler requires `event.isTrusted`. Every style is inlined from the design tokens.
+- It's positioned with `getBoundingClientRect()` of the video, in the **top-right corner, 10 px inset** (pinned inside the visible part when the top scrolls away; beside the controls for audio), away from the bottom controls bar. A `ResizeObserver` and passive scroll and resize listeners (throttled to animation frames) keep it aligned.
+- It's 36 px, with `pointer-events` only on the button itself, and hidden in fullscreen. *Not built:* dragging it to another corner.
+- Clicking it opens the panel in the same shadow root: poster thumbnail (when the page has one), title, source, duration, resolution, the formats the page offers with sizes from a HEAD request, Download, and Open in Downora.
 
 ## Downloads
 

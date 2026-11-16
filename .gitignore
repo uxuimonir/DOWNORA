@@ -12,3 +12,6 @@ test-results
 apps/desktop/src-tauri/target
 *.tsbuildinfo
 dist-preview
+apps/extension/dist
+apps/extension/dist-test
+apps/extension/*.zip

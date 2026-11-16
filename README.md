@@ -14,7 +14,7 @@ bypasses DRM, sign-ins or paywalls.
 | API (`apps/api`) | **Partial.** Health, sources and the SSRF guard work; other routes return `501` |
 | Database (`infrastructure/database`) | Draft migration, not yet applied |
 | Media engine (`packages/media-engine`) | Interface only, no FFmpeg code yet |
-| Chrome extension (`apps/extension`) | Architecture and draft manifest only |
+| Chrome extension (`apps/extension`) | **Working.** Detection, floating button, panel, popup, Chrome downloads; tested in Chromium. Not on the Chrome Web Store |
 | Desktop app (`apps/desktop`) | Plan only, no installers |
 
 ### What the web app really does
@@ -76,7 +76,7 @@ desktop and phone.
 apps/
   web/          React 19 + Vite + Tailwind 4 web app
   api/          Node + TypeScript REST API (Phase 3 groundwork)
-  extension/    Chrome MV3 extension (Phase 5, design)
+  extension/    Chrome MV3 extension (detection, floating button, popup)
   desktop/      Tauri app (Phase 6, plan)
 packages/
   types/            Shared domain and API types
@@ -97,5 +97,6 @@ redistribute and to use in tests.
 ## Docs
 
 - [docs/backend-integration.md](docs/backend-integration.md): API status, Phase 3–4 plan, and the credentials you'll need
+- [apps/extension/README.md](apps/extension/README.md): build the extension and install it in Chrome
 - [docs/extension-architecture.md](docs/extension-architecture.md): Chrome extension design
 - [apps/desktop/README.md](apps/desktop/README.md): desktop plan and build requirements

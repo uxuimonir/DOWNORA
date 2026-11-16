@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><title>Unsupported media</title>
+<style>video{width:480px;height:270px;background:#000;display:block;margin:12px}</style>
+<video id="mse" controls aria-label="Stream"></video>
+<video controls aria-label="HLS"><source src="/media/master.m3u8" type="application/x-mpegURL"></video>
+<video controls aria-label="MKV"><source src="/media/movie.mkv"></video>
+<script>
+  // A blob: source, the way MediaSource players look from the outside.
+  fetch('/media/downora-sample-720p.webm').then((r) => r.blob()).then((b) => { document.getElementById('mse').src = URL.createObjectURL(b); });
+</script>
