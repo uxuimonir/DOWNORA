@@ -59,7 +59,19 @@ export type PopupMessage =
   | { type: 'downloads/retry'; id: number }
   | { type: 'downloads/cancel'; id: number }
   | { type: 'downloads/clear' }
-  | { type: 'downloads/show'; id: number };
+  | { type: 'downloads/show'; id: number }
+  | { type: 'desktop/state' }
+  | { type: 'desktop/pair'; code: string }
+  | { type: 'desktop/unpair' };
+
+export interface DesktopState {
+  paired: boolean;
+  pairedAt?: string;
+  /** null = not checked (not paired). */
+  reachable: boolean | null;
+  version?: string;
+  error?: string;
+}
 
 // Worker → content script / popup
 export type WorkerEvent = { type: 'downloads/changed'; downloads: ExtensionDownload[] };
@@ -165,7 +177,12 @@ export function parsePopupMessage(v: unknown): PopupMessage | null {
     case 'downloads/retry':
     case 'downloads/cancel':
     case 'downloads/show':
-      return isId(v.id) ? { type: v.type, id: v.id } : null;
+      return typeof v.id === 'number' && Number.isInteger(v.id) ? { type: v.type, id: v.id } : null;
+    case 'desktop/state':
+    case 'desktop/unpair':
+      return { type: v.type };
+    case 'desktop/pair':
+      return typeof v.code === 'string' && /^\d{6}$/.test(v.code) ? { type: 'desktop/pair', code: v.code } : null;
     default:
       return null;
   }

@@ -15,3 +15,6 @@ dist-preview
 apps/extension/dist
 apps/extension/dist-test
 apps/extension/*.zip
+apps/desktop/target
+apps/desktop/dist
+apps/desktop/src-tauri/gen

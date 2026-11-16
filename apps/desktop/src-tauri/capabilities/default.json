@@ -1,0 +1,19 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Everything the Downora window may do. No filesystem, shell or HTTP plugin access: the UI can only call Downora's own validated commands.",
+  "windows": ["main"],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:window:allow-start-dragging",
+    "allow-app-info", "allow-get-settings", "allow-update-settings", "allow-storage-info",
+    "allow-pick-folder", "allow-pick-media-files",
+    "allow-analyze-url", "allow-add-download", "allow-list-downloads", "allow-pause-download", "allow-resume-download",
+    "allow-cancel-download", "allow-retry-download", "allow-remove-download", "allow-clear-finished-downloads",
+    "allow-open-download", "allow-reveal-download", "allow-open-download-folder", "allow-download-thumbnail",
+    "allow-probe-file", "allow-convert", "allow-list-conversions", "allow-cancel-conversion", "allow-clear-conversions",
+    "allow-reveal-conversion",
+    "allow-start-pairing", "allow-cancel-pairing", "allow-decide-pairing", "allow-list-browsers", "allow-revoke-browser"
+  ]
+}

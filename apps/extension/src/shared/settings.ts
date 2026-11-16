@@ -9,6 +9,8 @@ export interface ExtensionSettings {
   dashboardUrl: string;
   /** Optional Downora API for account and sync features. Empty = not configured. */
   apiUrl: string;
+  /** Hand downloads to the paired Downora Desktop app when it's running. */
+  sendToDesktop: boolean;
 }
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
@@ -16,6 +18,7 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
   askWhereToSave: false,
   dashboardUrl: 'http://localhost:5173',
   apiUrl: '',
+  sendToDesktop: true,
 };
 
 export function normalizeSettings(raw: unknown): ExtensionSettings {
@@ -34,6 +37,7 @@ export function normalizeSettings(raw: unknown): ExtensionSettings {
     askWhereToSave: typeof r.askWhereToSave === 'boolean' ? r.askWhereToSave : DEFAULT_SETTINGS.askWhereToSave,
     dashboardUrl: url(r.dashboardUrl, DEFAULT_SETTINGS.dashboardUrl),
     apiUrl: r.apiUrl === '' ? '' : url(r.apiUrl, ''),
+    sendToDesktop: typeof r.sendToDesktop === 'boolean' ? r.sendToDesktop : DEFAULT_SETTINGS.sendToDesktop,
   };
 }
 

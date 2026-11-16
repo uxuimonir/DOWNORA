@@ -278,4 +278,9 @@ export interface ExtensionDownload {
   error?: string;
   startedAt: string;
   endedAt?: string;
+  /** Who is saving the file: Chrome's downloader or the paired desktop app. */
+  via?: 'chrome' | 'desktop';
+  desktopJobId?: string;
+  /** Shown under the entry, e.g. why Chrome was used instead of the desktop app. */
+  note?: string;
 }

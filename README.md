@@ -15,7 +15,7 @@ bypasses DRM, sign-ins or paywalls.
 | Database (`infrastructure/database`) | Draft migration, not yet applied |
 | Media engine (`packages/media-engine`) | Interface only, no FFmpeg code yet |
 | Chrome extension (`apps/extension`) | **Working.** Detection, floating button, panel, popup, Chrome downloads; tested in Chromium. Not on the Chrome Web Store |
-| Desktop app (`apps/desktop`) | Plan only, no installers |
+| Desktop app (`apps/desktop`) | **Working on Linux** (built, installed, tested). Windows/macOS: code and CI ready, not yet built there. No signed installers |
 
 ### What the web app really does
 
@@ -77,7 +77,7 @@ apps/
   web/          React 19 + Vite + Tailwind 4 web app
   api/          Node + TypeScript REST API (Phase 3 groundwork)
   extension/    Chrome MV3 extension (detection, floating button, popup)
-  desktop/      Tauri app (Phase 6, plan)
+  desktop/      Tauri 2 desktop app (Rust engine + React UI)
 packages/
   types/            Shared domain and API types
   source-adapters/  Which links are supported, and why it's allowed
@@ -99,4 +99,4 @@ redistribute and to use in tests.
 - [docs/backend-integration.md](docs/backend-integration.md): API status, Phase 3–4 plan, and the credentials you'll need
 - [apps/extension/README.md](apps/extension/README.md): build the extension and install it in Chrome
 - [docs/extension-architecture.md](docs/extension-architecture.md): Chrome extension design
-- [apps/desktop/README.md](apps/desktop/README.md): desktop plan and build requirements
+- [apps/desktop/README.md](apps/desktop/README.md): desktop app: build, installers, code signing, security, tests

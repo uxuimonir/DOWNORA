@@ -46,7 +46,8 @@ createServer((req, res) => {
     res.writeHead(range ? 206 : 200, headers);
     if (req.method === 'HEAD') return res.end();
     if (area === 'broken') {
-      const s = createReadStream(path, { start: 0, end: Math.floor(size / 2) });
+      // Honours the requested range, then drops the connection halfway through it.
+      const s = createReadStream(path, { start, end: start + Math.floor((end - start) / 2) });
       s.on('data', (c) => res.write(c));
       s.on('end', () => setTimeout(() => res.destroy(), 200));
       return;
