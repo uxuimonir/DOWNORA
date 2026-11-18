@@ -231,31 +231,33 @@ function ResultView({ result, stage, onReset }: { result: Result; stage: boolean
   };
 
   return (
-    <Panel className={cn('overflow-hidden', stage && 'bg-surface/75 shadow-pop backdrop-blur-2xl')} data-testid="media-stage">
-      <div className="p-5 sm:p-6">
+    <Panel className={cn('overflow-hidden bg-grouped', stage && 'shadow-pop')} data-testid="media-stage">
+      <div className="p-4 sm:p-6">
         <MediaPreview analysis={analysis} thumbnail={result.thumbnail} playable={result.playable} />
       </div>
-      <div className="border-t border-line p-5 sm:p-6">
+      <div className="px-4 pb-5 sm:px-6 sm:pb-6">
         {active ? (
           <ActiveProgress active={active} onUpdate={setActive} onReset={onReset} />
         ) : (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-end">
-            <div className="flex min-w-0 flex-col gap-5">
-              <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col gap-6">
+            <div className="flex min-w-0 flex-col gap-6">
+              <div className="flex flex-col gap-1.5">
                 <ModeToggle value={mode} onChange={pickMode} available={available} />
-                {!available.audio && analysis.kind === 'video' ? <span className="text-xs text-ink-muted">Audio only needs Downora’s server.</span> : null}
+                {!available.audio && analysis.kind === 'video' ? <span className="px-4 text-[0.8125rem] text-ink-muted">Audio only needs Downora’s server.</span> : null}
               </div>
-              <div>
-                <p className="mb-2 text-sm font-medium">Format</p>
-                <FormatSelector formats={inMode} value={format.container} onChange={pickContainer} />
-              </div>
-              {mode === 'video' && inContainer.length > 0 ? (
+              <div className={cn('grid gap-6', mode === 'video' && inContainer.length > 0 && 'md:grid-cols-2')}>
                 <div>
-                  <p className="mb-2 text-sm font-medium">Quality</p>
-                  <QualitySelector formats={inContainer} value={format.id} onChange={setFormatId} />
+                  <p className="mb-1.5 px-4 text-[0.8125rem] text-ink-muted">Format</p>
+                  <FormatSelector formats={inMode} value={format.container} onChange={pickContainer} />
                 </div>
-              ) : null}
-              <p className="text-xs leading-relaxed text-ink-muted">
+                {mode === 'video' && inContainer.length > 0 ? (
+                  <div>
+                    <p className="mb-1.5 px-4 text-[0.8125rem] text-ink-muted">Quality</p>
+                    <QualitySelector formats={inContainer} value={format.id} onChange={setFormatId} />
+                  </div>
+                ) : null}
+              </div>
+              <p className="-mt-4 px-4 text-[0.8125rem] leading-[1.125rem] text-ink-muted">
                 {result.serverNote ??
                   (result.serverId
                     ? 'Only what this file really offers is listed. Qualities never go above the source.'
@@ -266,7 +268,7 @@ function ResultView({ result, stage, onReset }: { result: Result; stage: boolean
             </div>
             <div className="flex flex-col gap-3">
               {locked ? (
-                <div className="flex gap-2.5 rounded-control border border-accent/30 bg-accent/8 p-3 text-sm">
+                <div className="flex gap-2.5 rounded-panel bg-cell p-4 text-[0.9375rem]">
                   <Info className="mt-0.5 size-4 shrink-0 text-accent-soft" aria-hidden />
                   <p className="text-ink-muted">
                     {!result.browserReadable && format.delivery === 'original' ? 'This server doesn’t let browsers read the file directly. ' : 'Converting runs on Downora’s server. '}

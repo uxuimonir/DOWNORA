@@ -3,10 +3,10 @@
  * what it's given and reports choices; Downloader.tsx owns the data.
  */
 import type { Container, MediaAnalysis, MediaFormat, MediaKind } from '@downora/types';
-import { Badge, Button, cn, SegmentedControl, TransferTrack } from '@downora/ui';
+import { Badge, Button, cn, listGroupClass, SegmentedControl, TransferTrack } from '@downora/ui';
 import { ToggleGroup } from 'radix-ui';
 import { motion } from 'framer-motion';
-import { AlertTriangle, CheckCircle2, Download, Film, LoaderCircle, Lock, Music2, Play, RotateCcw, ShieldCheck, X } from 'lucide-react';
+import { AlertTriangle, Check, CheckCircle2, Download, Film, LoaderCircle, Lock, Music2, Play, RotateCcw, ShieldCheck, X } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { formatBytes, formatDuration, formatEta, formatSpeed } from '@/lib/format';
 
@@ -25,7 +25,7 @@ export function MediaPreview({ analysis, thumbnail, playable }: { analysis: Medi
 
   return (
     <div className="grid gap-5 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]" data-testid="media-preview">
-      <div className="relative aspect-video overflow-hidden rounded-[1.25rem] bg-raised ring-1 ring-edge">
+      <div className="relative aspect-video overflow-hidden rounded-panel bg-cell">
         {playing && playable ? (
           analysis.kind === 'video' ? (
             <video src={analysis.sourceUrl} controls autoPlay className="size-full bg-black object-contain" />
@@ -65,16 +65,16 @@ export function MediaPreview({ analysis, thumbnail, playable }: { analysis: Medi
       </div>
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="min-w-0 text-xl leading-snug font-semibold tracking-[-0.02em] break-words">{analysis.title}</h3>
+          <h3 className="min-w-0 text-[1.375rem] leading-7 font-bold tracking-[-0.02em] break-words">{analysis.title}</h3>
           <Badge tone="success" className="mt-1">
             <ShieldCheck /> Direct file
           </Badge>
         </div>
-        <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+        <dl className={cn(listGroupClass, 'mt-4')}>
           {rows.map(([k, v]) => (
-            <div key={k} className="contents">
-              <dt className="text-ink-muted">{k}</dt>
-              <dd className="tabular min-w-0 truncate">{v}</dd>
+            <div key={k} className="flex min-h-11 items-center justify-between gap-4 px-4 py-2.5 text-[0.9375rem]">
+              <dt className="text-ink">{k}</dt>
+              <dd className="tabular min-w-0 truncate text-right text-ink-muted">{v}</dd>
             </div>
           ))}
         </dl>
@@ -92,15 +92,15 @@ interface ChipOption {
   disabled?: boolean;
 }
 
-/** Radio-like chips with arrow-key navigation (Radix ToggleGroup). */
-function ChipGroup({ label, value, onChange, options, testId }: { label: string; value: string; onChange: (v: string) => void; options: ChipOption[]; testId?: string }) {
+/** iOS checkmark list: one row per option, arrow keys move between rows (Radix ToggleGroup). */
+function ChoiceList({ label, value, onChange, options, testId }: { label: string; value: string; onChange: (v: string) => void; options: ChipOption[]; testId?: string }) {
   return (
     <ToggleGroup.Root
       type="single"
       aria-label={label}
       value={value}
       onValueChange={(v) => v && onChange(v)}
-      className="flex flex-wrap gap-2"
+      className={cn(listGroupClass, 'flex flex-col')}
       data-testid={testId}
     >
       {options.map((o) => (
@@ -109,13 +109,13 @@ function ChipGroup({ label, value, onChange, options, testId }: { label: string;
           value={o.value}
           disabled={o.disabled}
           className={cn(
-            'hit-area relative flex min-h-11 min-w-16 flex-col items-center justify-center rounded-control border px-3.5 py-1.5 text-sm font-semibold transition-colors',
-            'border-line bg-surface text-ink hover:border-line-strong disabled:cursor-not-allowed disabled:opacity-40',
-            'data-[state=on]:border-accent data-[state=on]:bg-accent/12 data-[state=on]:text-ink data-[state=on]:shadow-[0_0_0_3px_rgb(139_92_246/0.14)]',
+            'group flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left transition-colors',
+            'hover:bg-fill/50 active:bg-fill disabled:cursor-not-allowed disabled:opacity-40 focus-visible:z-10',
           )}
         >
-          <span>{o.label}</span>
-          {o.hint ? <span className="text-[0.6875rem] font-medium text-ink-muted">{o.hint}</span> : null}
+          <span className="flex-1 text-[1.0625rem] tracking-[-0.01em] text-ink group-data-[state=on]:font-semibold">{o.label}</span>
+          {o.hint ? <span className="tabular text-[0.9375rem] text-ink-muted">{o.hint}</span> : null}
+          <Check className="size-[18px] shrink-0 text-accent-soft opacity-0 group-data-[state=on]:opacity-100" strokeWidth={2.6} aria-hidden />
         </ToggleGroup.Item>
       ))}
     </ToggleGroup.Root>
@@ -125,6 +125,7 @@ function ChipGroup({ label, value, onChange, options, testId }: { label: string;
 export function ModeToggle({ value, onChange, available }: { value: MediaKind; onChange: (k: MediaKind) => void; available: Record<MediaKind, boolean> }) {
   return (
     <SegmentedControl<MediaKind>
+      className="grid w-full grid-cols-2"
       aria-label="Video or audio"
       value={value}
       onValueChange={(v) => available[v] && onChange(v)}
@@ -139,14 +140,14 @@ export function ModeToggle({ value, onChange, available }: { value: MediaKind; o
 export function FormatSelector({ formats, value, onChange }: { formats: MediaFormat[]; value: Container; onChange: (c: Container) => void }) {
   const containers = [...new Set(formats.map((f) => f.container))];
   return (
-    <ChipGroup
+    <ChoiceList
       label="Format"
       testId="format-selector"
       value={value}
       onChange={(v) => onChange(v as Container)}
       options={containers.map((c) => {
         const original = formats.some((f) => f.container === c && f.delivery === 'original');
-        return { value: c, label: c.toUpperCase(), hint: original ? 'Original' : 'Convert' };
+        return { value: c, label: c.toUpperCase(), hint: original ? 'Original file' : 'Converted' };
       })}
     />
   );
@@ -155,14 +156,14 @@ export function FormatSelector({ formats, value, onChange }: { formats: MediaFor
 export function QualitySelector({ formats, value, onChange }: { formats: MediaFormat[]; value: string; onChange: (formatId: string) => void }) {
   const sorted = [...formats].sort((a, b) => (b.height ?? 0) - (a.height ?? 0));
   return (
-    <ChipGroup
+    <ChoiceList
       label="Quality"
       testId="quality-selector"
       value={value}
       onChange={onChange}
       options={sorted.map((f) => ({
         value: f.id,
-        label: f.qualityLabel ?? 'Original',
+        label: f.qualityLabel ?? 'Source quality',
         hint: f.sizeBytes ? formatBytes(f.sizeBytes) : f.delivery === 'original' ? 'Original' : 'Converted',
       }))}
     />
@@ -174,7 +175,7 @@ export function QualitySelector({ formats, value, onChange }: { formats: MediaFo
 export function DownloadButton({ format, onClick, busy, locked }: { format: MediaFormat; onClick: () => void; busy?: boolean; locked?: string }) {
   return (
     <motion.div whileTap={{ scale: 0.98 }} className="w-full">
-      <Button variant="primary" size="lg" className="h-14 w-full text-base" onClick={onClick} loading={busy} disabled={Boolean(locked)}>
+      <Button variant="primary" size="lg" className="h-[3.25rem] w-full rounded-[0.875rem] text-[1.0625rem]" onClick={onClick} loading={busy} disabled={Boolean(locked)}>
         {busy ? null : locked ? <Lock /> : <Download />}
         {format.delivery === 'transcode' ? 'Convert & download' : 'Download'} {format.container.toUpperCase()}
         {format.qualityLabel && format.kind === 'video' ? <span className="font-normal opacity-70">{format.qualityLabel}</span> : null}

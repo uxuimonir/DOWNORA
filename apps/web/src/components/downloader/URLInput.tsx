@@ -54,13 +54,13 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
         </label>
         <div
           className={cn(
-            'flex flex-col gap-2 rounded-[1.5rem] border bg-surface/80 p-1.5 shadow-panel backdrop-blur-xl transition-[border-color,box-shadow] sm:flex-row sm:items-center sm:rounded-full',
-            'focus-within:border-accent/50 focus-within:shadow-[0_0_0_5px_rgb(139_92_246/0.16)]',
-            error ? 'border-danger/70' : 'border-line',
+            'flex flex-col gap-2 rounded-[1.25rem] bg-cell p-2 shadow-panel transition-shadow sm:flex-row sm:items-center',
+            'focus-within:shadow-[0_0_0_4px_rgb(139_92_246/0.22)]',
+            error && 'shadow-[0_0_0_2px_var(--color-danger)]',
           )}
         >
           <div className="relative flex min-w-0 flex-1 items-center">
-            <Link2 className="pointer-events-none absolute left-3.5 size-[18px] text-ink-faint" aria-hidden />
+            <Link2 className="pointer-events-none absolute left-3 size-[18px] text-ink-muted" aria-hidden />
             <Input
               ref={inputRef}
               id={inputId}
@@ -75,8 +75,8 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
               aria-invalid={Boolean(error) || undefined}
               aria-describedby={error ? errorId : undefined}
               className={cn(
-                'rounded-full border-transparent bg-transparent pr-12 pl-11 hover:border-transparent focus-visible:border-transparent focus-visible:ring-0',
-                lg ? 'h-12 text-base' : 'h-11',
+                'rounded-[0.75rem] border-transparent pr-11 pl-10 focus-visible:border-transparent focus-visible:ring-0',
+                lg ? 'h-12' : 'h-11',
               )}
             />
             {value ? (
@@ -86,19 +86,21 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
                   onChange('');
                   inputRef.current?.focus();
                 }}
-                className="absolute right-1 grid size-10 place-items-center rounded-full text-ink-faint hover:bg-raised hover:text-ink"
+                className="absolute right-1 grid size-10 place-items-center rounded-full text-ink-faint hover:text-ink-muted"
                 aria-label="Clear link"
               >
-                <X className="size-4" />
+                <span className="grid size-[18px] place-items-center rounded-full bg-ink-faint/70 text-cell">
+                  <X className="size-3" strokeWidth={3} />
+                </span>
               </button>
             ) : null}
           </div>
           <div className="flex gap-2">
-            <Button type="button" variant="secondary" size={lg ? 'lg' : 'md'} onClick={paste} className="flex-1 sm:flex-none">
+            <Button type="button" variant="tinted" size={lg ? 'lg' : 'md'} onClick={paste} className="flex-1 rounded-[0.75rem] sm:flex-none">
               <ClipboardPaste />
               Paste
             </Button>
-            <Button type="submit" variant="primary" size={lg ? 'lg' : 'md'} loading={busy} className="flex-1 sm:flex-none">
+            <Button type="submit" variant="primary" size={lg ? 'lg' : 'md'} loading={busy} className="flex-1 rounded-[0.75rem] sm:flex-none">
               {busy ? null : <Search />}
               {busy ? 'Analyzing' : 'Analyze'}
             </Button>
@@ -111,7 +113,7 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
         </p>
       ) : null}
       <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 px-1 text-sm text-ink-muted">
-        <span className="text-xs text-ink-muted">Try a sample:</span>
+        <span className="text-[0.8125rem] text-ink-muted">Try a sample</span>
         {samples.map((sample) => (
           <button
             key={sample.path}
@@ -122,7 +124,7 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
               onChange(url);
               onSubmit(url);
             }}
-            className="hit-area rounded-full border border-line bg-surface/70 px-3 py-1 text-xs font-medium text-ink transition-colors hover:border-accent/40 hover:bg-raised disabled:opacity-50"
+            className="hit-area rounded-full bg-fill px-3 py-1 text-[0.8125rem] font-semibold text-accent-soft transition-colors hover:bg-fill-strong active:opacity-70 disabled:opacity-50"
           >
             {sample.label}
           </button>

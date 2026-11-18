@@ -318,7 +318,7 @@ export function SegmentedControl<T extends string>({
       onValueChange={(next) => {
         if (next) onValueChange(next as T);
       }}
-      className={cn('inline-flex items-center gap-1 rounded-full border border-line bg-surface p-1', className)}
+      className={cn('inline-flex items-center gap-0.5 rounded-[0.5625rem] bg-fill p-0.5', className)}
       {...props}
     >
       {options.map((option) => (
@@ -327,8 +327,8 @@ export function SegmentedControl<T extends string>({
           value={option.value}
           aria-label={option.ariaLabel}
           className={cn(
-            'hit-area inline-flex min-w-9 items-center justify-center gap-2 rounded-full px-3.5 text-sm font-medium text-ink-muted transition-colors',
-            'hover:text-ink data-[state=on]:bg-ink data-[state=on]:text-canvas data-[state=on]:shadow-[0_3px_8px_rgb(0_0_0/0.25)]',
+            'hit-area inline-flex min-w-9 items-center justify-center gap-2 rounded-[0.4375rem] px-3.5 text-[0.8125rem] font-medium text-ink transition-[background-color,box-shadow] duration-200',
+            'data-[state=on]:bg-[var(--dn-segment)] data-[state=on]:font-semibold data-[state=on]:shadow-[0_3px_8px_rgb(0_0_0/0.12),0_3px_1px_rgb(0_0_0/0.04),0_0_0_0.5px_rgb(0_0_0/0.04)]',
             '[&_svg]:size-4',
             size === 'sm' ? 'h-7 pointer-coarse:h-9 text-xs' : 'h-8 pointer-coarse:h-10',
           )}

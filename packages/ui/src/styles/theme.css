@@ -11,6 +11,14 @@
   --color-hover: var(--dn-hover);
   --color-line: var(--dn-line);
   --color-line-strong: var(--dn-line-strong);
+  /* iOS-style translucent grey fills (controls, search fields, chips). */
+  --color-fill: var(--dn-fill);
+  /* Accent behind white text: a shade deeper so labels pass WCAG AA. */
+  --color-accent-fill: var(--dn-accent-fill);
+  /* Grouped list: page behind (grouped) and the rows on top (cell). */
+  --color-cell: var(--dn-cell);
+  --color-grouped: var(--dn-grouped);
+  --color-fill-strong: var(--dn-fill-strong);
   /* Hairline for glass edges: light on dark, dark on light. */
   --color-edge: var(--dn-edge);
   --color-ink: var(--dn-ink);
@@ -159,6 +167,12 @@
     --dn-warn: #fbbf24;
     --dn-danger: #f87171;
     --dn-glass: rgb(17 20 27 / 0.66);
+    --dn-fill: rgb(118 118 128 / 0.2);
+    --dn-cell: #191e28;
+    --dn-accent-fill: #7c4ff0;
+    --dn-segment: #3a4152;
+    --dn-grouped: #0e1016;
+    --dn-fill-strong: rgb(118 118 128 / 0.3);
     --dn-shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03) inset, 0 20px 50px -30px rgb(0 0 0 / 0.9);
     --dn-shadow-pop: 0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 30px 70px -20px rgb(0 0 0 / 0.85), 0 0 0 1px rgb(255 255 255 / 0.06);
     --accent-gradient: linear-gradient(100deg, #8b5cf6 0%, #38bdf8 100%);
@@ -183,6 +197,12 @@
     --dn-warn: #92400e;
     --dn-danger: #c81e1e;
     --dn-glass: rgb(255 255 255 / 0.7);
+    --dn-fill: rgb(118 118 128 / 0.12);
+    --dn-cell: #ffffff;
+    --dn-accent-fill: #7047eb;
+    --dn-segment: #ffffff;
+    --dn-grouped: #eef0f6;
+    --dn-fill-strong: rgb(118 118 128 / 0.2);
     --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
     --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
     --accent-gradient: linear-gradient(100deg, #7047eb 0%, #2585e8 100%);
@@ -209,6 +229,12 @@
       --dn-warn: #92400e;
       --dn-danger: #c81e1e;
       --dn-glass: rgb(255 255 255 / 0.7);
+    --dn-fill: rgb(118 118 128 / 0.12);
+    --dn-cell: #ffffff;
+    --dn-accent-fill: #7047eb;
+    --dn-segment: #ffffff;
+    --dn-grouped: #eef0f6;
+    --dn-fill-strong: rgb(118 118 128 / 0.2);
       --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
       --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
       --accent-gradient: linear-gradient(100deg, #7047eb 0%, #2585e8 100%);
@@ -304,15 +330,14 @@
   letter-spacing: -0.04em;
 }
 
-/* Small monospace caption, as in the reference (section headers, stat labels, chips). */
+/* iOS footnote: grouped-list section headers, stat captions. Sentence case. */
 @utility label-mono {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: var(--color-ink-muted);
 }
 
 /* iOS frosted material for bars and sheets. */
@@ -359,7 +384,7 @@
 
 /* iOS search field: grey fill, no border. */
 @utility ios-search {
-  background-color: rgb(118 118 128 / 0.24);
+  background-color: var(--color-fill);
   border-color: transparent;
 }
 

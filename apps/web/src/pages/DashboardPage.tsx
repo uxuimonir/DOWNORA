@@ -56,16 +56,16 @@ export function DashboardPage() {
         }}
       />
 
-      <dl className="tabular mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-panel border border-line bg-line md:grid-cols-4">
+      <dl className="tabular mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
         {[
           ['Files saved', String(stats.saved)],
           ['Data saved', formatBytes(stats.bytes)],
           ['Saved this week', String(stats.thisWeek)],
           ['In the queue', String(stats.active.length)],
         ].map(([label, value]) => (
-          <div key={label} className="flex flex-col-reverse bg-surface px-5 py-5">
-            <dt className="label-mono mt-3">{label}</dt>
-            <dd className="text-[1.75rem] leading-none font-light tracking-[-0.03em]">{value}</dd>
+          <div key={label} className="flex flex-col-reverse rounded-panel bg-cell px-4 py-4 sm:px-5">
+            <dt className="mt-1 text-[0.8125rem] text-ink-muted">{label}</dt>
+            <dd className="text-[1.75rem] leading-none font-bold tracking-[-0.025em]">{value}</dd>
           </div>
         ))}
       </dl>
@@ -107,7 +107,7 @@ export function DashboardPage() {
               <EmptyState
                 icon={Clock3}
                 title="No downloads yet"
-                className="m-5 border-line py-10"
+                className="m-2 py-10"
                 action={
                   <Button variant="primary" asChild>
                     <Link to="/video">

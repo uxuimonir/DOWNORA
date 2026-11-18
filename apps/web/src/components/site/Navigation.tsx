@@ -37,7 +37,7 @@ export function Navigation() {
           <ul className="flex items-center gap-1">
             {LINKS.map((l) => (
               <li key={l.href}>
-                <a href={l.href} className="rounded-full px-3.5 py-2 text-sm text-ink-muted transition-colors hover:bg-raised hover:text-ink">
+                <a href={l.href} className="rounded-full px-3.5 py-2 text-sm text-ink transition-colors hover:bg-fill">
                   {l.label}
                 </a>
               </li>
@@ -60,10 +60,10 @@ export function Navigation() {
             </SheetTrigger>
             <SheetContent title="Menu">
               <nav aria-label="Site menu" className="px-4 pt-4 pb-2">
-                <ul className="overflow-hidden rounded-panel bg-raised">
+                <ul className="overflow-hidden rounded-panel bg-cell">
                   {LINKS.map((l) => (
                     <li key={l.href} className="border-b border-line last:border-b-0">
-                      <a href={l.href} onClick={() => setOpen(false)} className="flex h-12 items-center px-4 text-[1.0625rem] active:bg-hover">
+                      <a href={l.href} onClick={() => setOpen(false)} className="flex h-12 items-center px-4 text-[1.0625rem] active:bg-fill">
                         {l.label}
                       </a>
                     </li>

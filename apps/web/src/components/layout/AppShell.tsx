@@ -74,8 +74,8 @@ function SidebarSection({ title, items }: { title: string; items: NavItem[] }) {
   const active = counts.filter((j) => j.status === 'downloading' || j.status === 'queued').length;
   const history = counts.filter((j) => !isActive(j)).length;
   return (
-    <div className="border-b border-line px-2.5 py-3 last:border-b-0">
-      <p className="label-mono px-2.5 pb-2">{title}</p>
+    <div className="px-1 pb-5">
+      <p className="px-3 pb-1.5 text-[0.8125rem] font-semibold text-ink-muted">{title}</p>
       <ul className="flex flex-col gap-0.5">
         {items.map(({ to, label, icon: Icon, count }) => {
           const n = count === 'active' ? active : count === 'history' ? history : undefined;
@@ -85,17 +85,17 @@ function SidebarSection({ title, items }: { title: string; items: NavItem[] }) {
                 to={to}
                 className={({ isActive: on }) =>
                   cn(
-                    'group flex h-9 items-center gap-3 rounded-control border px-2.5 text-sm transition-colors',
-                    on ? 'border-line-strong bg-raised text-ink' : 'border-transparent text-ink-muted hover:bg-raised/60 hover:text-ink',
+                    'group flex h-9 items-center gap-3 rounded-[0.625rem] px-3 text-[0.9375rem] transition-colors',
+                    on ? 'bg-accent-fill font-medium text-white' : 'text-ink hover:bg-fill/60 active:bg-fill',
                   )
                 }
               >
                 {({ isActive: on }) => (
                   <>
-                    <Icon className={cn('size-[17px]', on ? 'text-accent-soft' : 'text-ink-faint group-hover:text-ink-muted')} />
+                    <Icon className={cn('size-[18px]', on ? 'text-white' : 'text-accent-soft')} />
                     <span className="flex-1">{label}</span>
                     {n !== undefined ? (
-                      <span className={cn('tabular font-mono text-[0.6875rem]', count === 'active' && n > 0 ? 'text-accent-soft' : 'text-ink-faint')}>
+                      <span className={cn('tabular text-[0.8125rem]', on ? 'text-white/80' : 'text-ink-muted')}>
                         {count === 'active' && n > 0 ? <span className="sr-only">Active downloads: </span> : null}
                         {n}
                       </span>
@@ -120,14 +120,14 @@ function TabBar() {
   const moreActive = MORE.some((m) => location.pathname.startsWith(m.to));
 
   return (
-    <nav aria-label="Main" className="material fixed inset-x-0 bottom-0 z-40 border-t border-edge pb-safe lg:hidden">
+    <nav aria-label="Main" className="material fixed inset-x-0 bottom-0 z-40 border-t border-edge pb-safe [background-color:color-mix(in_srgb,var(--color-canvas)_90%,transparent)] lg:hidden">
       <ul className="mx-auto grid h-[3.25rem] max-w-lg grid-cols-5">
         {TABS.map(({ to, label, icon: Icon, count }) => (
           <li key={to}>
             <NavLink
               to={to}
               className={({ isActive: on }) =>
-                cn('relative flex h-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium', on ? 'text-accent-soft' : 'text-ink-faint')
+                cn('relative flex h-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium', on ? 'text-accent-soft' : 'text-ink-muted')
               }
             >
               <Icon className="size-[22px]" strokeWidth={1.8} />
@@ -146,7 +146,7 @@ function TabBar() {
             <SheetTrigger
               className={cn(
                 'flex h-full w-full flex-col items-center justify-center gap-0.5 text-[0.625rem] font-medium',
-                moreActive ? 'text-accent-soft' : 'text-ink-faint',
+                moreActive ? 'text-accent-soft' : 'text-ink-muted',
               )}
             >
               <Ellipsis className="size-[22px]" strokeWidth={1.8} />
@@ -154,7 +154,7 @@ function TabBar() {
             </SheetTrigger>
             <SheetContent title="More">
               <div className="flex items-center justify-between px-6 pt-4 pb-2">
-                <p className="label-mono">More</p>
+                <p className="text-[1.0625rem] font-semibold">More</p>
                 <ThemeControl />
               </div>
               <ul className="mx-4 mb-4 overflow-hidden rounded-panel bg-raised">
@@ -241,14 +241,14 @@ export function AppShell() {
         Skip to content
       </a>
 
-      <aside className="sticky top-0 hidden h-dvh flex-col p-3 lg:flex">
+      <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-grouped p-3 lg:flex">
         <div className="flex h-14 shrink-0 items-center px-3">
           <Link to="/" aria-label="Downora home">
             <Logo />
           </Link>
         </div>
         <nav aria-label="Main" className="mt-2 flex flex-1 flex-col overflow-y-auto">
-          <div className="rounded-panel border border-line bg-surface">
+          <div>
             <SidebarSection title="Library" items={LIBRARY} />
             <SidebarSection title="Account" items={ACCOUNT} />
           </div>
