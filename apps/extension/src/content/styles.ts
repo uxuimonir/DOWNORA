@@ -28,6 +28,9 @@ export const OVERLAY_CSS = /* css */ `
     color-scheme: light;
   }
 }
+/* Mono mark: white tile on dark pages' glass, black on light. */
+.lt { fill: #fff; } .lg { stroke: #000; }
+@media (prefers-color-scheme: light) { .lt { fill: #000; } .lg { stroke: #fff; } }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -50,7 +53,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .panel {
   pointer-events: auto; position: fixed; width: 320px; max-width: calc(100vw - 16px);
   max-height: calc(100vh - 16px); overflow: auto;
-  background: linear-gradient(160deg, rgb(139 92 246 / 0.12), transparent 40%), var(--glass);
+  background: var(--glass);
   -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
   border: 1px solid var(--line); border-radius: 22px;
   box-shadow: var(--shadow);
@@ -100,7 +103,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .progress .pct { font-size: 22px; font-weight: 300; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .track { margin-top: 8px; height: 8px; background: var(--tint2); overflow: hidden;
   -webkit-mask-image: repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 7px); mask-image: repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 7px); }
-.track > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--sky)); transition: width .3s ease-out; }
+.track > div { height: 100%; background: var(--accent); transition: width .3s ease-out; }
 .track.done > div { background: var(--success); }
 .track.indeterminate > div { width: 40% !important; animation: sweep 1.4s linear infinite; }
 @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(350%); } }
@@ -110,7 +113,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 `;
 
 /** Downora mark, same drawing as the web app's LogoMark. */
-export const LOGO_SVG = `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><defs><linearGradient id="dng" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#8B5CF6"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs><rect width="32" height="32" rx="9.5" fill="url(#dng)"/><path d="M10 7.5h6.2c4.9 0 8.3 3.4 8.3 8.1 0 2.3-.8 4.3-2.2 5.8" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/><path d="M10 7.5v10.2" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/><path d="M16 12.5v8.2m0 0-3.4-3.4m3.4 3.4 3.4-3.4" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 24.6h13" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/></svg>`;
+export const LOGO_SVG = `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect class="lt" width="32" height="32" rx="9.5" fill="#000000"/><g class="lg" stroke="#FFFFFF" stroke-linecap="round"><path d="M10 7.5h6.2c4.9 0 8.3 3.4 8.3 8.1 0 2.3-.8 4.3-2.2 5.8" stroke-width="2.6"/><path d="M10 7.5v10.2" stroke-width="2.6"/><path d="M16 12.5v8.2m0 0-3.4-3.4m3.4 3.4 3.4-3.4" stroke-width="2.4" stroke-linejoin="round"/><path d="M9.5 24.6h13" stroke-width="2.6"/></g></svg>`;
 
 export const ICONS = {
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',

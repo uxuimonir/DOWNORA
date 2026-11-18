@@ -59,7 +59,7 @@ export function ProfilePage() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <Panel>
           <div className="flex flex-wrap items-center gap-4 p-5">
-            <span className="accent-gradient grid size-14 shrink-0 place-items-center rounded-full">
+            <span className="grid size-14 bg-accent-fill shrink-0 place-items-center rounded-full">
               <HardDrive className="size-6 text-canvas" aria-hidden />
             </span>
             <div className="min-w-0">

@@ -39,7 +39,7 @@ export function MediaPreview({ analysis, thumbnail, playable }: { analysis: Medi
             {thumbnail ? (
               <img src={thumbnail} alt={`Preview frame of ${analysis.title}`} className="size-full object-cover" />
             ) : (
-              <div className="grid size-full place-items-center bg-[radial-gradient(120%_90%_at_20%_0%,rgb(139_92_246/0.28),transparent_60%),radial-gradient(100%_80%_at_100%_100%,rgb(56_189_248/0.22),transparent_60%)]">
+              <div className="grid size-full place-items-center bg-cell">
                 <Icon className="size-10 text-ink-muted" aria-hidden />
               </div>
             )}

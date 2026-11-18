@@ -13,6 +13,9 @@
   --color-line-strong: var(--dn-line-strong);
   /* iOS-style translucent grey fills (controls, search fields, chips). */
   --color-fill: var(--dn-fill);
+  /* The mark is monochrome: tile and glyph swap with the theme. */
+  --color-logo: var(--dn-logo);
+  --color-logo-ink: var(--dn-logo-ink);
   /* Accent behind white text: a shade deeper so labels pass WCAG AA. */
   --color-accent-fill: var(--dn-accent-fill);
   /* Grouped list: page behind (grouped) and the rows on top (cell). */
@@ -169,13 +172,14 @@
     --dn-glass: rgb(17 20 27 / 0.66);
     --dn-fill: rgb(118 118 128 / 0.2);
     --dn-cell: #191e28;
+    --dn-logo: #ffffff;
+    --dn-logo-ink: #000000;
     --dn-accent-fill: #7c4ff0;
     --dn-segment: #3a4152;
     --dn-grouped: #0e1016;
     --dn-fill-strong: rgb(118 118 128 / 0.3);
     --dn-shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03) inset, 0 20px 50px -30px rgb(0 0 0 / 0.9);
     --dn-shadow-pop: 0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 30px 70px -20px rgb(0 0 0 / 0.85), 0 0 0 1px rgb(255 255 255 / 0.06);
-    --accent-gradient: linear-gradient(100deg, #8b5cf6 0%, #38bdf8 100%);
   }
   :root[data-theme='light'] {
     color-scheme: light;
@@ -199,13 +203,14 @@
     --dn-glass: rgb(255 255 255 / 0.7);
     --dn-fill: rgb(118 118 128 / 0.12);
     --dn-cell: #ffffff;
+    --dn-logo: #000000;
+    --dn-logo-ink: #ffffff;
     --dn-accent-fill: #7047eb;
     --dn-segment: #ffffff;
     --dn-grouped: #eef0f6;
     --dn-fill-strong: rgb(118 118 128 / 0.2);
     --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
     --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
-    --accent-gradient: linear-gradient(100deg, #7047eb 0%, #2585e8 100%);
   }
   /* No theme chosen yet (e.g. extension pages, which can't run an inline script): follow the OS. */
   @media (prefers-color-scheme: light) {
@@ -231,13 +236,14 @@
       --dn-glass: rgb(255 255 255 / 0.7);
     --dn-fill: rgb(118 118 128 / 0.12);
     --dn-cell: #ffffff;
+    --dn-logo: #000000;
+    --dn-logo-ink: #ffffff;
     --dn-accent-fill: #7047eb;
     --dn-segment: #ffffff;
     --dn-grouped: #eef0f6;
     --dn-fill-strong: rgb(118 118 128 / 0.2);
       --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
       --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
-      --accent-gradient: linear-gradient(100deg, #7047eb 0%, #2585e8 100%);
     }
   }
 
@@ -358,9 +364,6 @@
   mask-image: repeating-linear-gradient(90deg, #000 0 5px, transparent 5px 7px);
 }
 
-@utility accent-gradient {
-  background-image: var(--accent-gradient);
-}
 
 @utility hairline-top {
   box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.04) inset;

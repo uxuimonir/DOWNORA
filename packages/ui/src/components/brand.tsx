@@ -1,4 +1,4 @@
-import { useId, type HTMLAttributes, type SVGProps } from 'react';
+import { type HTMLAttributes, type SVGProps } from 'react';
 import { Toaster as SonnerToaster, type ToasterProps } from 'sonner';
 import { cn } from '../lib/cn';
 
@@ -9,31 +9,15 @@ import { cn } from '../lib/cn';
  * a tray — the file arriving on disk.
  */
 export function LogoMark({ className, ...props }: SVGProps<SVGSVGElement>) {
-  const id = useId();
   return (
     <svg viewBox="0 0 32 32" fill="none" className={cn('size-8', className)} aria-hidden {...props}>
-      <defs>
-        <linearGradient id={`${id}-g`} x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#8B5CF6" />
-          <stop offset="1" stopColor="#38BDF8" />
-        </linearGradient>
-      </defs>
-      <rect width="32" height="32" rx="9.5" fill={`url(#${id}-g)`} />
-      <path
-        d="M10 7.5h6.2c4.9 0 8.3 3.4 8.3 8.1 0 2.3-.8 4.3-2.2 5.8"
-        stroke="#FFFFFF"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      <path d="M10 7.5v10.2" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" />
-      <path
-        d="M16 12.5v8.2m0 0-3.4-3.4m3.4 3.4 3.4-3.4"
-        stroke="#FFFFFF"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M9.5 24.6h13" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" />
+      <rect width="32" height="32" rx="9.5" fill="var(--color-logo)" />
+      <g stroke="var(--color-logo-ink)" strokeLinecap="round">
+        <path d="M10 7.5h6.2c4.9 0 8.3 3.4 8.3 8.1 0 2.3-.8 4.3-2.2 5.8" strokeWidth="2.6" />
+        <path d="M10 7.5v10.2" strokeWidth="2.6" />
+        <path d="M16 12.5v8.2m0 0-3.4-3.4m3.4 3.4 3.4-3.4" strokeWidth="2.4" strokeLinejoin="round" />
+        <path d="M9.5 24.6h13" strokeWidth="2.6" />
+      </g>
     </svg>
   );
 }

@@ -179,7 +179,6 @@ export function App() {
 
   return (
     <div className="relative flex min-h-[520px] flex-col overflow-hidden bg-canvas p-4 text-ink">
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-24 h-56 bg-[radial-gradient(60%_60%_at_30%_40%,rgb(139_92_246/0.28),transparent),radial-gradient(50%_60%_at_80%_30%,rgb(56_189_248/0.2),transparent)] blur-2xl" />
       <header className="relative flex items-center justify-between">
         <h1 className="m-0">
           <Logo className="[&_svg]:size-7 [&>span:last-child]:text-[1.0625rem]" />

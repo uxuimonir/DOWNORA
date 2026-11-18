@@ -114,7 +114,6 @@ export function Hero() {
   const enter = (delay: number, y = 18) => (reduce ? {} : { initial: { opacity: 0, y }, animate: { opacity: 1, y: 0 }, transition: { ...spring, delay } });
   return (
     <section className="relative isolate overflow-clip pt-12 pb-20 sm:pt-20 lg:pb-28">
-      <div aria-hidden className="aurora -z-10" />
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <motion.h1 {...enter(0, 24)} className="mx-auto text-center text-[2.75rem] leading-[0.98] font-bold tracking-[-0.045em] min-[400px]:text-[3.1rem] sm:text-[5.25rem] lg:text-[7.25rem]">
           <span className="block">Your Media.</span>
@@ -188,7 +187,7 @@ function ProgressDemo() {
         </IconTile>
         <div className="min-w-0 flex-1">
           <p className="truncate text-[0.9375rem] font-semibold">launch-film.mp4</p>
-          <p className="tabular text-[0.8125rem] text-ink-muted">520 KB of 722 KB, 1 s left</p>
+          <p className="tabular text-[0.8125rem] text-ink-muted">106 KB of 147 KB, 1 s left</p>
         </div>
         <span className="tabular text-[1.75rem] leading-none font-semibold tracking-[-0.03em]">72%</span>
       </div>
@@ -339,12 +338,12 @@ function BrowserMock() {
               <span className="flex items-center justify-between px-3 py-2 text-ink">
                 <span className="font-semibold">MP4 1080p</span>
                 <span className="flex items-center gap-1.5 text-ink-muted">
-                  722 KB <Check className="size-3.5 text-accent-soft" strokeWidth={2.6} />
+                  147 KB <Check className="size-3.5 text-accent-soft" strokeWidth={2.6} />
                 </span>
               </span>
               <span className="flex items-center justify-between border-t border-line px-3 py-2 text-ink">
                 <span>WEBM 720p</span>
-                <span className="text-ink-muted">261 KB</span>
+                <span className="text-ink-muted">126 KB</span>
               </span>
             </div>
             <span className="mt-2 block rounded-[0.75rem] bg-accent-fill py-2 text-center text-[0.8125rem] font-semibold text-white">Download video</span>
@@ -475,7 +474,6 @@ export function FeatureSection({ id, title, body, items, visual, flip }: { id?: 
 export function VideoVisual() {
   return (
     <div className="relative">
-      <div aria-hidden className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(60%_60%_at_30%_30%,rgb(139_92_246/0.3),transparent_70%),radial-gradient(50%_50%_at_80%_80%,rgb(56_189_248/0.25),transparent_70%)] blur-2xl" />
       <SampleVideo className="aspect-video w-full rounded-[1.75rem] bg-black object-cover shadow-pop" label="Sample video" />
       <div className="material absolute -bottom-6 left-4 flex items-center gap-3 rounded-[1.125rem] py-2 pr-4 pl-2 shadow-pop" aria-hidden>
         <IconTile color="violet">
@@ -496,7 +494,7 @@ export function AudioVisual() {
   return (
     <div className="rounded-[1.75rem] bg-cell p-5 shadow-pop sm:p-7" aria-hidden>
       <div className="flex items-center gap-3">
-        <span className="accent-gradient grid size-14 place-items-center rounded-[0.875rem]">
+        <span className="grid size-14 place-items-center rounded-[0.875rem] bg-[#D9467A]">
           <Music2 className="size-7 text-white" />
         </span>
         <div>
@@ -508,7 +506,7 @@ export function AudioVisual() {
         {bars.map((h, i) => (
           <motion.span
             key={i}
-            className="flex-1 rounded-full bg-gradient-to-t from-accent to-info"
+            className="flex-1 rounded-full bg-accent"
             style={{ height: `${h * 100}%`, transformOrigin: 'center' }}
             animate={reduce ? undefined : { scaleY: [1, 0.55 + (i % 5) * 0.08, 1] }}
             transition={{ duration: 2.4 + (i % 7) * 0.2, repeat: Infinity, ease: 'easeInOut', delay: i * 0.03 }}
@@ -528,7 +526,7 @@ export function AudioVisual() {
 
 export function QueueVisual() {
   const rows = [
-    { name: 'launch-film.mp4', state: 'Downloading', v: 0.64, s: 'active' as const, meta: '462 KB of 722 KB', icon: Film, tile: 'violet' as const },
+    { name: 'launch-film.mp4', state: 'Downloading', v: 0.64, s: 'active' as const, meta: '94 KB of 147 KB', icon: Film, tile: 'violet' as const },
     { name: 'interview.webm', state: 'Paused', v: 0.31, s: 'paused' as const, meta: 'Resumes from 68 KB', icon: Pause, tile: 'orange' as const },
     { name: 'theme-song.mp3', state: 'Saved', v: 1, s: 'done' as const, meta: '188 KB', icon: Check, tile: 'green' as const },
   ];
@@ -654,8 +652,7 @@ export function FinalCTA() {
   return (
     <Wrap className="bg-grouped pb-20 sm:pb-28">
       <Reveal className="relative isolate overflow-hidden rounded-[2.25rem] px-6 py-14 text-center sm:px-12 sm:py-20">
-        <div aria-hidden className="aurora aurora-strong -z-10" />
-        <div aria-hidden className="absolute inset-0 -z-10 bg-cell/50 backdrop-blur-xl [border-radius:inherit]" />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-cell [border-radius:inherit]" />
         <span className="mx-auto block w-fit">
           <LogoMark className="size-16" />
         </span>

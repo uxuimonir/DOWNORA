@@ -50,7 +50,6 @@ export function AuthPage() {
 
   return (
     <div className="relative isolate grid min-h-dvh place-items-center overflow-clip px-4 pt-24 pb-10">
-      <div aria-hidden className="aurora -z-10" />
       <header className="absolute inset-x-0 top-0 mx-auto flex max-w-[1280px] items-center justify-between px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
         <Link to="/" aria-label="Downora home" className="flex min-h-11 items-center">
           <Logo />
