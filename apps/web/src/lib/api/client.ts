@@ -5,7 +5,10 @@
  */
 import type { AuthResponse, HealthResponse, HistoryEntry, MediaAnalysis, ServerJob, User } from '@downora/types';
 
-export const API_URL: string | undefined = import.meta.env.VITE_DOWNORA_API_URL?.replace(/\/$/, '') || undefined;
+const RAW_API = import.meta.env.VITE_DOWNORA_API_URL?.trim();
+/** `same-origin` = the API serves this site too (one-server deploy). */
+export const API_URL: string | undefined =
+  RAW_API === 'same-origin' ? (typeof window !== 'undefined' ? window.location.origin : undefined) : RAW_API?.replace(/\/$/, '') || undefined;
 
 export class ApiError extends Error {
   constructor(

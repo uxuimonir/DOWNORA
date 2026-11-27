@@ -119,3 +119,18 @@ for (const scheme of ['dark', 'light'] as const) {
     });
   }
 }
+
+test('account history shows when /history is opened directly', async ({ page, request }) => {
+  const API = 'http://localhost:8787';
+  const headers = { origin: 'http://localhost:5173' };
+  const email = `direct-${Date.now()}@example.com`;
+  const reg = await page.request.post(`${API}/api/auth/register`, { data: { email, password: 'correct horse battery' }, headers });
+  expect(reg.status()).toBe(201);
+  await page.request.post(`${API}/api/history`, {
+    data: { url: `${API}/x.mp3`, title: 'direct', fileName: 'direct-check.mp3', container: 'mp3', kind: 'audio', sizeBytes: 10 },
+    headers,
+  });
+  void request;
+  await page.goto('/history');
+  await expect(page.getByTestId('account-history')).toContainText('direct-check.mp3');
+});

@@ -1,0 +1,16 @@
+# Run everything locally:  docker compose up --build   → http://localhost:8787
+services:
+  downora:
+    build: .
+    ports:
+      - "8787:8787"
+    environment:
+      # The address people open in the browser. Change it when you deploy.
+      PUBLIC_ORIGIN: http://localhost:8787
+      # Set to "true" once the site is served over HTTPS.
+      COOKIE_SECURE: "false"
+    volumes:
+      - downora-data:/data
+    restart: unless-stopped
+volumes:
+  downora-data:

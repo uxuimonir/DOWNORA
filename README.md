@@ -31,25 +31,59 @@ Known limits: in-browser downloads are held in memory until saved (default cap
 
 ## Run it
 
-Requirements: Node 20.19+ (22 recommended) and pnpm 10.
+Requirements: Node 22 (22.13 or newer), pnpm 10, and FFmpeg for conversions.
 
 ```bash
 pnpm install
 ```
 
+### Everything on one address (website + API + downloads)
+
 ```bash
-pnpm dev
+pnpm serve
 ```
 
-Then open http://localhost:5173. To run the API as well (accounts, history,
-conversions; FFmpeg must be installed for conversions):
+Then open http://localhost:8787. This builds the web app, and the API serves
+it together with every `/api` route: sign up, analyze links, download
+originals, convert on the server (MP4, WebM, MKV, MP3, WAV, M4A when FFmpeg is
+installed), and keep history. Your data goes to `apps/api/.data`.
+
+### With Docker
+
+```bash
+docker compose up --build
+```
+
+Same result at http://localhost:8787, with FFmpeg included. Data lives in the
+`downora-data` volume.
+
+### Put it online
+
+Any host that runs a Docker image works (a VPS, Render, Railway, Fly.io and so
+on). Use the `Dockerfile`, keep one instance (jobs are in memory), mount a disk
+at `/data`, and set:
+
+| Variable | Value |
+| --- | --- |
+| `PUBLIC_ORIGIN` | The site's address, e.g. `https://downora.example.com` |
+| `COOKIE_SECURE` | `true` (the site must be on HTTPS) |
+| `PORT` | Whatever the host gives you (default 8787) |
+
+Static-only hosts (Vercel/Netlify static, GitHub Pages) can't run the server
+part, so there the site works in browser-only mode: originals only, no
+accounts, no conversions.
+
+### Development (hot reload)
 
 ```bash
 pnpm dev:api
 ```
 
-Then set `VITE_DOWNORA_API_URL=http://localhost:8787` in `apps/web/.env`. See
-`apps/api/.env.example` for settings.
+```bash
+VITE_DOWNORA_API_URL=http://localhost:8787 pnpm dev
+```
+
+Then open http://localhost:5173.
 
 ## Test it
 

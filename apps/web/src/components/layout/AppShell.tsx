@@ -18,6 +18,7 @@ import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-rou
 import { useShallow } from 'zustand/react/shallow';
 import { useChrome } from '@/stores/chrome';
 import { ThemeControl } from '@/components/site/Navigation';
+import { useAccount } from '@/stores/account';
 import { isActive, useDownloads } from '@/stores/downloads';
 
 interface NavItem {
@@ -224,6 +225,11 @@ function NavBar() {
 export function AppShell() {
   const location = useLocation();
   const mainRef = useRef<HTMLElement>(null);
+  const initAccount = useAccount((s) => s.init);
+  // Load the account once for every app page (history, profile, conversions).
+  useEffect(() => {
+    void initAccount();
+  }, [initAccount]);
 
   // Move focus to the page on navigation so screen readers announce it —
   // unless the page already put focus somewhere useful (e.g. an autofocus field).

@@ -1,0 +1,10 @@
+**/node_modules
+**/dist
+**/dist-preview
+**/dist-test
+**/test-results
+**/playwright-report
+**/.data
+apps/extension/*.zip
+.git
+.env

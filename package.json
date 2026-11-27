@@ -16,6 +16,8 @@
     "e2e": "pnpm --filter @downora/web e2e",
     "samples": "bash apps/web/scripts/generate-samples.sh",
     "ext:build": "pnpm --filter @downora/extension build",
-    "ext:e2e": "pnpm --filter @downora/extension e2e"
+    "ext:e2e": "pnpm --filter @downora/extension e2e",
+    "build:server-site": "VITE_DOWNORA_API_URL=same-origin pnpm --filter @downora/web build",
+    "serve": "pnpm build:server-site && PUBLIC_ORIGIN=${PUBLIC_ORIGIN:-http://localhost:8787} WEB_DIR=../web/dist pnpm --filter @downora/api start"
   }
 }

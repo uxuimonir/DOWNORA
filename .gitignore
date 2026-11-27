@@ -18,3 +18,4 @@ apps/extension/*.zip
 apps/desktop/target
 apps/desktop/dist
 apps/desktop/src-tauri/gen
+.data

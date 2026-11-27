@@ -16,6 +16,7 @@ import { loadConfig, type Config } from './config';
 import { openDb, type Database } from './db';
 import { Media, UserError } from './media';
 import { allowPrivateHosts } from './security/ssrf';
+import { serveStatic } from './static';
 
 const VERSION = '0.2.0';
 
@@ -283,12 +284,13 @@ export async function createApp(overrides: Partial<Config> = {}): Promise<App> {
     if (req.method === 'OPTIONS') return void res.writeHead(204).end();
 
     const ip = req.socket.remoteAddress ?? 'unknown';
-    const now = Date.now();
-    const h = hits.get(ip);
-    if (!h || h.until < now) hits.set(ip, { n: 1, until: now + 60_000 });
-    else if (++h.n > config.rateLimitPerMinute) return fail(res, 429, 'rate_limited', 'Too many requests. Try again in a minute.');
-
     const url = new URL(req.url ?? '/', 'http://api');
+    if (url.pathname.startsWith('/api/')) {
+      const now = Date.now();
+      const h = hits.get(ip);
+      if (!h || h.until < now) hits.set(ip, { n: 1, until: now + 60_000 });
+      else if (++h.n > config.rateLimitPerMinute) return fail(res, 429, 'rate_limited', 'Too many requests. Try again in a minute.');
+    }
     for (const r of routes) {
       if (r.method !== req.method) continue;
       const m = url.pathname.match(r.pattern);
@@ -305,6 +307,7 @@ export async function createApp(overrides: Partial<Config> = {}): Promise<App> {
       }
       return;
     }
+    if (config.webDir && !url.pathname.startsWith('/api/') && (await serveStatic(config.webDir, req, res, url.pathname))) return;
     fail(res, 404, 'not_found', 'No such endpoint.');
   };
 
