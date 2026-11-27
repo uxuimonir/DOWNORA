@@ -82,6 +82,20 @@ up from Render automatically; set `PUBLIC_ORIGIN` only for a custom domain.
 A disk needs a paid instance; on the free plan remove the `disk:` block and
 expect accounts and history to be wiped on every restart.
 
+### Vercel (website only)
+
+`vercel.json` builds the web app: Vercel → **Add New → Project** → import this
+repository → **Deploy** (leave the build settings as they are). Vercel can't
+run the API (FFmpeg jobs, disk), so this site runs in browser-only mode:
+original files download, but there are no accounts or conversions.
+
+To give the Vercel site the full features, run the API on Render too, then:
+1. Add a rewrite before the catch-all in `vercel.json`:
+   `{ "source": "/api/(.*)", "destination": "https://YOUR-RENDER-URL/api/$1" }`
+2. In Vercel → Settings → Environment Variables, set
+   `VITE_DOWNORA_API_URL` = `same-origin`, then redeploy.
+3. In Render → Environment, set `PUBLIC_ORIGIN` = your Vercel address.
+
 ### Development (hot reload)
 
 ```bash
