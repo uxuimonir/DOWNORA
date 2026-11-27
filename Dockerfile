@@ -18,5 +18,6 @@ ENV NODE_ENV=production \
     DATA_DIR=/data
 VOLUME /data
 EXPOSE 8787
-USER node
-CMD ["pnpm", "--filter", "@downora/api", "start"]
+WORKDIR /app/apps/api
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["./node_modules/.bin/tsx", "src/server.ts"]

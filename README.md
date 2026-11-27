@@ -73,6 +73,15 @@ Static-only hosts (Vercel/Netlify static, GitHub Pages) can't run the server
 part, so there the site works in browser-only mode: originals only, no
 accounts, no conversions.
 
+### Render
+
+`render.yaml` is a ready Blueprint: Render dashboard → **New → Blueprint** →
+pick this repository → **Apply**. It builds the `Dockerfile`, checks
+`/api/health`, and mounts a 1 GB disk at `/data`. The site's address is picked
+up from Render automatically; set `PUBLIC_ORIGIN` only for a custom domain.
+A disk needs a paid instance; on the free plan remove the `disk:` block and
+expect accounts and history to be wiped on every restart.
+
 ### Development (hot reload)
 
 ```bash

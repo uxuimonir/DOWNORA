@@ -1,0 +1,24 @@
+# Render Blueprint: Dashboard → New → Blueprint → pick this repo.
+services:
+  - type: web
+    name: downora
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    # A disk (accounts, history) needs a paid instance. On the free plan,
+    # change this to "free" and delete the whole "disk:" block below;
+    # data is then wiped whenever the service restarts or redeploys.
+    plan: starter
+    numInstances: 1
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: COOKIE_SECURE
+        value: "true"
+      # Set this only if you add your own domain, e.g. https://downora.example.com
+      # (otherwise the onrender.com address is used automatically).
+      - key: PUBLIC_ORIGIN
+        sync: false
+    disk:
+      name: downora-data
+      mountPath: /data
+      sizeGB: 1

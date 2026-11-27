@@ -24,8 +24,9 @@ export interface Config {
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   return {
     port: Number(env.PORT ?? 8787),
-    // PUBLIC_ORIGIN is the site's own address when the API also serves the web app.
-    corsOrigins: new Set([...list(env.CORS_ORIGINS ?? 'http://localhost:5173'), ...list(env.PUBLIC_ORIGIN)]),
+    // PUBLIC_ORIGIN is the site's own address when the API also serves the web app
+    // (on Render it defaults to the URL Render assigns).
+    corsOrigins: new Set([...list(env.CORS_ORIGINS ?? 'http://localhost:5173'), ...list(env.PUBLIC_ORIGIN || env.RENDER_EXTERNAL_URL)]),
     rateLimitPerMinute: Number(env.RATE_LIMIT_PER_MINUTE ?? 240),
     dataDir: env.DATA_DIR ?? join(process.cwd(), '.data'),
     maxFileBytes: Number(env.MAX_FILE_MB ?? 1024) * 1024 * 1024,
