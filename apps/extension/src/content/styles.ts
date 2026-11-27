@@ -7,10 +7,10 @@ export const OVERLAY_CSS = /* css */ `
 :host { all: initial; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 .layer {
-  --canvas: #08090d; --surface: #11141b; --raised: #191e28; --hover: #222836;
-  --line: rgb(255 255 255 / 0.1); --ink: #f8fafc; --muted: #94a3b8; --faint: #8592a6;
-  --accent: #8b5cf6; --accent-ink: #b4a0fb; --sky: #38bdf8; --danger: #ff6b6b; --success: #34d399;
-  --glass: rgb(17 20 27 / 0.82); --fab: rgb(8 9 13 / 0.72); --tint: rgb(255 255 255 / 0.05); --tint2: rgb(255 255 255 / 0.09);
+  --canvas: #0b0b0c; --surface: #121213; --raised: #18181a; --hover: #1f1f22;
+  --line: #2a2a2e; --ink: #f5f5f5; --muted: #a1a1a6; --faint: #8e8e93;
+  --accent: #7c4ff0; --accent-ink: #b4a0fb; --sky: #38bdf8; --danger: #ff6b6b; --success: #34d399;
+  --glass: #121213; --fab: rgb(11 11 12 / 0.8); --tint: rgb(255 255 255 / 0.05); --tint2: rgb(255 255 255 / 0.09);
   --shadow: 0 24px 60px -12px rgb(0 0 0 / 0.75);
   font: 14px/1.4 -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
   color: var(--ink);
@@ -20,10 +20,10 @@ export const OVERLAY_CSS = /* css */ `
 }
 @media (prefers-color-scheme: light) {
   .layer {
-    --canvas: #f7f8fc; --surface: #ffffff; --raised: #f0f2f8; --hover: #e7eaf3;
-    --line: rgb(17 24 39 / 0.1); --ink: #111827; --muted: #64748b; --faint: #5b6678;
+    --canvas: #fafafa; --surface: #ffffff; --raised: #f4f4f5; --hover: #eeeeef;
+    --line: #e7e7e7; --ink: #111111; --muted: #5f5f5f; --faint: #6e6e6e;
     --accent: #7047eb; --accent-ink: #5b32d6; --sky: #2585e8; --danger: #c62828; --success: #047857;
-    --glass: rgb(255 255 255 / 0.86); --fab: rgb(255 255 255 / 0.8); --tint: rgb(17 24 39 / 0.04); --tint2: rgb(17 24 39 / 0.07);
+    --glass: #ffffff; --fab: rgb(255 255 255 / 0.85); --tint: rgb(0 0 0 / 0.03); --tint2: rgb(0 0 0 / 0.06);
     --shadow: 0 24px 60px -16px rgb(30 27 75 / 0.28);
     color-scheme: light;
   }
@@ -55,7 +55,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
   max-height: calc(100vh - 16px); overflow: auto;
   background: var(--glass);
   -webkit-backdrop-filter: saturate(180%) blur(24px); backdrop-filter: saturate(180%) blur(24px);
-  border: 1px solid var(--line); border-radius: 22px;
+  border: 1px solid var(--line); border-radius: 14px;
   box-shadow: var(--shadow);
   animation: pop .18s cubic-bezier(.22,1,.36,1);
 }
@@ -65,7 +65,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 @media (forced-colors: active) { .fab, .panel { border: 1px solid CanvasText; } }
 
 .head { display: flex; gap: 12px; padding: 14px; }
-.thumb { width: 88px; aspect-ratio: 16/9; flex: none; border-radius: 10px; background: var(--hover); overflow: hidden; display: grid; place-items: center; color: var(--faint); }
+.thumb { width: 88px; aspect-ratio: 16/9; flex: none; border-radius: 8px; border: 1px solid var(--line); background: var(--hover); overflow: hidden; display: grid; place-items: center; color: var(--faint); }
 .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .thumb svg { width: 22px; height: 22px; }
 .title { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word; }
@@ -76,7 +76,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .close svg { width: 16px; height: 16px; }
 
 .label { font: 500 11px/16px 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); padding: 4px 16px 6px; }
-.list { margin: 0 10px; border-radius: 14px; background: var(--tint); overflow: hidden; }
+.list { margin: 0 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); overflow: hidden; }
 .opt { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--line); }
 .opt:last-child { border-bottom: 0; }
 .opt:hover { background: var(--tint); }
@@ -89,11 +89,11 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .error { margin: 10px 14px 0; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); font-size: 13px; }
 
 .actions { display: grid; gap: 8px; padding: 14px; }
-.btn { min-height: 44px; border-radius: 999px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; }
+.btn { min-height: 44px; border-radius: 10px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; }
 .btn svg { width: 18px; height: 18px; }
-.btn.primary { background: var(--accent); color: #fff; box-shadow: 0 8px 20px -8px var(--accent); transition: filter .15s, transform .15s; }
+.btn.primary { background: var(--accent); color: #fff; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.18); transition: filter .15s, transform .15s; }
 .btn.primary:hover { filter: brightness(1.08); }
-.btn.secondary { background: var(--tint2); color: var(--ink); }
+.btn.secondary { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
 .btn.secondary:hover { background: var(--hover); }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
 .btn:active:not(:disabled) { transform: scale(.98); }

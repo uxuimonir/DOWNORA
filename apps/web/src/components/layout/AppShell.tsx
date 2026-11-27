@@ -75,7 +75,7 @@ function SidebarSection({ title, items }: { title: string; items: NavItem[] }) {
   const history = counts.filter((j) => !isActive(j)).length;
   return (
     <div className="px-1 pb-5">
-      <p className="px-3 pb-1.5 text-[0.8125rem] font-semibold text-ink-muted">{title}</p>
+      <p className="tag-mono px-3 pb-2 text-ink-muted">{title}</p>
       <ul className="flex flex-col gap-0.5">
         {items.map(({ to, label, icon: Icon, count }) => {
           const n = count === 'active' ? active : count === 'history' ? history : undefined;
@@ -85,17 +85,17 @@ function SidebarSection({ title, items }: { title: string; items: NavItem[] }) {
                 to={to}
                 className={({ isActive: on }) =>
                   cn(
-                    'group flex h-9 items-center gap-3 rounded-[0.625rem] px-3 text-[0.9375rem] transition-colors',
-                    on ? 'bg-accent-fill font-medium text-white' : 'text-ink hover:bg-fill/60 active:bg-fill',
+                    'group flex h-9 items-center gap-3 rounded-[0.5rem] border px-3 text-[0.875rem] transition-colors',
+                    on ? 'border-line bg-surface font-medium text-ink shadow-[0_1px_2px_rgb(0_0_0/0.05)]' : 'border-transparent text-ink-muted hover:text-ink',
                   )
                 }
               >
                 {({ isActive: on }) => (
                   <>
-                    <Icon className={cn('size-[18px]', on ? 'text-white' : 'text-accent-soft')} />
+                    <Icon className={cn('size-4', on ? 'text-accent-soft' : 'text-ink-muted group-hover:text-ink')} />
                     <span className="flex-1">{label}</span>
                     {n !== undefined ? (
-                      <span className={cn('tabular text-[0.8125rem]', on ? 'text-white/80' : 'text-ink-muted')}>
+                      <span className="tabular tag-mono text-ink-muted">
                         {count === 'active' && n > 0 ? <span className="sr-only">Active downloads: </span> : null}
                         {n}
                       </span>
@@ -157,7 +157,7 @@ function TabBar() {
                 <p className="text-[1.0625rem] font-semibold">More</p>
                 <ThemeControl />
               </div>
-              <ul className="mx-4 mb-4 overflow-hidden rounded-panel bg-raised">
+              <ul className="mx-4 mb-4 overflow-hidden rounded-panel border border-line bg-surface">
                 {MORE.map(({ to, label, icon: Icon }) => (
                   <li key={to} className="border-b border-edge last:border-b-0">
                     <Link
@@ -165,8 +165,8 @@ function TabBar() {
                       onClick={() => setMoreOpen(false)}
                       className="flex h-12 items-center gap-3.5 px-4 text-[1.0625rem] text-ink active:bg-hover"
                     >
-                      <span className="grid size-7 place-items-center rounded-[0.5rem] bg-accent/18">
-                        <Icon className="size-4 text-accent-soft" />
+                      <span className="grid size-7 place-items-center rounded-[0.5rem] border border-line bg-surface">
+                        <Icon className="size-4 text-ink" />
                       </span>
                       <span className="flex-1">{label}</span>
                       <ChevronRight className="size-4 text-ink-faint" aria-hidden />
@@ -233,7 +233,7 @@ export function AppShell() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[264px_1fr]">
+    <div className="min-h-dvh bg-canvas lg:grid lg:grid-cols-[248px_1fr] lg:bg-page">
       <a
         href="#main"
         className="sr-only z-50 rounded-full bg-ink px-4 py-2 text-sm font-medium text-canvas focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
@@ -241,10 +241,10 @@ export function AppShell() {
         Skip to content
       </a>
 
-      <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-grouped p-3 lg:flex">
+      <aside className="sticky top-0 hidden h-dvh flex-col p-3 pr-2 lg:flex">
         <div className="flex h-14 shrink-0 items-center px-3">
           <Link to="/" aria-label="Downora home">
-            <Logo />
+            <Logo className="[&_svg]:size-6 [&>span:last-child]:text-[0.9375rem]" />
           </Link>
         </div>
         <nav aria-label="Main" className="mt-2 flex flex-1 flex-col overflow-y-auto">
@@ -259,14 +259,14 @@ export function AppShell() {
         </nav>
       </aside>
 
-      <div className="min-w-0">
+      <div className="min-w-0 lg:my-3 lg:mr-3 lg:rounded-[1.25rem] lg:border lg:border-line lg:bg-canvas">
         <NavBar />
 
         <main
           id="main"
           ref={mainRef}
           tabIndex={-1}
-          className="mx-auto w-full max-w-[1160px] px-4 pt-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] outline-none sm:px-6 lg:px-10 lg:pt-12 lg:pb-16"
+          className="mx-auto w-full max-w-[1120px] px-4 pt-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] outline-none sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"
         >
           <Outlet />
         </main>

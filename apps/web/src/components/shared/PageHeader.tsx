@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { Tag } from '@/components/site/grid';
 import { useDocumentTitle } from '@/lib/useDocumentTitle';
 import { useChrome } from '@/stores/chrome';
 
@@ -35,11 +36,12 @@ export function PageHeader({
   }, [title, setChrome]);
 
   return (
-    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-8 flex flex-col gap-4 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
+        <Tag className="mb-4 hidden sm:inline-flex">Downora · {title}</Tag>
         <h1
           ref={ref}
-          className="text-[2.125rem] leading-tight font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:font-semibold"
+          className="text-[2rem] leading-tight font-semibold tracking-[-0.045em] sm:text-[2.75rem]"
         >
           {title}
         </h1>

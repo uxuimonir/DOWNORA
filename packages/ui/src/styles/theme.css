@@ -27,6 +27,10 @@
   --color-ink: var(--dn-ink);
   --color-ink-muted: var(--dn-ink-muted);
   --color-ink-faint: var(--dn-ink-faint);
+  /* Grey half of a two-tone headline (large text only, 3:1). */
+  --color-ink-ghost: var(--dn-ink-ghost);
+  /* Behind the framed page. */
+  --color-page: var(--dn-page);
   /* accent = fills; accent-soft = accessible accent text */
   --color-accent: var(--dn-accent);
   --color-accent-strong: var(--dn-accent-strong);
@@ -37,8 +41,8 @@
   --color-danger: var(--dn-danger);
 
   /* Type — SF Pro on Apple devices, Inter elsewhere */
-  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', system-ui, sans-serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', system-ui, sans-serif;
+  --font-display: 'Inter Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', 'SF Mono', ui-monospace, Menlo, monospace;
 
   /* A modular scale (ratio ≈ 1.2) with matching leading */
@@ -68,9 +72,9 @@
   --text-7xl--line-height: 5.25rem;
 
   /* Radius hierarchy — iOS continuous-corner feel: controls < panels < stages */
-  --radius-control: 0.75rem;
-  --radius-panel: 1.25rem;
-  --radius-stage: 1.75rem;
+  --radius-control: 0.625rem;
+  --radius-panel: 0.875rem;
+  --radius-stage: 1.25rem;
 
   /* Elevation — flat and quiet, like the reference */
   --shadow-panel: var(--dn-shadow-panel);
@@ -152,16 +156,18 @@
   :root,
   :root[data-theme='dark'] {
     color-scheme: dark;
-    --dn-canvas: #08090d;
-    --dn-surface: #11141b;
-    --dn-raised: #191e28;
-    --dn-hover: #222836;
-    --dn-line: #1f2430;
-    --dn-line-strong: #2d3443;
+    --dn-canvas: #0b0b0c;
+    --dn-page: #000000;
+    --dn-surface: #121213;
+    --dn-raised: #18181a;
+    --dn-hover: #1f1f22;
+    --dn-line: #222225;
+    --dn-line-strong: #2e2e32;
     --dn-edge: rgb(255 255 255 / 0.08);
-    --dn-ink: #f8fafc;
-    --dn-ink-muted: #94a3b8;
-    --dn-ink-faint: #8693a8;
+    --dn-ink: #f5f5f5;
+    --dn-ink-muted: #a1a1a6;
+    --dn-ink-faint: #8e8e93;
+    --dn-ink-ghost: #6b6b70;
     --dn-accent: #8b5cf6;
     --dn-accent-strong: #7c3aed;
     --dn-accent-text: #b4a0fb;
@@ -169,30 +175,32 @@
     --dn-success: #34d399;
     --dn-warn: #fbbf24;
     --dn-danger: #f87171;
-    --dn-glass: rgb(17 20 27 / 0.66);
-    --dn-fill: rgb(118 118 128 / 0.2);
-    --dn-cell: #191e28;
+    --dn-glass: rgb(11 11 12 / 0.72);
+    --dn-fill: rgb(255 255 255 / 0.06);
+    --dn-cell: #121213;
     --dn-logo: #ffffff;
     --dn-logo-ink: #000000;
     --dn-accent-fill: #7c4ff0;
-    --dn-segment: #3a4152;
-    --dn-grouped: #0e1016;
-    --dn-fill-strong: rgb(118 118 128 / 0.3);
-    --dn-shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03) inset, 0 20px 50px -30px rgb(0 0 0 / 0.9);
-    --dn-shadow-pop: 0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 30px 70px -20px rgb(0 0 0 / 0.85), 0 0 0 1px rgb(255 255 255 / 0.06);
+    --dn-segment: #2c2c30;
+    --dn-grouped: #0b0b0c;
+    --dn-fill-strong: rgb(255 255 255 / 0.1);
+    --dn-shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03) inset;
+    --dn-shadow-pop: 0 24px 60px -24px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(255 255 255 / 0.06);
   }
   :root[data-theme='light'] {
     color-scheme: light;
-    --dn-canvas: #f7f8fc;
+    --dn-canvas: #fafafa;
+    --dn-page: #ececec;
     --dn-surface: #ffffff;
-    --dn-raised: #f0f2f8;
-    --dn-hover: #e7eaf3;
-    --dn-line: #e4e7ef;
-    --dn-line-strong: #cfd5e1;
-    --dn-edge: rgb(15 23 42 / 0.08);
-    --dn-ink: #111827;
-    --dn-ink-muted: #586477;
-    --dn-ink-faint: #5d6a7e;
+    --dn-raised: #f4f4f5;
+    --dn-hover: #eeeeef;
+    --dn-line: #e7e7e7;
+    --dn-line-strong: #d6d6d6;
+    --dn-edge: rgb(0 0 0 / 0.07);
+    --dn-ink: #111111;
+    --dn-ink-muted: #5f5f5f;
+    --dn-ink-faint: #6e6e6e;
+    --dn-ink-ghost: #8a8a8a;
     --dn-accent: #7047eb;
     --dn-accent-strong: #5b32d6;
     --dn-accent-text: #5b32d6;
@@ -200,32 +208,34 @@
     --dn-success: #047857;
     --dn-warn: #92400e;
     --dn-danger: #c81e1e;
-    --dn-glass: rgb(255 255 255 / 0.7);
-    --dn-fill: rgb(118 118 128 / 0.12);
+    --dn-glass: rgb(250 250 250 / 0.8);
+    --dn-fill: rgb(0 0 0 / 0.045);
     --dn-cell: #ffffff;
     --dn-logo: #000000;
     --dn-logo-ink: #ffffff;
     --dn-accent-fill: #7047eb;
     --dn-segment: #ffffff;
-    --dn-grouped: #eef0f6;
-    --dn-fill-strong: rgb(118 118 128 / 0.2);
-    --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
-    --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
+    --dn-grouped: #fafafa;
+    --dn-fill-strong: rgb(0 0 0 / 0.08);
+    --dn-shadow-panel: 0 1px 2px rgb(0 0 0 / 0.04);
+    --dn-shadow-pop: 0 24px 60px -28px rgb(0 0 0 / 0.22), 0 0 0 1px rgb(0 0 0 / 0.05);
   }
   /* No theme chosen yet (e.g. extension pages, which can't run an inline script): follow the OS. */
   @media (prefers-color-scheme: light) {
     :root:not([data-theme]) {
       color-scheme: light;
-      --dn-canvas: #f7f8fc;
+      --dn-canvas: #fafafa;
+      --dn-page: #ececec;
       --dn-surface: #ffffff;
-      --dn-raised: #f0f2f8;
-      --dn-hover: #e7eaf3;
-      --dn-line: #e4e7ef;
-      --dn-line-strong: #cfd5e1;
-      --dn-edge: rgb(15 23 42 / 0.08);
-      --dn-ink: #111827;
-      --dn-ink-muted: #586477;
-      --dn-ink-faint: #5d6a7e;
+      --dn-raised: #f4f4f5;
+      --dn-hover: #eeeeef;
+      --dn-line: #e7e7e7;
+      --dn-line-strong: #d6d6d6;
+      --dn-edge: rgb(0 0 0 / 0.07);
+      --dn-ink: #111111;
+      --dn-ink-muted: #5f5f5f;
+      --dn-ink-faint: #6e6e6e;
+      --dn-ink-ghost: #8a8a8a;
       --dn-accent: #7047eb;
       --dn-accent-strong: #5b32d6;
       --dn-accent-text: #5b32d6;
@@ -233,20 +243,19 @@
       --dn-success: #047857;
       --dn-warn: #92400e;
       --dn-danger: #c81e1e;
-      --dn-glass: rgb(255 255 255 / 0.7);
-    --dn-fill: rgb(118 118 128 / 0.12);
-    --dn-cell: #ffffff;
-    --dn-logo: #000000;
-    --dn-logo-ink: #ffffff;
-    --dn-accent-fill: #7047eb;
-    --dn-segment: #ffffff;
-    --dn-grouped: #eef0f6;
-    --dn-fill-strong: rgb(118 118 128 / 0.2);
-      --dn-shadow-panel: 0 1px 2px rgb(17 24 39 / 0.04), 0 18px 40px -28px rgb(17 24 39 / 0.18);
-      --dn-shadow-pop: 0 30px 70px -24px rgb(17 24 39 / 0.25), 0 0 0 1px rgb(15 23 42 / 0.06);
+      --dn-glass: rgb(250 250 250 / 0.8);
+      --dn-fill: rgb(0 0 0 / 0.045);
+      --dn-cell: #ffffff;
+      --dn-logo: #000000;
+      --dn-logo-ink: #ffffff;
+      --dn-accent-fill: #7047eb;
+      --dn-segment: #ffffff;
+      --dn-grouped: #fafafa;
+      --dn-fill-strong: rgb(0 0 0 / 0.08);
+      --dn-shadow-panel: 0 1px 2px rgb(0 0 0 / 0.04);
+      --dn-shadow-pop: 0 24px 60px -28px rgb(0 0 0 / 0.22), 0 0 0 1px rgb(0 0 0 / 0.05);
     }
   }
-
 
   html {
     background: var(--color-canvas);
@@ -325,6 +334,16 @@
 }
 
 /* Numbers that line up: sizes, timecodes, speeds. */
+/* Small mono tag text: section pills, meta lines, step numbers. */
+@utility tag-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 @utility tabular {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum';
@@ -417,18 +436,20 @@
   @media (prefers-contrast: more) {
     :root,
     :root[data-theme='dark'] {
-      --dn-line: #3a4252;
-      --dn-line-strong: #566074;
-      --dn-ink-muted: #cbd5e1;
-      --dn-ink-faint: #b6c2d4;
+      --dn-line: #3a3a3f;
+      --dn-line-strong: #55555b;
+      --dn-ink-muted: #d4d4d8;
+      --dn-ink-faint: #c4c4c8;
       --dn-accent-text: #cdbdfd;
+      --dn-ink-ghost: #a1a1a6;
     }
     :root[data-theme='light'] {
-      --dn-line: #b7bfcd;
-      --dn-line-strong: #8d97a8;
-      --dn-ink-muted: #374151;
-      --dn-ink-faint: #374151;
+      --dn-line: #b5b5b5;
+      --dn-line-strong: #8c8c8c;
+      --dn-ink-muted: #3a3a3a;
+      --dn-ink-faint: #3a3a3a;
       --dn-accent-text: #4c1fc9;
+      --dn-ink-ghost: #5f5f5f;
     }
   }
 

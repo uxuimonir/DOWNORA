@@ -202,7 +202,7 @@ test('stays accessible with Increase Contrast and Reduce Motion @responsive', as
     await page.goto(route);
     await page.waitForLoadState('networkidle');
     // Theme follows the OS by default: light here.
-    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(247, 248, 252)');
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(250, 250, 250)');
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
     expect(results.violations.map((v) => v.id)).toEqual([]);
   }

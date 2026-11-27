@@ -1,23 +1,23 @@
 import { Button, Logo, Sheet, SheetContent, SheetTrigger, ThemeSwitcher } from '@downora/ui';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Menu } from 'lucide-react';
+import { ArrowDownToLine, Menu } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useAccount } from '@/stores/account';
 import { useSettings } from '@/stores/settings';
 
 const LINKS = [
-  { href: '#download', label: 'Download' },
   { href: '#how', label: 'How it works' },
+  { href: '#why', label: 'Why Downora' },
   { href: '#extension', label: 'Extension' },
-  { href: '#features', label: 'Features' },
+  { href: '#formats', label: 'Formats' },
   { href: '#faq', label: 'FAQ' },
 ];
 
-export function ThemeControl({ className }: { className?: string }) {
+export function ThemeControl({ className, size }: { className?: string; size?: 'sm' | 'md' }) {
   const theme = useSettings((s) => s.settings.theme);
   const update = useSettings((s) => s.update);
-  return <ThemeSwitcher value={theme} onChange={(t) => update({ theme: t })} className={className} />;
+  return <ThemeSwitcher value={theme} onChange={(t) => update({ theme: t })} size={size} className={className} />;
 }
 
 export function Navigation() {
@@ -27,17 +27,17 @@ export function Navigation() {
   const signedIn = useAccount((s) => s.status === 'signed_in');
 
   return (
-    <header className="sticky top-0 z-50 pt-safe">
-      <motion.div style={{ opacity: border }} className="material pointer-events-none absolute inset-0 border-b border-edge" aria-hidden />
-      <div className="relative mx-auto flex h-16 max-w-[1280px] items-center gap-6 px-4 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-line bg-canvas/85 pt-safe backdrop-blur-md">
+      <motion.div style={{ opacity: border }} className="pointer-events-none absolute inset-0 bg-surface/60" aria-hidden />
+      <div className="relative mx-auto flex h-14 max-w-[1200px] items-center gap-6 px-4 sm:px-6">
         <Link to="/" aria-label="Downora home" className="flex min-h-11 items-center">
-          <Logo />
+          <Logo className="[&_svg]:size-6 [&>span:last-child]:text-[0.9375rem]" />
         </Link>
         <nav aria-label="Site" className="hidden flex-1 justify-center lg:flex">
           <ul className="flex items-center gap-1">
             {LINKS.map((l) => (
               <li key={l.href}>
-                <a href={l.href} className="rounded-full px-3.5 py-2 text-sm text-ink transition-colors hover:bg-fill">
+                <a href={l.href} className="rounded-md px-3 py-1.5 text-[0.8125rem] text-ink-muted transition-colors hover:text-ink">
                   {l.label}
                 </a>
               </li>
@@ -45,12 +45,14 @@ export function Navigation() {
           </ul>
         </nav>
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          <ThemeControl className="hidden sm:inline-flex" />
+          <ThemeControl size="sm" className="hidden sm:inline-flex" />
           <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
             <Link to={signedIn ? '/profile' : '/sign-in'}>{signedIn ? 'Account' : 'Sign in'}</Link>
           </Button>
-          <Button variant="primary" size="sm" asChild>
-            <Link to="/dashboard">Open app</Link>
+          <Button variant="ink" size="sm" asChild>
+            <Link to="/dashboard">
+              Open app <ArrowDownToLine />
+            </Link>
           </Button>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -60,7 +62,7 @@ export function Navigation() {
             </SheetTrigger>
             <SheetContent title="Menu">
               <nav aria-label="Site menu" className="px-4 pt-4 pb-2">
-                <ul className="overflow-hidden rounded-panel bg-cell">
+                <ul className="overflow-hidden rounded-panel border border-line bg-cell">
                   {LINKS.map((l) => (
                     <li key={l.href} className="border-b border-line last:border-b-0">
                       <a href={l.href} onClick={() => setOpen(false)} className="flex h-12 items-center px-4 text-[1.0625rem] active:bg-fill">

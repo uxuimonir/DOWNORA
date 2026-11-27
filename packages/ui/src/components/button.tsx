@@ -7,17 +7,18 @@ import { cn } from '../lib/cn';
 export const buttonVariants = cva(
   [
     'relative inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap select-none',
-    'rounded-full font-semibold tracking-[-0.01em] transition-[background-color,border-color,color,opacity,transform] duration-150',
+    'rounded-control font-semibold tracking-[-0.01em] transition-[background-color,border-color,color,opacity,transform] duration-150',
     'active:scale-[0.97] active:opacity-70 disabled:pointer-events-none disabled:opacity-40',
     '[&_svg]:pointer-events-none [&_svg]:shrink-0',
   ],
   {
     variants: {
       variant: {
-        primary: 'bg-accent-fill text-white shadow-[0_8px_24px_-10px_var(--color-accent)] hover:brightness-110',
-        tinted: 'bg-accent/15 text-accent-soft hover:bg-accent/22',
-        secondary: 'bg-fill text-ink hover:bg-fill-strong',
-        ghost: 'text-accent-soft hover:bg-fill',
+        primary: 'bg-accent-fill text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.18)] hover:brightness-110',
+        ink: 'bg-ink text-canvas hover:opacity-90',
+        tinted: 'border border-line bg-surface text-ink hover:bg-raised',
+        secondary: 'border border-line bg-surface text-ink shadow-[0_1px_1px_rgb(0_0_0/0.04)] hover:bg-raised',
+        ghost: 'text-ink-muted hover:bg-fill hover:text-ink',
         outline: 'border border-line-strong text-ink hover:bg-fill',
         danger: 'bg-danger/12 text-danger hover:bg-danger/20',
         link: 'hit-area h-auto rounded-sm px-0 text-accent-soft underline-offset-4 hover:underline',

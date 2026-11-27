@@ -16,7 +16,7 @@ export function Input({ className, invalid, ...props }: InputProps) {
     <input
       aria-invalid={invalid || undefined}
       className={cn(
-        'h-11 w-full min-w-0 rounded-control border border-transparent bg-fill px-3.5 text-[1.0625rem] text-ink',
+        'h-11 w-full min-w-0 rounded-control border border-line bg-surface px-3.5 text-[0.9375rem] text-ink',
         'placeholder:text-ink-faint transition-[border-color,box-shadow] duration-150',
         'focus-visible:border-accent/70 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15',
         'disabled:cursor-not-allowed disabled:opacity-50',
@@ -42,7 +42,7 @@ export function Label({ className, ...props }: ComponentProps<typeof LabelPrimit
 // ─────────────────────────── Badge ───────────────────────────
 
 export const badgeVariants = cva(
-  'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-xs font-semibold whitespace-nowrap [&_svg]:size-3',
+  'tag-mono inline-flex h-6 shrink-0 items-center gap-1.5 rounded-[6px] border px-2 whitespace-nowrap [&_svg]:size-3',
   {
     variants: {
       tone: {
@@ -87,7 +87,7 @@ export function Panel({ className, level = 'surface', ...props }: PanelProps) {
   return (
     <div
       className={cn(
-        'rounded-panel',
+        'rounded-panel border border-line',
         level === 'surface' ? 'bg-surface' : 'bg-raised',
         className,
       )}
@@ -192,27 +192,19 @@ export function ListSection({
 
 /** Classes for an inset grouped list; children get inset hairline separators. */
 export const listGroupClass =
-  'overflow-hidden rounded-panel bg-cell [&>*+*]:relative [&>*+*]:before:pointer-events-none [&>*+*]:before:absolute [&>*+*]:before:top-0 [&>*+*]:before:right-0 [&>*+*]:before:left-[var(--inset,1rem)] [&>*+*]:before:h-px [&>*+*]:before:scale-y-50 [&>*+*]:before:bg-line-strong [&>*+*]:before:content-[""]';
+  'overflow-hidden rounded-panel border border-line bg-cell [&>*+*]:relative [&>*+*]:before:pointer-events-none [&>*+*]:before:absolute [&>*+*]:before:top-0 [&>*+*]:before:right-0 [&>*+*]:before:left-[var(--inset,1rem)] [&>*+*]:before:h-px [&>*+*]:before:scale-y-50 [&>*+*]:before:bg-line [&>*+*]:before:content-[""]';
 
 export function ListGroup({ className, as: Tag = 'div', ...props }: HTMLAttributes<HTMLElement> & { as?: 'div' | 'ul' | 'ol' }) {
   return <Tag className={cn(listGroupClass, className)} {...props} />;
 }
 
-const TILE = {
-  violet: 'bg-[#8B5CF6]',
-  sky: 'bg-[#2D9CDB]',
-  green: 'bg-[#22A06B]',
-  orange: 'bg-[#E8772E]',
-  pink: 'bg-[#D9467A]',
-  gray: 'bg-[#6B7280]',
-  indigo: 'bg-[#5B5BD6]',
-} as const;
-export type TileColor = keyof typeof TILE;
+/** Kept for API compatibility; the icon badge is monochrome now. */
+export type TileColor = 'violet' | 'sky' | 'green' | 'orange' | 'pink' | 'gray' | 'indigo';
 
-/** Settings-style rounded square holding a white glyph. */
-export function IconTile({ color = 'violet', className, children }: { color?: TileColor; className?: string; children: React.ReactNode }) {
+/** Small white badge with a hairline border holding a line icon. */
+export function IconTile({ className, children }: { color?: TileColor; className?: string; children: React.ReactNode }) {
   return (
-    <span aria-hidden className={cn('grid size-[29px] shrink-0 place-items-center rounded-[7px] text-white [&_svg]:size-[17px]', TILE[color], className)}>
+    <span aria-hidden className={cn('grid size-[30px] shrink-0 place-items-center rounded-[8px] border border-line bg-surface text-ink shadow-[0_1px_1px_rgb(0_0_0/0.04)] [&_svg]:size-[15px]', className)}>
       {children}
     </span>
   );

@@ -48,19 +48,22 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
 
   return (
     <div>
-      <form onSubmit={submit} role="search" aria-label="Analyze a media link">
-        <label htmlFor={inputId} className="sr-only">
-          Media link
-        </label>
-        <div
+      <div className={cn('rounded-[0.875rem] border border-line bg-raised', error && 'border-danger/60')}>
+        <form
+          onSubmit={submit}
+          role="search"
+          aria-label="Analyze a media link"
           className={cn(
-            'flex flex-col gap-2 rounded-[1.25rem] bg-cell p-2 shadow-panel transition-shadow sm:flex-row sm:items-center',
-            'focus-within:shadow-[0_0_0_4px_rgb(139_92_246/0.22)]',
-            error && 'shadow-[0_0_0_2px_var(--color-danger)]',
+            '-m-px rounded-[0.875rem] border border-line bg-surface shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-shadow',
+            'focus-within:border-accent/60 focus-within:shadow-[0_0_0_4px_rgb(112_71_235/0.12)]',
+            error && 'border-danger/60',
           )}
         >
-          <div className="relative flex min-w-0 flex-1 items-center">
-            <Link2 className="pointer-events-none absolute left-3 size-[18px] text-ink-muted" aria-hidden />
+          <label htmlFor={inputId} className="sr-only">
+            Media link
+          </label>
+          <div className="relative flex items-center">
+            <Link2 className="pointer-events-none absolute left-3.5 size-4 text-ink-faint" aria-hidden />
             <Input
               ref={inputRef}
               id={inputId}
@@ -69,15 +72,12 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
               autoComplete="off"
               spellCheck={false}
               autoFocus={autoFocus}
-              placeholder="https://example.com/media/clip.mp4"
+              placeholder="Paste a link to a media file…"
               value={value}
               onChange={(e) => onChange(e.target.value)}
               aria-invalid={Boolean(error) || undefined}
               aria-describedby={error ? errorId : undefined}
-              className={cn(
-                'rounded-[0.75rem] border-transparent pr-11 pl-10 focus-visible:border-transparent focus-visible:ring-0',
-                lg ? 'h-12' : 'h-11',
-              )}
+              className={cn('rounded-none border-0 bg-transparent pr-11 pl-10 shadow-none focus-visible:ring-0', lg ? 'h-14 text-base' : 'h-12')}
             />
             {value ? (
               <button
@@ -86,50 +86,49 @@ export function URLInput({ value, onChange, onSubmit, busy, error, kind = 'any',
                   onChange('');
                   inputRef.current?.focus();
                 }}
-                className="absolute right-1 grid size-10 place-items-center rounded-full text-ink-faint hover:text-ink-muted"
+                className="absolute right-1.5 grid size-9 place-items-center rounded-md text-ink-faint hover:bg-fill hover:text-ink"
                 aria-label="Clear link"
               >
-                <span className="grid size-[18px] place-items-center rounded-full bg-ink-faint/70 text-cell">
-                  <X className="size-3" strokeWidth={3} />
-                </span>
+                <X className="size-4" />
               </button>
             ) : null}
           </div>
-          <div className="flex gap-2">
-            <Button type="button" variant="tinted" size={lg ? 'lg' : 'md'} onClick={paste} className="flex-1 rounded-[0.75rem] sm:flex-none">
+          <div className="flex flex-wrap items-center gap-2 px-2.5 pb-2.5">
+            <Button type="button" variant="secondary" size="sm" onClick={paste} className="h-8">
               <ClipboardPaste />
               Paste
             </Button>
-            <Button type="submit" variant="primary" size={lg ? 'lg' : 'md'} loading={busy} className="flex-1 rounded-[0.75rem] sm:flex-none">
+            <span className="tag-mono hidden text-ink-faint sm:inline">MP4 · WebM · MP3 · M4A · WAV</span>
+            <Button type="submit" variant="primary" size={lg ? 'md' : 'sm'} loading={busy} className={cn('ml-auto', lg ? 'h-10' : 'h-8')}>
               {busy ? null : <Search />}
               {busy ? 'Analyzing' : 'Analyze'}
             </Button>
           </div>
+        </form>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 px-3 py-2.5 text-[0.8125rem] text-ink-muted">
+          <span>Try a sample</span>
+          {samples.map((sample) => (
+            <button
+              key={sample.path}
+              type="button"
+              disabled={busy}
+              onClick={() => {
+                const url = sampleUrl(sample);
+                onChange(url);
+                onSubmit(url);
+              }}
+              className="hit-area rounded-[6px] border border-line bg-surface px-2 py-0.5 text-[0.75rem] font-medium text-ink transition-colors hover:border-line-strong disabled:opacity-50"
+            >
+              {sample.label}
+            </button>
+          ))}
         </div>
-      </form>
+      </div>
       {error ? (
         <p id={errorId} role="alert" className="mt-2 px-1 text-sm text-danger">
           {error}
         </p>
       ) : null}
-      <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 px-1 text-sm text-ink-muted">
-        <span className="text-[0.8125rem] text-ink-muted">Try a sample</span>
-        {samples.map((sample) => (
-          <button
-            key={sample.path}
-            type="button"
-            disabled={busy}
-            onClick={() => {
-              const url = sampleUrl(sample);
-              onChange(url);
-              onSubmit(url);
-            }}
-            className="hit-area rounded-full bg-fill px-3 py-1 text-[0.8125rem] font-semibold text-accent-soft transition-colors hover:bg-fill-strong active:opacity-70 disabled:opacity-50"
-          >
-            {sample.label}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

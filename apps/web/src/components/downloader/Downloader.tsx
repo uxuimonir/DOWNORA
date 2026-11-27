@@ -123,7 +123,7 @@ export function Downloader({ kind = 'any', size = 'md', autoFocus, initialUrl, v
         <AnimatePresence mode="wait" initial={false}>
           {phase.name === 'analyzing' ? (
             <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <Panel className={cn('p-5', stage && 'bg-surface/70 backdrop-blur-xl')}>
+              <Panel className="p-5">
                 <div className="grid gap-5 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
                   <Skeleton className="aspect-video rounded-[1.25rem]" />
                   <div className="flex flex-col gap-3">
@@ -231,7 +231,7 @@ function ResultView({ result, stage, onReset }: { result: Result; stage: boolean
   };
 
   return (
-    <Panel className={cn('overflow-hidden bg-grouped', stage && 'shadow-pop')} data-testid="media-stage">
+    <Panel className={cn('overflow-hidden bg-raised/60', stage && 'shadow-panel')} data-testid="media-stage">
       <div className="p-4 sm:p-6">
         <MediaPreview analysis={analysis} thumbnail={result.thumbnail} playable={result.playable} />
       </div>

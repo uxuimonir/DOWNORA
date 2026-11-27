@@ -25,7 +25,7 @@ export function MediaPreview({ analysis, thumbnail, playable }: { analysis: Medi
 
   return (
     <div className="grid gap-5 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]" data-testid="media-preview">
-      <div className="relative aspect-video overflow-hidden rounded-panel bg-cell">
+      <div className="relative aspect-video overflow-hidden rounded-panel border border-line bg-cell">
         {playing && playable ? (
           analysis.kind === 'video' ? (
             <video src={analysis.sourceUrl} controls autoPlay className="size-full bg-black object-contain" />
@@ -65,7 +65,7 @@ export function MediaPreview({ analysis, thumbnail, playable }: { analysis: Medi
       </div>
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="min-w-0 text-[1.375rem] leading-7 font-bold tracking-[-0.02em] break-words">{analysis.title}</h3>
+          <h3 className="min-w-0 text-[1.25rem] leading-7 font-semibold tracking-[-0.03em] break-words">{analysis.title}</h3>
           <Badge tone="success" className="mt-1">
             <ShieldCheck /> Direct file
           </Badge>
@@ -113,9 +113,9 @@ function ChoiceList({ label, value, onChange, options, testId }: { label: string
             'hover:bg-fill/50 active:bg-fill disabled:cursor-not-allowed disabled:opacity-40 focus-visible:z-10',
           )}
         >
-          <span className="flex-1 text-[1.0625rem] tracking-[-0.01em] text-ink group-data-[state=on]:font-semibold">{o.label}</span>
+          <span className="flex-1 text-[0.9375rem] tracking-[-0.01em] text-ink group-data-[state=on]:font-semibold">{o.label}</span>
           {o.hint ? <span className="tabular text-[0.9375rem] text-ink-muted">{o.hint}</span> : null}
-          <Check className="size-[18px] shrink-0 text-accent-soft opacity-0 group-data-[state=on]:opacity-100" strokeWidth={2.6} aria-hidden />
+          <Check className="size-4 shrink-0 text-accent-soft opacity-0 group-data-[state=on]:opacity-100" strokeWidth={2.6} aria-hidden />
         </ToggleGroup.Item>
       ))}
     </ToggleGroup.Root>
@@ -175,7 +175,7 @@ export function QualitySelector({ formats, value, onChange }: { formats: MediaFo
 export function DownloadButton({ format, onClick, busy, locked }: { format: MediaFormat; onClick: () => void; busy?: boolean; locked?: string }) {
   return (
     <motion.div whileTap={{ scale: 0.98 }} className="w-full">
-      <Button variant="primary" size="lg" className="h-[3.25rem] w-full rounded-[0.875rem] text-[1.0625rem]" onClick={onClick} loading={busy} disabled={Boolean(locked)}>
+      <Button variant="primary" size="lg" className="h-12 w-full text-[0.9375rem]" onClick={onClick} loading={busy} disabled={Boolean(locked)}>
         {busy ? null : locked ? <Lock /> : <Download />}
         {format.delivery === 'transcode' ? 'Convert & download' : 'Download'} {format.container.toUpperCase()}
         {format.qualityLabel && format.kind === 'video' ? <span className="font-normal opacity-70">{format.qualityLabel}</span> : null}
